@@ -1,4 +1,4 @@
-Learn more about
+Learn more about:
 
 | Notebook |  Run It |
 | --- | --- |
