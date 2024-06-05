@@ -16,10 +16,11 @@ def load_data(using_colab=0):
     else:
         data        = sio.loadmat('spindle_data.mat')       # Load the data default
     
+    baseline          = data['baseline']
     during_treatment  = data['during_treatment']                      # ... and define the variables.
     post_treatment    = data['post_treatment']
 
-    return during_treatment, post_treatment
+    return baseline, during_treatment, post_treatment
 
 
 def plot_spike_train(t, spikes):
