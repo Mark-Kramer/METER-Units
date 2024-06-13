@@ -79,15 +79,20 @@ def fdr(p):
 
     return p_values_signficant_after_FDR
 
+import ipywidgets as widgets
+from IPython.display import display, clear_output, Code
+import scipy.stats as stats
+
 def create_dropdown_compute_pvalues(during_treatment):
+    # Dictionary to store results
+    results = {'p_value': None}
 
     # Function to handle dropdown value change
     def on_dropdown_change(change):
-
         code = """
-    result         = stats.ttest_1samp(during_treatment,popmean=0)
-    p_value_during = result.pvalue
-    """
+result = stats.ttest_1samp(during_treatment, popmean=0)
+p_value_during = result.pvalue
+"""
         
         with output:
             clear_output()
@@ -97,24 +102,21 @@ def create_dropdown_compute_pvalues(during_treatment):
                 print("2. The `popmean` is 0.")
                 print("If you get stuck, select the `Show me the code and the results.` option\n")
             elif change['new'] == 'Show me the code and I will run it myself.':
-                print("\n Here's the code:\n")
+                print("\nHere's the code:\n")
                 display(Code(data=code, language='python'))
             elif change['new'] == 'Show me the code and the results.':
-                print("\n Here's the code:\n")
+                print("\nHere's the code:\n")
                 display(Code(data=code, language='python'))
-                print("\n And here are the results:\n")
-                import scipy.stats as stats
-                import numpy as np
-                result         = stats.ttest_1samp(during_treatment,popmean=0)
-                p_value_during = result.pvalue
-                return p_value_during
+                print("\nAnd here are the results:\n")
+                result = stats.ttest_1samp(during_treatment, popmean=0)
+                results['p_value'] = result.pvalue
+                print("p-value: ", results['p_value'])
             elif change['new'] == 'Just show me the results!':
-                print("\n Running code ... here are the results:\n")
-                import scipy.stats as stats
-                result         = stats.ttest_1samp(during_treatment,popmean=0)
-                p_value_during = result.pvalue
-                return p_value_during
-    
+                print("\nRunning code ... here are the results:\n")
+                result = stats.ttest_1samp(during_treatment, popmean=0)
+                results['p_value'] = result.pvalue
+                print("p-value: ", results['p_value'])
+
     # Create a dropdown widget
     dropdown = widgets.Dropdown(
         options=['I want to write all the code myself.', 'Show me the code and I will run it myself.', 'Show me the code and the results.', 'Just show me the results!'],
@@ -132,3 +134,5 @@ def create_dropdown_compute_pvalues(during_treatment):
     # Display the dropdown widget and output widget
     display(dropdown)
     display(output)
+
+    return results
