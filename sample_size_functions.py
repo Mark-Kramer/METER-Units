@@ -31,9 +31,9 @@ def do_nothing_function(N):
 
     if N<=800:
         print("You stare at the jumbled results, numbers and graphs swirling into a chaotic mess. The data makes no sense, the patterns are meaningless. You realize with a sinking feeling that your choice of sample size was too small, too narrow to capture the true picture. The project, once so full of promise, is now a monument to your miscalculation.")
-        print()
+        print("")
         print("You try to backtrack, to salvage something from the wreckage, but it's too late. The deadline looms, and there is no time to start over. The project ends here, in a tangle of flawed data and lost opportunities.")
-        print()
+        print("")
         print("If only you had chosen a larger sample size, maybe things would have been different. But now, all you can do is close the book and learn from your mistake.")
         print()
         print("THE END.")
