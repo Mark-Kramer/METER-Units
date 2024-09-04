@@ -38,10 +38,30 @@ def do_nothing_function(N):
         print()
         print("THE END.")
     if (N>800) & (N<=1200):
-        print("Congratulations! You've reached the final page of your statistical adventure. Your choice of sample size led to successful results. The data aligns with the hypothesized result, the analysis checks out, and everything seems to be in order. You might feel a sense of triumph and relief wash over you. \n\n But there's an uneasy feeling lingering in the back of your mind. How did you arrive at the correct sample size? Was it a calculated decision based on a thorough understanding of the principles, or did luck play a significant role? \n\n As you stand on the brink of your next project, remember this moment. This time, you might have gotten lucky. But next time, the stakes might be higher, and luck might not be on your side. \n\n Take this as a lesson: delve deeper into the principles of sample size determination. Equip yourself with the knowledge to make informed decisions. Your future success depends on it. \n\n The adventure continues, and the next chapter is yours to write. Will you rely on luck again, or will you master the art of sample size calculations? The choice is yours. \n\n THE END.")
+        print("Congratulations! You've reached the final page of your statistical adventure. Your choice of sample size led to successful results. The data aligns with the hypothesized result, the analysis checks out, and everything seems to be in order. You might feel a sense of triumph and relief wash over you.")
+        print("")
+        print("But there's an uneasy feeling lingering in the back of your mind. How did you arrive at the correct sample size? Was it a calculated decision based on a thorough understanding of the principles, or did luck play a significant role?")
+        print("")
+        print("As you stand on the brink of your next project, remember this moment. This time, you might have gotten lucky. But next time, the stakes might be higher, and luck might not be on your side.")
+        print("")
+        print("Take this as a lesson: delve deeper into the principles of sample size determination. Equip yourself with the knowledge to make informed decisions. Your future success depends on it.")
+        print("")
+        print("The adventure continues, and the next chapter is yours to write. Will you rely on luck again, or will you master the art of sample size calculations? The choice is yours.")
+        print("")
+        print("THE END.")
 
     if N>1200:
-        print("Congratulations! You've reached the final page of your statistical adventure. Your choice of sample size has yielded accurate results. The data aligns with the hypothesized result, the analysis checks out, and everything seems to be in order. However, as you review the costs, the reality of your decision sets in. \n\n The sample size you chose was much larger than necessary. The data collection process, while thorough, has left you with an extraordinary bill. The expenses have skyrocketed beyond your initial budget, and now, your lab faces the consequences. \n\n To pay for the costly experiment, significant cutbacks are needed. Resources are reallocated, projects are postponed, and the lab's progress is stunted. The success of your experiment is overshadowed by the financial strain it has caused. \n\n As you reflect on this experience, remember the importance of balance. A successful experiment is not just about accurate results; it's also about efficient resource management. Learn from this costly lesson and strive to find the optimal sample size that balances accuracy with affordability. \n\n The adventure continues, and the next chapter is yours to write. Will you learn to balance precision with practicality, or will you let costs spiral out of control again? The choice is yours. \n\n THE END.")
+        print("Congratulations! You've reached the final page of your statistical adventure. Your choice of sample size has yielded accurate results. The data aligns with the hypothesized result, the analysis checks out, and everything seems to be in order. However, as you review the costs, the reality of your decision sets in.")
+        print("")
+        print("The sample size you chose was much larger than necessary. The data collection process, while thorough, has left you with an extraordinary bill. The expenses have skyrocketed beyond your initial budget, and now, your lab faces the consequences.")
+        print("")
+        print("To pay for the costly experiment, significant cutbacks are needed. Resources are reallocated, projects are postponed, and the lab's progress is stunted. The success of your experiment is overshadowed by the financial strain it has caused.")
+        print("")
+        print("As you reflect on this experience, remember the importance of balance. A successful experiment is not just about accurate results; it's also about efficient resource management. Learn from this costly lesson and strive to find the optimal sample size that balances accuracy with affordability.")
+        print("")
+        print("The adventure continues, and the next chapter is yours to write. Will you learn to balance precision with practicality, or will you let costs spiral out of control again? The choice is yours.")
+        print("")
+        print("THE END.")
 
 
 
