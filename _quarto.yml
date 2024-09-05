@@ -1,0 +1,26 @@
+project:
+  type: website
+  output-dir: docs
+
+render:
+  ignore:
+    - "METER_Inference-SHORT.ipynb"
+    - "METER_Inference.ipynb"
+
+website:
+  title: "BU METER"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: Sample_Size_Quarto.html
+        text: Sample Size
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+

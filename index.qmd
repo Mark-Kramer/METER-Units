@@ -1,0 +1,24 @@
+---
+title: "BU METER"
+---
+
+
+### Sample Size - How much data is enough for your experiment?
+- Interactive [notebook](METER_Sample_Size-SHORT-Quarto.html)
+
+---
+
+### Evaluate your evaluation methods! A key to meaningful inference.
+- Static [notebook](https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Inference-SHORT.ipynb)
+
+---
+
+
+### Putting the p-value in context: p<0.05, but what does it REALLY mean?
+- Static [notebook](https://github.com/Mark-Kramer/METER-Units/blob/main/METER_P_Values.ipynb)
+
+---
+
+
+### Reproducible exploratory analysis: Mitigating multiplicity when mining data
+- Static [notebook](https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb)
