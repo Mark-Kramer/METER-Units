@@ -4,8 +4,6 @@ project:
 
 render:
   ignore:
-    - "METER_Inference-SHORT.ipynb"
-    - "METER_Inference.ipynb"
 
 website:
   title: "BU METER"
@@ -13,7 +11,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: Sample_Size_Quarto.html
+      - href: METER_Sample_Size-SHORT_Quarto.html
         text: Sample Size
 
 format:

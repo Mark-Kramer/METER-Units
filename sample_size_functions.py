@@ -30,13 +30,16 @@ def load_data_Colab(N):                         # Load the data with sample size
 def do_nothing_function(N):
 
     if N<=800:
-        print("You stare at the jumbled results, numbers and graphs swirling into a chaotic mess. The data makes no sense, the patterns are meaningless. You realize with a sinking feeling that your choice of sample size was too small, too narrow to capture the true picture. The project, once so full of promise, is now a monument to your miscalculation.")
-        print("")
-        print("You try to backtrack, to salvage something from the wreckage, but it's too late. The deadline looms, and there is no time to start over. The project ends here, in a tangle of flawed data and lost opportunities.")
-        print("")
-        print("If only you had chosen a larger sample size, maybe things would have been different. But now, all you can do is close the book and learn from your mistake.")
-        print()
-        print("THE END.")
+        print("You stare at the jumbled results, numbers and graphs swirling into a chaotic mess.")
+        print("The data makes no sense, the patterns are meaningless.")
+        print("You realize with a sinking feeling that your choice of sample size was too small, too narrow to capture the true picture.")
+        print("The project, once so full of promise, is now a monument to your miscalculation.")
+        print("\nYou try to backtrack, to salvage something from the wreckage, but it's too late.")
+        print("The deadline looms, and there is no time to start over.")
+        print("The project ends here, in a tangle of flawed data and lost opportunities.")
+        print("\nIf only you had chosen a larger sample size, maybe things would have been different.")
+        print("But now, all you can do is close the book and learn from your mistake.")
+        print("\nTHE END.\n")
     if (N>800) & (N<=1200):
         print("Congratulations! You've reached the final page of your statistical adventure. Your choice of sample size led to successful results. The data aligns with the hypothesized result, the analysis checks out, and everything seems to be in order. You might feel a sense of triumph and relief wash over you.")
         print("")
