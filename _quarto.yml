@@ -11,7 +11,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: METER_Sample_Size-SHORT_Quarto.html
+      - href: METER_Sample_Size-SHORT-Quarto.html
         text: Sample Size
 
 format:
