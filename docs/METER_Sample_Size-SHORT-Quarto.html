@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -228,7 +228,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"id":1,"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nN = 100                               # Here, learner will input N they found in Mini 1.\nx,lifespan = load_data(N)             # ... and load the data with this many N.","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":2,"code":"plt.figure()\nplt.scatter(x,lifespan)\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":3,"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat                = {\"x\": x, \"lifespan\": lifespan}\nregression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":4,"code":"print('Slope estimate                   = {:.3f}'.format(regression_results.params.iloc[1]))\nprint('Standard error of slope estimate = {:.3f}'.format(regression_results.bse['x']))\nprint('p-value                          = {:.3f}'.format(regression_results.pvalues.iloc[1]))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":5,"code":"pred   = regression_results.get_prediction().summary_frame()\nmn     = pred['mean']\nci_low = pred['mean_ci_lower'] \nci_upp = pred['mean_ci_upper']\n\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted],mn[indices_sorted], 'r')\nplt.plot(x[indices_sorted],ci_low[indices_sorted], ':r')\nplt.plot(x[indices_sorted],ci_upp[indices_sorted], ':r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":6,"code":"N_resampled = N;","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":7,"code":"ind = np.random.choice(np.size(x), N_resampled)\nprint(ind)","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":8,"code":"x_resampled        = x[ind]\nlifespan_resampled = lifespan[ind]","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":9,"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_resampled, lifespan_resampled, color='blue', alpha=0.25, label='Resampled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)');\nplt.legend()\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":10,"code":"# Estimate a line from the resampled data.\nfrom statsmodels.formula.api import ols\ndat_resampled                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\nregression_results_resampled = ols(\"lifespan ~ 1 + x\", data=dat_resampled).fit()\n\nprint('Slope estimate (resampled data)                   = {:.3f}'.format(regression_results_resampled.params.iloc[1]))\nprint('Standard error of slope estimate (resampled data) = {:.3f}'.format(regression_results_resampled.bse['x']))\nprint('p-value (resampled data)                          = {:.3f}'.format(regression_results_resampled.pvalues.iloc[1]))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":11,"code":"N_resampled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":12,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":13,"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":14,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":15,"code":"N_resampled = N\nalpha       = 0.05\nK           = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_resampled={:.0f}'.format(N_resampled), 'and alpha={:.2f}'.format(alpha))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":16,"code":"plt.figure()\nplt.hist(x)\nplt.xlabel('Biomarker x')\nplt.ylabel('Number of observations')\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":17,"code":"# Estimating the parameters of the normal distribution for the biomarker x\nmean_x = np.mean(x)\nstd_x  = np.std(x)\nprint('Mean of x               = {:.2f}'.format(mean_x))\nprint('Standard deviation of x = {:.2f}'.format(std_x))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":18,"code":"N_modeled = 100;\nx_modeled = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nprint(x_modeled)","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":19,"code":"plt.figure()\nplt.hist(x,         bins=30, alpha=0.5, label='Original Data (x)', color='blue')\nplt.hist(x_modeled, bins=30, alpha=0.5, label='Modeled data (x_modeled)', color='red')\nplt.title('Histogram of Original Data and Samples')\nplt.xlabel('Value')\nplt.ylabel('Frequency')\nplt.legend()\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":20,"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat   = {\"x\": x, \"lifespan\": lifespan}\nmodel = ols(\"lifespan ~ 1 + x\", data=dat).fit()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":21,"code":"slope     = model.params.iloc[1]\nintercept = model.params.iloc[0]\n\nprint('Slope estimate     = {:.2f}'.format(slope))\nprint('Intercept estimate = {:.2f}'.format(intercept))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":22,"code":"# Get the model prediciton.\npred   = model.get_prediction().summary_frame();  mn = pred['mean']\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted[:,0]],mn[indices_sorted[:,0]], 'r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":23,"code":"dispersion = np.sqrt(model.scale)\nprint('Dispersion parameter = {:.2f}'.format(dispersion))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":24,"code":"N_modeled = N\nx_modeled        = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nlifespan_modeled = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1])","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":25,"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_modeled, lifespan_modeled, color='blue', alpha=0.25, label='Modeled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.legend()\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":26,"code":"# Estimate a line from the modeled data.\nfrom statsmodels.formula.api import ols\ndat_modeled                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\nregression_results_modeled = ols(\"lifespan ~ 1 + x\", data=dat_modeled).fit()\n\nprint('Slope estimate (modeled data)                   = {:.3f}'.format(regression_results_modeled.params.iloc[1]))\nprint('Standard error of slope estimate (modeled data) = {:.3f}'.format(regression_results_modeled.bse['x']))\nprint('p-value (modeled data)                          = {:.3f}'.format(regression_results_modeled.pvalues.iloc[1]))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":27,"code":"N_modeled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":28,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1.05,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":29,"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":30,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":31,"code":"N_modeled = 1000\nalpha     = 0.05\nK         = 1000\np_values  = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_modeled={:.0f}'.format(N_modeled), 'and alpha={:.2f}'.format(alpha))","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}},{"id":32,"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nN = 100\ndo_nothing_function(N)","options":{"dpi":72,"out-width":"700px","context":"interactive","warning":"true","fig-height":5,"message":"true","out-height":"","autorun":"","output":"true","fig-width":7,"comment":"","label":"","fig-cap":"","read-only":"false","results":"markup","classes":""}}];
+globalThis.qpyodideCellDetails = [{"id":1,"code":"N = 100","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":2,"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nx,lifespan = load_data(N)             # ... and load the data with this many N.","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":3,"code":"plt.figure()\nplt.scatter(x,lifespan)\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":4,"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat                = {\"x\": x, \"lifespan\": lifespan}\nregression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":5,"code":"slope_estimate = regression_results.params.iloc[1]\nprint('Slope estimate                   = {:.3f}'.format(slope_estimate)\nprint('Standard error of slope estimate = {:.3f}'.format(regression_results.bse['x']))\nprint('p-value                          = {:.3f}'.format(regression_results.pvalues.iloc[1]))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":6,"code":"pred   = regression_results.get_prediction().summary_frame()\nmn     = pred['mean']\nci_low = pred['mean_ci_lower'] \nci_upp = pred['mean_ci_upper']\n\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted],mn[indices_sorted], 'r')\nplt.plot(x[indices_sorted],ci_low[indices_sorted], ':r')\nplt.plot(x[indices_sorted],ci_upp[indices_sorted], ':r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":7,"code":"N_resampled = N;","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":8,"code":"ind = np.random.choice(np.size(x), N_resampled)\nprint(ind)","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":9,"code":"x_resampled        = x[ind]\nlifespan_resampled = lifespan[ind]","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":10,"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_resampled, lifespan_resampled, color='blue', alpha=0.25, label='Resampled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)');\nplt.legend()\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":11,"code":"# Estimate a line from the resampled data.\nfrom statsmodels.formula.api import ols\ndat_resampled                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\nregression_results_resampled = ols(\"lifespan ~ 1 + x\", data=dat_resampled).fit()\n\nprint('Slope estimate (resampled data)                   = {:.3f}'.format(regression_results_resampled.params.iloc[1]))\nprint('Standard error of slope estimate (resampled data) = {:.3f}'.format(regression_results_resampled.bse['x']))\nprint('p-value (resampled data)                          = {:.3f}'.format(regression_results_resampled.pvalues.iloc[1]))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":12,"code":"N_resampled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":13,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":14,"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":15,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":16,"code":"N_resampled = N\nalpha       = 0.05\nK           = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_resampled={:.0f}'.format(N_resampled), 'and alpha={:.2f}'.format(alpha))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":17,"code":"plt.figure()\nplt.hist(x)\nplt.xlabel('Biomarker x')\nplt.ylabel('Number of observations')\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":18,"code":"# Estimating the parameters of the normal distribution for the biomarker x\nmean_x = np.mean(x)\nstd_x  = np.std(x)\nprint('Mean of x               = {:.2f}'.format(mean_x))\nprint('Standard deviation of x = {:.2f}'.format(std_x))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":19,"code":"N_modeled = 100;\nx_modeled = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nprint(x_modeled)","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":20,"code":"plt.figure()\nplt.hist(x,         bins=30, alpha=0.5, label='Original Data (x)', color='blue')\nplt.hist(x_modeled, bins=30, alpha=0.5, label='Modeled data (x_modeled)', color='red')\nplt.title('Histogram of Original Data and Samples')\nplt.xlabel('Value')\nplt.ylabel('Frequency')\nplt.legend()\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":21,"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat   = {\"x\": x, \"lifespan\": lifespan}\nmodel = ols(\"lifespan ~ 1 + x\", data=dat).fit()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":22,"code":"slope     = model.params.iloc[1]\nintercept = model.params.iloc[0]\n\nprint('Slope estimate     = {:.2f}'.format(slope))\nprint('Intercept estimate = {:.2f}'.format(intercept))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":23,"code":"# Get the model prediciton.\npred   = model.get_prediction().summary_frame();  mn = pred['mean']\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted[:,0]],mn[indices_sorted[:,0]], 'r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":24,"code":"dispersion = np.sqrt(model.scale)\nprint('Dispersion parameter = {:.2f}'.format(dispersion))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":25,"code":"N_modeled = N\nx_modeled        = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nlifespan_modeled = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1])","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":26,"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_modeled, lifespan_modeled, color='blue', alpha=0.25, label='Modeled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.legend()\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":27,"code":"# Estimate a line from the modeled data.\nfrom statsmodels.formula.api import ols\ndat_modeled                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\nregression_results_modeled = ols(\"lifespan ~ 1 + x\", data=dat_modeled).fit()\n\nprint('Slope estimate (modeled data)                   = {:.3f}'.format(regression_results_modeled.params.iloc[1]))\nprint('Standard error of slope estimate (modeled data) = {:.3f}'.format(regression_results_modeled.bse['x']))\nprint('p-value (modeled data)                          = {:.3f}'.format(regression_results_modeled.pvalues.iloc[1]))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":28,"code":"N_modeled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":29,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1.05,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":30,"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":31,"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":32,"code":"N_modeled = 1000\nalpha     = 0.05\nK         = 1000\np_values  = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_modeled={:.0f}'.format(N_modeled), 'and alpha={:.2f}'.format(alpha))","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}},{"id":33,"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nN = 100\ndo_nothing_function(N)","options":{"output":"true","context":"interactive","comment":"","label":"","results":"markup","fig-height":5,"read-only":"false","autorun":"","classes":"","fig-cap":"","fig-width":7,"warning":"true","dpi":72,"out-width":"700px","message":"true","out-height":""}}];
 
 
 </script>
@@ -474,7 +474,7 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./METER_Sample_Size-SHORT_Quarto.html"> 
+    <a class="nav-link active" href="./METER_Sample_Size-SHORT-Quarto.html" aria-current="page"> 
 <span class="menu-text">Sample Size</span></a>
   </li>  
 </ul>
@@ -496,9 +496,9 @@ window.Quarto = {
   <li><a href="#just-google-it" id="toc-just-google-it" class="nav-link active" data-scroll-target="#just-google-it">1 - Just Google it?</a></li>
   <li><a href="#underpowered-experiments-are-doomed-to-failure." id="toc-underpowered-experiments-are-doomed-to-failure." class="nav-link" data-scroll-target="#underpowered-experiments-are-doomed-to-failure.">2- Underpowered experiments are doomed to failure.</a>
   <ul class="collapse">
-  <li><a href="#slope-estimate-0.91" id="toc-slope-estimate-0.91" class="nav-link" data-scroll-target="#slope-estimate-0.91">Slope estimate = 0.91</a></li>
-  <li><a href="#standard-error-of-slope-estimate-1.02" id="toc-standard-error-of-slope-estimate-1.02" class="nav-link" data-scroll-target="#standard-error-of-slope-estimate-1.02">Standard error of slope estimate = 1.02</a></li>
-  <li><a href="#p-value-0.37" id="toc-p-value-0.37" class="nav-link" data-scroll-target="#p-value-0.37">p-value = 0.37</a></li>
+  <li><a href="#slope-estimate" id="toc-slope-estimate" class="nav-link" data-scroll-target="#slope-estimate">Slope estimate</a></li>
+  <li><a href="#standard-error-of-slope-estimate" id="toc-standard-error-of-slope-estimate" class="nav-link" data-scroll-target="#standard-error-of-slope-estimate">Standard error of slope estimate</a></li>
+  <li><a href="#p-value" id="toc-p-value" class="nav-link" data-scroll-target="#p-value">p-value</a></li>
   </ul></li>
   <li><a href="#choose-your-own-adventure" id="toc-choose-your-own-adventure" class="nav-link" data-scroll-target="#choose-your-own-adventure">Choose your own adventure …</a>
   <ul class="collapse">
@@ -627,12 +627,13 @@ Given this information, how many individuals should we include in our study to h
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Now, try to estimate the sample size using one of these approaches. What obstacles did you encounter along the way? (NOTE: This isn’t always easy or obvious, even for veteran researchers!)
+Now, try to estimate the sample size using one of these approaches. What obstacles did you encounter along the way?
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>Here’s a <a href="https://www.youtube.com/watch?v=Hz1fyhVOjr4">good video of the challenge</a>.</li>
+<li><p>Sample size calculations aren’t always easy or obvious, even for veteran researchers!</p></li>
+<li><p>Here’s a <a href="https://www.youtube.com/watch?v=Hz1fyhVOjr4">good video of the challenge</a>.</p></li>
 </ul>
 </div>
 </div>
@@ -680,10 +681,14 @@ We provided very little information and asked you to compute the sample size. Wh
 <li><p><code>x</code> - a measure of the proposed biomarker for longevity,</p></li>
 <li><p><code>lifespan</code> - the individual’s age at death.</p></li>
 </ul>
+<p>Let’s start by defining our choice for <code>N</code></p>
 <div id="qpyodide-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>Let’s start by plotting the data.</p>
+<p>With your chosen sample size <code>N</code>, you do the experiment and collect both <code>x</code> and <code>lifespan</code> for each subject.</p>
 <div id="qpyodide-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>Let’s start by plotting the data.</p>
+<div id="qpyodide-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -704,7 +709,7 @@ What do you observe? Does the hypothesized relationship between the biomarker <s
 <p>Let’s assess the relationship between the biomarker <code>x</code> and <code>lifespan</code> beyond visual inspection.</p>
 <p>There are many ways to do so.</p>
 <p>Here, we’ll fit a line to the data and compute the slope.</p>
-<div id="qpyodide-insertion-location-3"></div>
+<div id="qpyodide-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -725,26 +730,26 @@ If this code is new to you, don’t worry. Can you find the equation for the lin
 </div>
 </div>
 <p>Now, with the line estimated, we can print the estimated slope, and its p-value.</p>
-<div id="qpyodide-insertion-location-4"></div>
+<div id="qpyodide-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Let’s interpret these numbers:</p>
-<section id="slope-estimate-0.91" class="level3">
-<h3 class="anchored" data-anchor-id="slope-estimate-0.91">Slope estimate = 0.91</h3>
+<section id="slope-estimate" class="level3">
+<h3 class="anchored" data-anchor-id="slope-estimate">Slope estimate</h3>
 <p><strong>Meaning:</strong> The slope estimate represents the change in the <code>lifespan</code> for a one-unit change in the genetic biomarker <code>x</code>.</p>
-<p><strong>Interpretation:</strong> For every one-unit increase the genetic biomarker <code>x</code>, the lifespan is estimated to increase by 0.91 years, on average.</p>
+<p><strong>Interpretation:</strong> For every one-unit increase the genetic biomarker <code>x</code>, the lifespan is estimated to increase by the <code>slope_estimate</code> in years, on average.</p>
 </section>
-<section id="standard-error-of-slope-estimate-1.02" class="level3">
-<h3 class="anchored" data-anchor-id="standard-error-of-slope-estimate-1.02">Standard error of slope estimate = 1.02</h3>
+<section id="standard-error-of-slope-estimate" class="level3">
+<h3 class="anchored" data-anchor-id="standard-error-of-slope-estimate">Standard error of slope estimate</h3>
 <p><strong>Meaning:</strong> The standard error measures the average amount that the slope estimate varies from the true slope of the population regression line. It indicates the precision of the slope estimate.</p>
-<p><strong>Interpretation:</strong> A standard error of 1.02 suggests that the slope estimate (0.91) could vary by about <span class="math inline">\(2 * 1.02\)</span> units from the true slope. Given that the standard error is relatively large compared to the slope estimate, this implies that there is a considerable amount of uncertainty in the estimate.</p>
+<p><strong>Interpretation:</strong> A standard error of <span class="math inline">\(\sigma\)</span>, for example, suggests that the slope estimate could vary by about <span class="math inline">\(2 sigma\)</span> units from the true slope. In our case, the standard error is relatively large compared to the slope estimate. This implies there is a considerable amount of uncertainty in the estimate.</p>
 </section>
-<section id="p-value-0.37" class="level3">
-<h3 class="anchored" data-anchor-id="p-value-0.37">p-value = 0.37</h3>
+<section id="p-value" class="level3">
+<h3 class="anchored" data-anchor-id="p-value">p-value</h3>
 <p><strong>Meaning:</strong> The p-value is used to test the null hypothesis that the slope of the regression line is zero (no relationship between <code>x</code> and <code>lifespan</code>).</p>
-<p><strong>Interpretation:</strong> The p-value describes the probability of seeing an effect at least this large if substance x had no relation to lifespan. A p-value of 0.37 is much larger than commonly used thresholds to significance levels (e.g., 0.05). This means that there is not enough evidence to reject the null hypothesis. In other words, the data do not provide sufficient evidence to conclude that there is a statistically significant relationship between <code>x</code> and <code>lifespan</code>.</p>
+<p><strong>Interpretation:</strong> The p-value describes the probability of seeing an effect at least this large if substance <code>x</code> had no relation to lifespan. A p-value of 0.3, for example, is much larger than commonly used thresholds to significance levels (e.g., 0.05). In this case, this means that there is not enough evidence to reject the null hypothesis. In other words, the data do not provide sufficient evidence to conclude that there is a statistically significant relationship between <code>x</code> and <code>lifespan</code>.</p>
 <p>There’s much more to say about p-values. If you’re curious, check out <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_P_Values.ipynb">this link</a>.</p>
 <p>Let’s also <strong>visualize</strong> the estimated line by plotting it with the data.</p>
-<div id="qpyodide-insertion-location-5"></div>
+<div id="qpyodide-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -850,7 +855,7 @@ What will you choose for <code>N_resampled</code>?
 </ul>
 </div>
 </div>
-<div id="qpyodide-insertion-location-6"></div>
+<div id="qpyodide-insertion-location-7"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>We’ll start by fixing <code>N_resampled = N</code>, the original sample size. In what follows, we’ll adjust this value and examine the impact.</p>
 <p><strong>Thus concludes Step 1 of our resampling procedure.</strong></p>
@@ -862,7 +867,7 @@ What will you choose for <code>N_resampled</code>?
 <p>To visualize this procedure, imagine we assign each patient in the original data set a number, from <span class="math inline">\(0\)</span> up to <code>N</code>. We then write each number on a marble and place all <code>N</code> marbles in an opaque bag. Each marble is assigned a unique integer value from 0 to <code>N</code>-1. Now, reach your hand into the bag, grab a marble, record its number, and replace the marble in the bag. We assume that each marble is equally likely to be selected at each draw (i.e., there are no special features that allow some marbles to be drawn more often). Repeat this procedure <code>N_resampled</code> times to create a list of <code>N_resampled</code> integers. Notice that after recording the drawn marble’s number, we replace it in the bag. So, we could potentially draw the same marble <code>N_resampled</code> times, although that’s extremely unlikely.</p>
 <p>Performing this sampling with replacement procedure by hand would, of course, be extremely time consuming (e.g., who will paint integers on each marble?). Fortunately, this is the type of boring task where a computer excels.</p>
 <p>Let’s have a look at this “marble draw”:</p>
-<div id="qpyodide-insertion-location-7"></div>
+<div id="qpyodide-insertion-location-8"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -902,7 +907,7 @@ Run the code to generate <code>ind</code> again. What do you find? (I.e., is it 
 <section id="resampling-procedure-step-3" class="level3">
 <h3 class="anchored" data-anchor-id="resampling-procedure-step-3">Resampling procedure: Step 3</h3>
 <p>Our third step is to use these indices to generate the resampled data. To do so, we’ll draw data from the study participants using the indices in <code>ind</code>. Again, this is a task for a computer:</p>
-<div id="qpyodide-insertion-location-8"></div>
+<div id="qpyodide-insertion-location-9"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -920,7 +925,7 @@ How many values are in the resampled data <code>x_sampled</code> and <code>lifes
 </div>
 </div>
 <p>Let’s see what those values look like, compared to our original data set.</p>
-<div id="qpyodide-insertion-location-9"></div>
+<div id="qpyodide-insertion-location-10"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -946,7 +951,7 @@ Compare the plots of the original data (<code>x</code> and <code>lifespan</code>
 <h3 class="anchored" data-anchor-id="resampling-procedure-step-4">Resampling procedure: Step 4</h3>
 <p>Our fourth step is to compute the relationship (and its statistical significance) between the resampled biomarker <span class="math inline">\(x\)</span> and resampled lifespan.</p>
 <p>To do so, we’ll follow the same approach as above. We’ll fit the same line to new resampled data, and again compute the slope and significance.</p>
-<div id="qpyodide-insertion-location-10"></div>
+<div id="qpyodide-insertion-location-11"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1014,10 +1019,10 @@ So far, we’ve fixed <code>N_resampled = N</code>, the original sample size. Ch
 <h3 class="anchored" data-anchor-id="resampling-procedure-step-5">Resampling procedure: Step 5</h3>
 <p>We’ve added Step 5, in which we create <code>K</code> new instances of the pseudodata. For each instance, we calculate and save the p-value corresponding to the statistical significance of the relationship between the biomarker <span class="math inline">\(x\)</span> and lifespan in our resampled data.</p>
 <p>At the end of Step 5, we’ll have created a vector of <code>K</code> p-values. Let’s do so now:</p>
-<div id="qpyodide-insertion-location-11"></div>
+<div id="qpyodide-insertion-location-12"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Let’s investigate this list of p-values by plotting a historgram:</p>
-<div id="qpyodide-insertion-location-12"></div>
+<div id="qpyodide-insertion-location-13"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1043,7 +1048,7 @@ What p-values do you observe?
 <p><code>alpha = 0.05</code></p>
 <p>which means that there is a 5% chance of committing a Type I error, which is the error of incorrectly rejecting a true null hypothesis. This value is not inherently magical or optimal in all circumstances. But, it has become a convention primarily because it offers a middle ground that has been deemed acceptable by the scientific community for controlling Type I errors.</p>
 <p>To implement Step 6, let’s compute the <code>statistical_power</code> as the proportion of times that <code>p_values</code> is less than the threshold <code>alpha</code>.</p>
-<div id="qpyodide-insertion-location-13"></div>
+<div id="qpyodide-insertion-location-14"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1062,13 +1067,13 @@ Interpret the value in <code>statistical_power</code>. What does it mean?
 </div>
 <p>The value in <code>statistical_power</code> is the <strong>statistical power</strong> of our test. It represents the proportion of times we reject the null hypothesis and declare a significant relationship between the biomarker <code>x</code> and lifespan.</p>
 <p>To make this graphically explicit, let’s replot the histogram of <code>p-values</code> with a line at our threshold <code>alpha</code>.</p>
-<div id="qpyodide-insertion-location-14"></div>
+<div id="qpyodide-insertion-location-15"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>In this plot, the <strong>statistical power</strong> is the proportion of values to the left (i.e., smaller than) the red line.</p>
 <p>And that’s it!</p>
 <p>The <strong>statistical power</strong> is not a mystical quantity. It’s the probability that a test will correctly reject a false null hypothesis. And, using the data we collected, we can compute this <strong>statistical power</strong> for different choices of sample size (<code>N_resample</code>).</p>
 <p>Let’s collect all the code, and perform one more experiment:</p>
-<div id="qpyodide-insertion-location-15"></div>
+<div id="qpyodide-insertion-location-16"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1162,7 +1167,7 @@ Why do we choose statistical power 0.8?
 <h3 class="anchored" data-anchor-id="modeling-procedure-step-1">Modeling procedure: Step 1</h3>
 <p>Our first step is to estimate a model for biomarker <code>x</code>.</p>
 <p>To do so, let’s begin by visualizing the biomarker <code>x</code> in a historgram:</p>
-<div id="qpyodide-insertion-location-16"></div>
+<div id="qpyodide-insertion-location-17"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1185,7 +1190,7 @@ Describe the histogram. What does it look like?
 <p>That’s very useful, because it suggests we can model the data as normally distributed.</p>
 <p>Normal distributions are nice because we only need to estimate two parameters: <strong>the mean and standard deviation</strong>.</p>
 <p>Let’s compute those values in Python:</p>
-<div id="qpyodide-insertion-location-17"></div>
+<div id="qpyodide-insertion-location-18"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1207,7 +1212,7 @@ Interpert the values of <code>mean_x</code> and <code>std_x</code>. How do they 
 <p>In words, we’ll model <code>x</code> as normally distributed with mean <code>mean_x</code> = 0.03 and standard deviation <code>std_x</code> = 0.71.</p>
 <p>In Python, it’s <strong>easy to simulate values from this model.</strong></p>
 <p>Let’s do so, and simulate 100 values from the model.</p>
-<div id="qpyodide-insertion-location-18"></div>
+<div id="qpyodide-insertion-location-19"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1225,7 +1230,7 @@ Compared <code>x_modeled</code> to the original values <code>x</code>. Do the va
 </div>
 </div>
 <p>Let’s also plot histograms for the original data <code>x</code> and the modeled data <code>x_modeled</code>.</p>
-<div id="qpyodide-insertion-location-19"></div>
+<div id="qpyodide-insertion-location-20"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1252,15 +1257,15 @@ Compared the histograms of <code>x_modeled</code> and the original values <code>
 <p>Thankfully, we’ve already completed this step!</p>
 <p>In Mini 2, we modeled the relationship between biomarker <span class="math inline">\(x\)</span> and lifespan as a line.</p>
 <p>Here’s that code again:</p>
-<div id="qpyodide-insertion-location-20"></div>
+<div id="qpyodide-insertion-location-21"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>As we discussed in Mini 2, the model consists of two parameters: the <code>slope</code> and <code>intercept</code>.</p>
 <p>Let’s define and print those:</p>
-<div id="qpyodide-insertion-location-21"></div>
+<div id="qpyodide-insertion-location-22"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Do those values make sense?</p>
 <p>Let’s check by plotting the data with our estimated line:</p>
-<div id="qpyodide-insertion-location-22"></div>
+<div id="qpyodide-insertion-location-23"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1281,7 +1286,7 @@ Examine the plot above. Do the estimated values for <code>slope</code> and <code
 <p>To simulate the model of lifespan, we’ll need to extract one more parameter from the estimated model: the <strong>dispersion</strong>.</p>
 <p>The <strong>dispersion parameter</strong> describes the amount of uncertainty in our ability to predinct each data point. In this case, it is the residual standard deviation of the lifespan after we have tried to predict it using the expression level of substance <span class="math inline">\(x\)</span>.</p>
 <p>Let’s get the dispersion from the estimated model:</p>
-<div id="qpyodide-insertion-location-23"></div>
+<div id="qpyodide-insertion-location-24"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1360,7 +1365,7 @@ Describe - in words - each term in the equations above.
 <p>With the estimated models in hand, it’s now simple to simulate data from the models.</p>
 <p>To do so, we must choose a value for <code>N_modeled</code>.</p>
 <p>Let’s start by setting <code>N_modeled = N</code>, our original sample size, and then simulate the models. To do so,</p>
-<div id="qpyodide-insertion-location-24"></div>
+<div id="qpyodide-insertion-location-25"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1378,7 +1383,7 @@ How many values are in the simulated data <code>x_sampled</code> and <code>lifes
 </div>
 </div>
 <p>Let’s see what those modeled values look like, compared to our original data set.</p>
-<div id="qpyodide-insertion-location-25"></div>
+<div id="qpyodide-insertion-location-26"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1403,7 +1408,7 @@ Compare the plots of the original data (<code>x</code> and <code>lifespan</code>
 <h3 class="anchored" data-anchor-id="modeling-procedure-step-4">Modeling procedure: Step 4</h3>
 <p>Our fourth step is to compute the relationship (and its statistical significance) between the modeled biomarker <span class="math inline">\(x\)</span> and modeled lifespan.</p>
 <p>To do so, we’ll follow the same approach as above. We’ll fit the same line to new modeled data, and again compute the slope and significance.</p>
-<div id="qpyodide-insertion-location-26"></div>
+<div id="qpyodide-insertion-location-27"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1470,10 +1475,10 @@ So far, we’ve fixed <code>N_modeled = N</code>, the original sample size. Chan
 <h3 class="anchored" data-anchor-id="modeling-procedure-step-5">Modeling procedure: Step 5</h3>
 <p>We’ve added Step 5, in which we create <code>K</code> new instances of the modeled data. For each instance, we calculate and save the p-value corresponding to the statistical significance of the relationship between the biomarker <span class="math inline">\(x\)</span> and lifespan in our modeled data.</p>
 <p>At the end of Step 5, we’ll have created a vector of <code>K</code> p-values. Let’s do so now, with <code>N_modeled=N</code>.</p>
-<div id="qpyodide-insertion-location-27"></div>
+<div id="qpyodide-insertion-location-28"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Let’s investigate this list of p-values by plotting a historgram:</p>
-<div id="qpyodide-insertion-location-28"></div>
+<div id="qpyodide-insertion-location-29"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1499,7 +1504,7 @@ What p-values do you observe?
 <p><code>alpha = 0.05</code></p>
 <p>which means that there is a 5% chance of committing a Type I error, which is the error of incorrectly rejecting a true null hypothesis. This value is not inherently magical or optimal in all circumstances. But, it has become a convention primarily because it offers a middle ground that has been deemed acceptable by the scientific community for controlling Type I errors.</p>
 <p>To implement Step 6, let’s compute the <code>statistical_power</code> as the proportion of times that <code>p_values</code> is less than the threshold <code>alpha</code>.</p>
-<div id="qpyodide-insertion-location-29"></div>
+<div id="qpyodide-insertion-location-30"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1518,14 +1523,14 @@ What p-values do you observe?
 </div>
 <p>The value in <code>statistical_power</code> is the <strong>statistical power</strong> of our test. It represents the proportion of times we reject the null hypothesis and declare a significant relationship between the biomarker <code>x</code> and lifespan.</p>
 <p>To make this graphically explicit, let’s replot the histogram of <code>p-values</code> with a line at our threshold <code>alpha</code>.</p>
-<div id="qpyodide-insertion-location-30"></div>
+<div id="qpyodide-insertion-location-31"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>In this plot, the <strong>statistical power</strong> is the proportion of values to the left (i.e., smaller than) the red line.</p>
 <p>And that’s it!</p>
 <p>The <strong>statistical power</strong> is not a mystical quantity. It’s the probability that a test will correctly reject a false null hypothesis.</p>
 <p>And, using the data we collected, we can compute how the <strong>statistical power</strong> depends on sample size by changing the value of (<code>N_modeled</code>).</p>
 <p>To that end, let’s collect all the code, and perform one more experiment:</p>
-<div id="qpyodide-insertion-location-31"></div>
+<div id="qpyodide-insertion-location-32"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1583,7 +1588,7 @@ Why do we choose statistical power 0.8?
 </section>
 <section id="3C" class="level1">
 <h1>3C- Do nothing, I’m happy with the current sample size choice</h1>
-<div id="qpyodide-insertion-location-32"></div>
+<div id="qpyodide-insertion-location-33"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="Summary" class="level1">
