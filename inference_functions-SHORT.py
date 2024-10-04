@@ -10,7 +10,7 @@ def load_data():
     swim_lessons = np.array(df.iloc[0:N-1,0])
     drownings    = np.array(df.iloc[0:N-1,1])
     xy           = np.array(df.iloc[0:N-1,2])
-    return swim_lessons,drownings,xy
+    return swim_lessons,drownings,x,y
 
 def load_more_data():
     import pandas as pd
@@ -19,7 +19,7 @@ def load_more_data():
     drownings           = np.array(df.iloc[0:N-1,1])
     xy                  = np.array(df.iloc[0:N-1,2])
     distance_from_ocean = np.array(df.iloc[0:N-1,3])
-    return swim_lessons,drownings,xy
+    return swim_lessons,drownings,x,y,distance_from_ocean
 
 def compute_residuals_2d(swim_lessons, drownings):    
     from statsmodels.formula.api import ols                    # import the required module
