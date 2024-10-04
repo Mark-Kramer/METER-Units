@@ -60,7 +60,7 @@ def load_more_data(using_colab=0):
     return distance_from_ocean
 
 def plot_spatial_coordinates(xy, colors):
-    import plotly.graph_objects as go
+    #import plotly.graph_objects as go
 
     # Example x-y coordinates
     x_coordinates = xy[:,1]
