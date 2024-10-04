@@ -3,10 +3,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 import statsmodels.api as sm
-import plotly.graph_objects as go
-from IPython.lib.display import YouTubeVideo
-import ipywidgets as widgets
-from IPython.display import display, clear_output, Javascript, Code
+#import plotly.graph_objects as go
+#from IPython.lib.display import YouTubeVideo
+#import ipywidgets as widgets
+#from IPython.display import display, clear_output, Javascript, Code
+
+def load_data():
+    import pandas as pd
+    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/swim_lesson_data.csv")
+    swim_lessons = np.array(df.iloc[0:N-1,0])
+    drownings    = np.array(df.iloc[0:N-1,1])
+    xy           = np.array(df.iloc[0:N-1,2])
+    return swim_lessons,drownings,xy
+
+def load_more_data():
+    import pandas as pd
+    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/swim_lesson_data.csv")
+    swim_lessons        = np.array(df.iloc[0:N-1,0])
+    drownings           = np.array(df.iloc[0:N-1,1])
+    xy                  = np.array(df.iloc[0:N-1,2])
+    distance_from_ocean = np.array(df.iloc[0:N-1,3])
+    return swim_lessons,drownings,xy
+
+
+def load_code():
+    import requests
+    url = "https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py"
+    response = requests.get(url)
+    response.status_code
+    code = response.text
+    exec(code)
 
 def load_data(using_colab=0):
     # Load the data.
