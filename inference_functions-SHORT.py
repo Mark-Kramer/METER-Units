@@ -9,8 +9,9 @@ def load_data():
     df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/swim_lesson_data.csv")
     swim_lessons = np.array(df.iloc[:,0])
     drownings    = np.array(df.iloc[:,1])
-    xy           = np.array(df.iloc[:,2])
-    return swim_lessons,drownings,xy
+    x            = np.array(df.iloc[:,2])
+    y            = np.array(df.iloc[:,3])
+    return swim_lessons,drownings,x,y
 
 def load_more_data():
     import pandas as pd
