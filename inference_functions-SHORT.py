@@ -10,6 +10,8 @@ def load_data():
     swim_lessons = np.array(df.iloc[:,0])
     drownings    = np.array(df.iloc[:,1])
     xy           = np.array(df.iloc[:,2])
+    x            = xy[:,1]
+    y            = xy[:,0]
     return swim_lessons,drownings,x,y
 
 def load_more_data():
