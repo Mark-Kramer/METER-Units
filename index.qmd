@@ -9,7 +9,7 @@ title: "BU METER"
 ---
 
 ### Evaluate your evaluation methods! A key to meaningful inference.
-- Static [notebook](https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Inference-SHORT.html)
+- Static [notebook](https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Inference-SHORT.ipynb)
 
 ---
 

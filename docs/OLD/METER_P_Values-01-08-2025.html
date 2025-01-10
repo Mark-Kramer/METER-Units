@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Putting the p-value in Context – BU METER</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">BU METER</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../METER_Sample_Size-SHORT-Quarto.html"> 
+<span class="menu-text">Sample Size</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#heres-some-data-give-me-the-ps" id="toc-heres-some-data-give-me-the-ps" class="nav-link active" data-scroll-target="#heres-some-data-give-me-the-ps">1 - Here’s some data, give me the p’s!</a></li>
+  <li><a href="#lets-do-it-define-compute-p-values." id="toc-lets-do-it-define-compute-p-values." class="nav-link" data-scroll-target="#lets-do-it-define-compute-p-values.">2- Let’s do it: Define &amp; compute p-values.</a></li>
+  <li><a href="#maybe-theres-something-else-we-can-publish" id="toc-maybe-theres-something-else-we-can-publish" class="nav-link" data-scroll-target="#maybe-theres-something-else-we-can-publish">3- Maybe there’s something else we can publish?</a>
+  <ul class="collapse">
+  <li><a href="#but-are-we-sure" id="toc-but-are-we-sure" class="nav-link" data-scroll-target="#but-are-we-sure">But are we sure?</a></li>
+  <li><a href="#not-so-fast-visualize-always." id="toc-not-so-fast-visualize-always." class="nav-link" data-scroll-target="#not-so-fast-visualize-always.">4- Not so fast: visualize, always.</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Putting the p-value in Context</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Neuroscience researchers typically report p-values to express the strength of statistical evidence; but p-values are not sufficient on their own to understand the meaning and value of a scientific inference. In this unit, learners will learn how to interpret the p-value, how to express the size of an effect and uncertainty about a result, and how to interpret results at both the individual and population levels.</p>
+<div class="alert alert-block alert-danger">
+<p><b>Alert:</b> If you’re running this on <b>Google Colab</b>, then uncomment and run the next two cells.</p>
+</div>
+<div id="07d1c4fa-2969-419e-8d60-1e9075cb3076" class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !git clone https://github.com/Mark-Kramer/METER-Units.git</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="8658c043-55e3-4ef9-83e2-078809684b7b" class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import sys</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sys.path.insert(0,'/content/METER-Units')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="heres-some-data-give-me-the-ps" class="level1">
+<h1>1 - Here’s some data, give me the p’s!</h1>
+<div id="8ae7402f-3399-4340-a306-0c557f42893d" class="cell" data-tags="[]" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load modules</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pvalue_functions <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="alert alert-block alert-info">
+<p><em>Introduction</em>: - Your lab collects an EEG biomarker of memory (<a href="https://en.wikipedia.org/wiki/Sleep_spindle">sleep spindles</a>) from N=20 human subjects.</p>
+<ul>
+<li><p>ADD GRAPHICAL ELEMENTS</p></li>
+<li><p>To do so, your lab measures the <a href="https://mark-kramer.github.io/Case-Studies-Python/03.html">power</a> in the spindle band (9-15 Hz) twice per minute. Your lab has a <a href="https://mark-kramer.github.io/Case-Studies-Python/04.html#multitaper">reliable method</a> to detect spindle activity; this detector is known to be accurate outside of treatment. We expect it to still work during treatment, but we also expect more variability in the spindle power estimates (hence more variability in the detections) during treatment.</p></li>
+<li><p>Your lab measures spindle activity during three conditions:</p>
+<ul>
+<li><p><strong>Baseline</strong>: Data collection lasts 7 hours while the subject sleeps on an evening before the intervention. This results in 840 samples of spindle activity for each subject.</p></li>
+<li><p><strong>During Treatment</strong>: Data collection during a 15 minute intervention during sleep, resulting in 30 samples of spindle activity for each subject.</p></li>
+<li><p><strong>Post-treatment</strong>: Data collection after intervention lasts 7 hours, while the subject sleeps, resulting in 840 samples of spindle activity for each subject.</p></li>
+</ul></li>
+<li><p>Your PI says: <em>I want to know if there’s an effect of treatment in each human. <strong>Give me the p-values!</strong></em></p></li>
+</ul>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> What does the PI mean by <em>“Give me the p-values”</em>?</p>
+<p><strong>A:</strong> (Short answer)</p>
+<p>Example Learner Answers: 1. The PI wants the p-values from tests comparing spindle activity across conditions.<br>
+2. They mean to test if treatment significantly changed spindle power within each subject.<br>
+3. The PI is asking for p-values to determine if there’s a statistical effect of treatment.<br>
+4. It means running tests to see if spindle activity differs between Baseline, Treatment, and Post-treatment.<br>
+5. The PI wants statistical evidence to show treatment effects on spindle activity.</p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> For each scenario below, decide if it is appropriate to use a p-value to address the research question (answer yes or no).</p>
+<ol type="1">
+<li>Does the proportion of people who prefer brand A over brand B differ from 50%?<br>
+</li>
+<li>What is the exact average height of an adult giraffe in meters?<br>
+</li>
+<li>Does a new vaccine significantly reduce infection rates compared to the old vaccine?<br>
+</li>
+<li>How long does it take to completely drain a 50,000-gallon swimming pool?<br>
+</li>
+<li>Does changing the color of a website’s button increase user clicks statistically significantly?</li>
+</ol>
+<p><strong>A:</strong> 1. Yes, because we can statistically test if the proportion differs from 50%.<br>
+2. No, because we are looking for an exact value rather than testing a hypothesis.<br>
+3. Yes, because we can test if the new vaccine’s effect differs significantly from the old one.<br>
+4. No, because it’s a direct measurement rather than a hypothesis test.<br>
+5. Yes, because we can compare the click rates before and after the color change to see if the difference is statistically significant.</p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Have you ever computed a p-value (in software)?</p>
+<p><strong>A:</strong> (Survey)</p>
+</div>
+</section>
+<section id="lets-do-it-define-compute-p-values." class="level1">
+<h1>2- Let’s do it: Define &amp; compute p-values.</h1>
+<p>Let’s start by considering answers to these two questions:</p>
+<section id="what-does-a-p-value-test" class="level4">
+<h4 class="anchored" data-anchor-id="what-does-a-p-value-test">What does a p-value test?</h4>
+<ul>
+<li>CENTER: Help make a graphic for this?</li>
+</ul>
+<p>Sometimes statisticians think backwards. We’d like to know how the spindle activity changes relative to baseline. To test this, we’ll start by assuming the opposite: we’ll hypothesize that the spindle activity does not change. This is called the <strong>null hypothesis</strong>. The p-value indicates how much evidence we have to reject the null hypothesis given the data we observe. It’s like a measure of surprise. If we’re surprised by the observed data, then we’ll reject the null hypothesis, and conclude we have evidence that the spindle activity changes relative to baseline.</p>
+<p>Alternatively, if we’re not surprised by the observed data, then we’ll conclude that we lack sufficient evidence to reject the null hypothesis. There’s an important subtely here that statisicians like to point out - when we’re testing this way, we never accept the null hypothesis. Instead, the best we can do is talk like a statistican and say things like “we fail to reject the null hypothesis”.</p>
+</section>
+<section id="what-does-p0.05-mean" class="level4">
+<h4 class="anchored" data-anchor-id="what-does-p0.05-mean">What does p&lt;0.05 mean?</h4>
+<p>The probability of observing the data, or something more extreme, under the null hypothesis is less than 5%. This is typically considered sufficient evidence to reject the null hypothesis in favor of the alternative hypothesis (which posits that there is an effect or a difference). In other words, a p-value less than 0.05 suggests that the observed data is unlikely to have occurred by random chance alone, assuming the null hypothesis is true, leading researchers to reject the null hypothesis.</p>
+<p>Let’s now return to the human data. First, let’s consider the null hypothesis the PI wants to test.</p>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> The PI says <em>“I expect that during treatment the spindle activity exceeds the baseline spindle activity.”</em> What is the null hypothesis?</p>
+<p><strong>A:</strong> (Multiple Choice)</p>
+<p>Wrong answer: The average spindle activity during treatment is guaranteed to be higher than baseline.</p>
+<p>Wrong answer: The average spindle activity during treatment is guaranteed to be lower than baseline.</p>
+<p>Wrong answer: A difference in average spindle activity exists between treatment and baseline.</p>
+<p>Correct answer: No difference in average spindle activity exists between treatment and baseline.</p>
+</div>
+<p>Now, let’s load the data and compute the p-values.</p>
+<div id="33807648-6ab3-48ef-aa85-6f1ebc080206" class="cell" data-tags="[]" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>baseline, during_treatment, post_treatment <span class="op">=</span> load_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s start by investigating the structure of the data.</p>
+<div id="e581a977-88b6-42f8-9dcc-302e78b5cf4c" class="cell" data-tags="[]">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(baseline.shape)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(during_treatment.shape)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(post_treatment.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All three variables consist of observations from 20 subjects (the number of columns). We collect 30 samples during treatment and 840 samples at baseline (i.e., before treatment) and after treatment; this is the the number of rows for each variable.</p>
+<p>You might think of these variables as rectangles (or matrices), where each row indicates a sample of spindle activity, and each column indicates a subject:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="IMG_Pvalue/simple_boxes_during_and_post.jpg" class="img-fluid figure-img"></p>
+<figcaption>title</figcaption>
+</figure>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Look at the representations of the data above. What differs about the data during treatment, compared to baseline and post-treatment?</p>
+<p><strong>A:</strong> (Multiple Choice)</p>
+<p>Wrong answer: There are fewer subjects during treatment.</p>
+<p>Correct answer: There are fewer samples during treatment.</p>
+</div>
+<p>To get a sense for the the data, let’s plot the spindle activitys during <code>baseline</code> for one subject:</p>
+<div id="1df1308b-4818-46d3-ba3f-6ec9239d842b" class="cell" data-tags="[]" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">25</span>,<span class="dv">10</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(baseline[:,<span class="dv">0</span>])<span class="op">;</span> ax[<span class="dv">0</span>].set_xlim([<span class="dv">0</span>,<span class="dv">850</span>])<span class="op">;</span> ax[<span class="dv">0</span>].set_ylim([<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>])<span class="op">;</span> ax[<span class="dv">0</span>].set_title(<span class="st">'Baseline'</span>)<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(during_treatment[:,<span class="dv">0</span>])<span class="op">;</span> ax[<span class="dv">1</span>].set_xlim([<span class="dv">0</span>,<span class="dv">850</span>])<span class="op">;</span> ax[<span class="dv">1</span>].set_ylim([<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>])<span class="op">;</span> ax[<span class="dv">1</span>].set_title(<span class="st">'During Treatment'</span>)<span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].plot(post_treatment[:,<span class="dv">0</span>])<span class="op">;</span> ax[<span class="dv">2</span>].set_xlim([<span class="dv">0</span>,<span class="dv">850</span>])<span class="op">;</span> ax[<span class="dv">2</span>].set_ylim([<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>])<span class="op">;</span> ax[<span class="dv">2</span>].set_title(<span class="st">'Post-Treatment'</span>)<span class="op">;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Samples'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Spindle activity'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="METER_P_Values-01-08-2025_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> What values do you observe for the spindle activity?</p>
+<p><strong>A:</strong> The values tend to fluctuate around 0, and can be both positive and negative. Here, the spindle activity has been z-scored during each recording interval relative to baseline. So, the values we observe indicate changes relative to the mean baseline spindle activity; positive (negative) values indicate increases (decreases) in spindle activity relative to the baseline activity.</p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> What differences or similarites do you notice in spindle activity in baseline, during treatment, and post-treatment?</p>
+<p><strong>A:</strong> Similarities: - All fluctuate around 0. This makes sense because all values are normalized relative to the mean baseline spindle activity.</p>
+<p>Differences: - During treatment there are fewer samples. - During treatment, the fluctuations are bigger (the data is “noiser”).</p>
+</div>
+<p>Let’s now compute the p-values <code>during treatment</code>. That’s the item of primary scientific interest in our study.</p>
+<p>To do so, we’ll start by assuming the <strong>null hypothesis of no difference in spindle rate during treatment</strong>.</p>
+<p>Because we’ve subtracted the baseline spindle rate, the null hypothesis becomes:</p>
+<p><strong>Null hypothesis</strong>: Mean spindle rate during treatment = 0</p>
+<div id="ad44f68c-e810-4c95-979e-98525c9a38f8" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> create_dropdown_compute_pvalues(during_treatment)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"2ffb986c4f624d058ea9f05511debc5d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"724364bd80d44e089d30105caddf2d21","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+<div id="642cb5eb-a771-4489-989f-ca4baa905d5b" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract data from dropdown.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>p_value_during <span class="op">=</span> results[<span class="st">'p_value'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The list above consists of 20 p-values, one for each subject.</p>
+<p>Remember that each p-value indicates the probability of observing the data, or something more extreme, under the null hypothesis that the mean spindle rate during treatment is 0.</p>
+<p>Let’s investigate the shape of these results:</p>
+<div id="0ebc8860-3292-41bf-aa9a-06e61bf9a16e" class="cell" data-tags="[]" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p_value_during.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(20,)</code></pre>
+</div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Do these shapes make sense?</p>
+<p><strong>A:</strong> Yes, there’s one p-value per subject, and we have 20 subjects.</p>
+</div>
+<p>Let’s print the p-values for each subject:</p>
+<div id="e43ff967-7db5-4301-b62d-90033fbe57c6" class="cell" data-tags="[]" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Subject '</span>, k, <span class="st">', p='</span>, np.array2string(p_value_during[k], precision<span class="op">=</span><span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Subject  0 , p= 0.51764
+Subject  1 , p= 0.88867
+Subject  2 , p= 0.63339
+Subject  3 , p= 0.22295
+Subject  4 , p= 0.00638
+Subject  5 , p= 0.30963
+Subject  6 , p= 0.01242
+Subject  7 , p= 0.99443
+Subject  8 , p= 0.08998
+Subject  9 , p= 0.26046
+Subject  10 , p= 0.07091
+Subject  11 , p= 0.13959
+Subject  12 , p= 0.01699
+Subject  13 , p= 0.11679
+Subject  14 , p= 0.19091
+Subject  15 , p= 0.734
+Subject  16 , p= 0.30088
+Subject  17 , p= 0.46395
+Subject  18 , p= 0.04994
+Subject  19 , p= 0.29267</code></pre>
+</div>
+</div>
+<p>Let’s also plot the p-values:</p>
+<div id="5783096b-96d5-4283-8f5b-d26e40cf1681" class="cell" data-tags="[]" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the p-values during treatment</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_during)<span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'During Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="METER_P_Values-01-08-2025_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Interpert the print-out and plots of p-values. What do you see?</p>
+<p><strong>A:</strong> The p-values tend to exceed 0.05 (red dashed line in the figure), although a few subjects have p&lt;0.05.</p>
+</div>
+<p><strong>Now, do we have evidence to reject the null hypothesis?</strong></p>
+<p>Maybe … if we had performed one statistical test, then we typically reject the null hypothesis if</p>
+<p><code>p &lt; 0.05</code></p>
+<p>But here we compute 20 test (one for each subject).</p>
+<p>When we perform multiple tests, it’s important we consider the impact of <strong>multiple comparisons</strong>. We cover this topic in detail in the <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb">Multiplicity Unit</a>.</p>
+<p>Here we’ll chose a specific appraoch to deal with multiplicity - we’ll apply a <strong>Bonferroni correction</strong>. The Bonferroni correction reduces the Type I error rate by dividing the desired overall significance level (here 0.05) by the number of tests performed (here 20). Stated simply, the Bonferroni test adjusts the significance level by dividing it by the number of comparisons. Doing so reduces the risk of Type I errors (false positives). For more information, see <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb">Multiplicity Unit</a>.</p>
+<p>So, for our analysis of the p-values from 20 subjects, let’s compare the p-values to a stricter threshold of</p>
+<p><code>p &lt; 0.05 / 20</code> or <code>p &lt; 0.0025</code></p>
+<p>Let’s plot the p-values versus this new threhsold.</p>
+<div id="d4ef734d-b387-49b9-87f4-2a57eedc6873" class="cell" data-tags="[]" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the p-values during treatment</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_during)<span class="op">;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'During Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Significant p-values during treatment = '</span>,np.<span class="bu">sum</span>(p_value_during <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Significant p-values during treatment =  0</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="METER_P_Values-01-08-2025_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> After the Bonferroni correction, can we reject the null hypothesis for any subject?</p>
+<p><strong>A:</strong> No.&nbsp;None of the p-values are less than 0.05/20.</p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> The PI requested <em>“Give me the p’s!”</em>. Do you have evidence to reject the null hypothesis during treatment?</p>
+<p><strong>A:</strong> No! Because the p-values are large, we find no evidence to reject the null hypothesis for any subject.</p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> We do not find any p-values that pass our significance threshold during treatment. Does this mean that the spindle activity during treatment does not change relative to baseline?</p>
+<p><strong>A:</strong> No! We never accept the null hypothesis. Remember we have to talk like a statistician. Instead, we say:</p>
+<p><em>“We fail to reject the null hypothesis that the spindle activity during treatment differs from baseline.”</em></p>
+</div>
+<div class="alert alert-block alert-danger">
+<p><b>Summary:</b> We’ve computed p-values testing the null hypothesis:</p>
+<ul>
+<li>that the spindle activity during treatment = 0.</li>
+</ul>
+We’ve done this for each subject. Our intial results suggest provide <strong>no evidence</strong> that we can reject the null hypothesis during treatment.
+<p></p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Before finishing this Mini, let’s review:</p>
+<ol type="1">
+<li>What is the scientific question we’re seeking to answer? (Multiple Choice)</li>
+<li>What statistical approach did we use to answer that question? (Multiple Choice)</li>
+</ol>
+<p><strong>A:</strong> 1. Does the spindle activity during treatment differ from the baseline spindle activity?</p>
+<ol start="2" type="1">
+<li>To answer this question, we assumed a null hypothesis of no difference in spindle activity during treatment compared to 0. We then tested this null hypothsis for each subject, and computed a p-value. We rejected the null hypothesis if the p-value was small enough. Notice that, in doing so, we compute a p-value to provide a yes/no answer to the question: do we have evidence that the spindle activity during treatment differs from 0?</li>
+</ol>
+</div>
+</section>
+</section>
+<section id="maybe-theres-something-else-we-can-publish" class="level1">
+<h1>3- Maybe there’s something else we can publish?</h1>
+<p>The results in Mini 2 are discouraging; we find no evidence of a change in spindle activity from baseline during treatment.</p>
+<p>That’s discouraging, so the PI asks we continue to <strong>continue exploring the data</strong>.</p>
+<p>Data exploration is common in neuroscience. In general, as a practicing neuroscientist, it’s fine to explore your data for interesting features.</p>
+<p>However, if you do, it’s important to make it clear in any future reporting of the results.</p>
+<p>Let’s begin our explorationg by investigating the change in spindle activity <code>post-treatment</code>.</p>
+<p>We do <em>not</em> expect a change in spindle activity post-treatment, compared to baseline.</p>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Given this expectation, how can we test it?</p>
+<p><strong>A:</strong> Let’s make the null hypothesis:</p>
+<p><strong>Null hypothesis</strong>: Mean spindle activity post-treatment = 0</p>
+<p>Remeber, we’ve subtracted the baseline spindle activity from the post-treatment value. So, no change in spindle activity post-treatment would result in values the fluctuate around 0.</p>
+</div>
+<div class="alert alert-block alert-danger">
+<p><b>Alert:</b></p>
+<p>We’re embarking on exploratory data analysis after our initial hypothesis failed.</p>
+Exploratory analysis is fine, we just need to be careful about our approach and how we present our results. For more details, check out the <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb">Multiplicity Unit</a>.
+<p></p>
+</div>
+<p>Now, let’s repeat the analysis in Mini 2, but now examining the <code>post-treatment</code> spindle activity.</p>
+<div id="a444cd5f-fd71-4c33-abcd-8c16df923934" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> create_dropdown_compute_pvalues(post_treatment)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f2076c2ee1124a7a86d902d747cae7a8","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"81da5f8a19d548ec872b0dabd703ab3d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+<div id="b162d955-3a26-4923-a948-6e69d03e5fa0" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract data from dropdown.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p_value_post <span class="op">=</span> results[<span class="st">'p_value'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s print and plot the p-values for each subject:</p>
+<div id="d621da51-5ef8-47a0-8ce8-d2cdac948fce" class="cell" data-tags="[]" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Subject '</span>, k, <span class="st">', p='</span>, np.array2string(p_value_post[k], precision<span class="op">=</span><span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Subject  0 , p= 7.0968e-05
+Subject  1 , p= 6.84004e-07
+Subject  2 , p= 0.02359
+Subject  3 , p= 7.58302e-05
+Subject  4 , p= 4.28276e-05
+Subject  5 , p= 0.17057
+Subject  6 , p= 0.01569
+Subject  7 , p= 0.00628
+Subject  8 , p= 0.00911
+Subject  9 , p= 0.23845
+Subject  10 , p= 0.02688
+Subject  11 , p= 0.00011
+Subject  12 , p= 0.00011
+Subject  13 , p= 0.41621
+Subject  14 , p= 1.94807e-06
+Subject  15 , p= 0.68545
+Subject  16 , p= 0.00059
+Subject  17 , p= 0.03251
+Subject  18 , p= 0.00193
+Subject  19 , p= 0.01037</code></pre>
+</div>
+</div>
+<div id="ace419aa-59f6-4bf4-b41e-57209899c307" class="cell" data-tags="[]" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the p-values post-treatment</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_post)<span class="op">;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'Post-Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="METER_P_Values-01-08-2025_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s again correct for multiple compariosns (we’ve computed 20 p-values, one from each subject) using a Bonferroni correction.</p>
+<div id="62223ffb-098d-4eb2-a959-125ecb2aac4f" class="cell" data-tags="[]" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_post)<span class="op">;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'Post-Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Significant p-values post-treatment = '</span>,np.<span class="bu">sum</span>(p_value_post <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Significant p-values post-treatment =  9</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="METER_P_Values-01-08-2025_files/figure-html/cell-18-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Compare these two sets of p-values, calculated during treatment (Mini 2) and post-treatment. What does it mean?</p>
+<p><strong>A:</strong> Look at how small the p-values are post-treatment!</p>
+<p>9 p-values post-treatment are less than 0.05/20, the Bonferroni corrected p-value threshold.</p>
+<p>Notice that, during treatment, the p-values are much larger, and we find no p-values less than 0.05/20.</p>
+<p>We find many more significant p-values post-treatment (9 out of 20, after Bonferroni correction).</p>
+</div>
+<p>Our results <strong>seem</strong> to reveal a new conclusion:</p>
+<ul>
+<li>In Mini 2, we found no evidence of a change in spindle activity <code>during treatment</code>.</li>
+<li>In this Mini, we find many very small p-values (less than 0.05/20) <code>post-treatment</code>, and evidence a significant change in spindle activity post-treatment in 9/20 subjects.</li>
+</ul>
+<p>The PI is very excited with our progress, as these results upend the literature.</p>
+<p>The PI drafts the title for a high-impact paper:</p>
+<section id="post-treatment-paradox-clear-human-responses-despite-absence-of-treatment-effect" class="level4">
+<h4 class="anchored" data-anchor-id="post-treatment-paradox-clear-human-responses-despite-absence-of-treatment-effect"><em>“Post-Treatment Paradox: Clear Human Responses, Despite Absence of Treatment Effect”</em></h4>
+</section>
+<section id="but-are-we-sure" class="level2">
+<h2 class="anchored" data-anchor-id="but-are-we-sure">But are we sure?</h2>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Review the characteristics of the during and post-treatment data (Mini 1). How might these characteristics impact the p-values?</p>
+<p><strong>A:</strong> This is a very important question … and we’re not going to answer it yet.</p>
+<p>But here’s a hint: notice that we collect many more samples post-treatment, compared to during treatment. I wonder how this might impact our p-value comparisons …</p>
+</div>
+<div class="alert alert-block alert-danger">
+<p><b>Alert: Wait, I’m not so sure … </b></p>
+<p></p>
+<ul>
+<li><p>Why is the word <em>seem</em> in bold?</p></li>
+<li><p>Why did you ask me to review the characteristics of the data, and think about how this might impact the data?</p></li>
+</ul>
+</div>
+<div class="alert alert-block alert-info">
+<p><em>Moment of tension</em>:</p>
+<ul>
+<li>Hook the learner - “something isn’t right and I want to know why.”</li>
+</ul>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> EXTENSION EXERCISE: We’ve examined the spindle activity during <code>treatment</code> and <code>post-treatment</code>. How would you test the null hypothesis of spindle activity = 0 during the <code>baseline</code> condition?</p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Before finishing this Mini, let’s review:</p>
+<ol type="1">
+<li>What is the scientific question we originally sought to answer (Mini 2)? (Multiple Choice)</li>
+<li>What is the scientific question we answered in this Mini? (Multiple Choice)</li>
+<li>What statistical approach did we use to answer this scientific question? (Multiple Choice)</li>
+</ol>
+<p><strong>A:</strong> 1. Does the spindle activity <strong>during treatment</strong> differ from the baseline spindle activity?</p>
+<ol start="2" type="1">
+<li><p>Does the spindle activity <strong>post-treatment</strong> differ from the baseline spindle activity?</p></li>
+<li><p>To answer the scientific question in this Mini, we assumed a null hypothesis of no difference in spindle activity post-treatment compared to 0. We then tested this null hypothsis for each subject, and computed a p-value. We rejected the null hypothesis if the p-value was small enough. Notice that, in doing so, we computed a p-value to provide a yes/no answer to the question: do we have evidence that the spindle activity during post-treatment differs from 0?</p></li>
+</ol>
+</div>
+</section>
+<section id="not-so-fast-visualize-always." class="level2">
+<h2 class="anchored" data-anchor-id="not-so-fast-visualize-always.">4- Not so fast: visualize, always.</h2>
+<p>We may have found an interesting result: a lower spindle activity post-treatment, but no effect during treatment.</p>
+<p>To do so, we analyzed and compared p-values, testing specific null hypotheses.</p>
+<p>We’ve hinted above that something isn’t right … let’s now dive in and identify where we went wrong.</p>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Let’s remember - what was the original scientific question we wanted to test?</p>
+<p><strong>A:</strong> Does the spindle activity <strong>during treatment</strong> differ from the baseline spindle activity?</p>
+<p><strong>Q:</strong> How did we test this original scientific question?</p>
+<p><strong>A:</strong> We computed p-values to test the null hypothesis of no difference in spindle rate during treatment from 0.</p>
+</div>
+<p>Our initial hypothesis “failed” … the p-values were too big.</p>
+<p>So, we investigated the spindle activity post-treatment.</p>
+<p>We applied the same strategy of computing p-values to test the null hypothesis that the spindle activity is 0.</p>
+<p><strong>We have focused (almost exclusively) on p-values.</strong></p>
+<p>Let’s again plot the p-values during and post-treatment:</p>
+<div id="7499ccc0-b925-4f97-bb69-8e236112523b" class="cell" data-tags="[]">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>l1 <span class="op">=</span> plt.stem(p_value_during, <span class="st">'or'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>l2 <span class="op">=</span> plt.stem(p_value_post, <span class="st">'ob'</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>,<span class="dv">20</span>))<span class="op">;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'During Treatment (red), Post-treatment (blue)'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> For each subject, compare the p-values during treatment (red) versus post-treatment (blue). What do you observe?</p>
+<p><strong>A:</strong> We oberve a post-treatment effect in many subjects (the p-value is small), but not during treatment (the p-value is big).</p>
+</div>
+<p>So far, we’ve used the spindle measurements to compute p-values.</p>
+<p><strong>But, we’ve almost completely ignored the spindle measurements themselves!</strong></p>
+<p>Now, let’s return to the spindle measurements and look at those values directly.</p>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Given our analysis of the p-values, how do you expect the spindle measurements behave during treatment and post-treatment?</p>
+<p><strong>A:</strong> - Because we do not find significnat p-values during treatment, I expect these values to appear near 0. - Because we do find significnt p-values post-treatment, I expect these values to differ from 0.</p>
+</div>
+<div id="68b366be-8767-4eae-8edb-91fc65898507" class="cell" data-tags="[]">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    plt.plot(np.tile(k,(<span class="dv">840</span>,<span class="dv">1</span>))<span class="op">-</span><span class="fl">0.25</span>, baseline[:,k], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    plt.plot(np.tile(k,(<span class="dv">30</span>,<span class="dv">1</span>)), during_treatment[:,k], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(np.tile(k,(<span class="dv">840</span>,<span class="dv">1</span>))<span class="op">+</span><span class="fl">0.25</span>, post_treatment[:,k], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'b'</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Spindle activity'</span>)<span class="op">;</span> plt.title(<span class="st">'Baseline (black), During Treatment (red), Post-Treatment (blue)'</span>)<span class="op">;</span> <span class="co">#plt.ylim([0,1]);</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>,<span class="dv">20</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Looking at the plots of spindle measurements, what do you observe? More specifically: 1. Do you observe an effect during treatment? 2. Do you obesrve an effect post-treatment? 3. Are these plots consistent with you p-value results?</p>
+<p><strong>A:</strong> 1. Yes, sort of … the spindle measurements during treatment appear larger than post-treatment. How can that be if the p-values are big? 2. Not really … because we find significant p-values post-treatment, I expect these values to differ from 0 and from the distribution of baseline values. But I don’t see that here … 3. Not really … we concluded that there’s an effect post-treamtnet, but not during treatment. However, these plots of spindle measurements aren’t consistent with our conclusions.</p>
+</div>
+<p>It’s nice to visualize all of the data, but doing so can also be overwhelming.</p>
+<p>Let’s summarize the spindle measurements in for each subject by ploting the <a href="https://mark-kramer.github.io/Case-Studies-Python/02.html#cis-m1">mean and the standard error of the mean</a>.</p>
+<div id="d38c27e8-6e14-4e4e-80f6-d39cb4248cff" class="cell" data-tags="[]">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    mn <span class="op">=</span> np.mean(baseline[:,k])<span class="op">;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    sd <span class="op">=</span> np.std( baseline[:,k])<span class="op">;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    K  <span class="op">=</span> np.shape(baseline)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(k<span class="op">-</span><span class="fl">0.2</span>, mn, <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    plt.plot([k<span class="op">-</span><span class="fl">0.2</span>,k<span class="op">-</span><span class="fl">0.2</span>], [mn<span class="op">-</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K), mn<span class="op">+</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K)], color<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    mn <span class="op">=</span> np.mean(during_treatment[:,k])<span class="op">;</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    sd <span class="op">=</span> np.std( during_treatment[:,k])<span class="op">;</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    K  <span class="op">=</span> np.shape(during_treatment)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    plt.plot(k, mn, <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    plt.plot([k,k], [mn<span class="op">-</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K), mn<span class="op">+</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K)], color<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    mn <span class="op">=</span> np.mean(post_treatment[:,k])<span class="op">;</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    sd <span class="op">=</span> np.std( post_treatment[:,k])<span class="op">;</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    K  <span class="op">=</span> np.shape(post_treatment)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    plt.plot(k<span class="op">+</span><span class="fl">0.2</span>, mn, <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'b'</span>)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    plt.plot([k<span class="op">+</span><span class="fl">0.2</span>,k<span class="op">+</span><span class="fl">0.2</span>], [mn<span class="op">-</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K), mn<span class="op">+</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K)], color<span class="op">=</span><span class="st">'b'</span>)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Spindle activity'</span>)<span class="op">;</span> plt.title(<span class="st">'Baseline (black), During Treatment (red), Post-Treatment (blue)'</span>)<span class="op">;</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>,<span class="dv">20</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Looking at the summary plots of spindle measurement means and standard error of the means for each subject, what do you observe? More specifically: 1. Do you observe an effect during treatment? 2. Do you obesrve an effect post-treatment? 3. Are these plots consistent with you p-value results?</p>
+<p><strong>A:</strong> 1. Yes … the spindle measurements during treatment appear larger than post-treatment. How can that be if the p-values are big during treatement? 2. Not really … because we find significnt p-values post-treatment, I expect these values to differ from 0. But I don’t see that here, the black and blue dots appear to overlap near 0 … 3. Not really … we concluded that there’s an effect post-treatment, but not during treatment. However, these plots of spindle measurements aren’t consistent with our conclusions.</p>
+</div>
+<p>Let’s summarize what we’ve found so far:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>State</th>
+<th>p-values</th>
+<th>spindle activity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>During treatment</td>
+<td>p&gt;0.05/20 (not significant)</td>
+<td>mean spindle activity &gt; 0</td>
+</tr>
+<tr class="even">
+<td>Post-treatment</td>
+<td>p&lt;&lt;0.05/20 (signficiant)</td>
+<td>mean spindle activity <span class="math inline">\(\approx\)</span> 0.</td>
+</tr>
+</tbody>
+</table>
+<p>Something’s not adding up here …</p>
+<p>Looking at the spindle activity plots, we observe:</p>
+<ul>
+<li>the mean spindle activity during treatment often exceeds the mean spindle activity at baseline.</li>
+</ul>
+<p><strong>That’s the oppostive conclusion we made from the p-values!</strong></p>
+<p>Hmm … we better think carefully about the paper title …</p>
+<div class="alert alert-block alert-danger">
+<p><b>Alert:</b> We’re made multiple statistial errors:</p>
+<ul>
+<li><p>Compared p-values</p></li>
+<li><p>Exploratory analysis</p></li>
+</ul>
+<p></p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Why do the spindle activities during treatment exceed the baseline spindle activity, but p&gt;0.05? And, why are the post-treatment spindle activities so near the baseline spindle activity, but p&lt;&lt;0.05?</p>
+<p><strong>A:</strong> The p-value measures the <strong>strength of evidence</strong> against the null hypothesis.</p>
+</div>
+<p>Two things impact the strength of evidence: - the effect size (i.e., the values of the spindle activity). - the number of observations</p>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> How do the number of observations differ during treatment versus post-treatment? How might this impact the results?</p>
+<p><strong>A:</strong> - We have many more observations post-treatment. Therefore, we can accumulate enough evidence to detect a weak effect post-treatment. - We have few observations during treatment. Therefore, even though the effect is strong, we don’t have enough evidence to declare an effect during treatment.</p>
+</div>
+<div class="alert alert-block alert-danger">
+<p><strong>Conclusion / Summary / Morale:</strong></p>
+<p>We began with the scientific statement:</p>
+<p><em>“I expect that during treatment the spindle activity exceeds the baseline spindle activity.”</em></p>
+<p>Our initial approach focused on computing and comparing p-values. That’s a bad idea. We’re not as interested in comparing the evidence we have for each null-hypothesis (the p-value); that depends on both the effect size and the number of observations.</p>
+<p>Instead, we’re more interested in comparing the spindle activity between condidtions. In other words, we’re intested in the effect size, not the p-value.</p>
+<p>This suggests a different analysis path forward for an improved approach. We can answer the same scienfitic question by comparing the spindle activitys beteween conditions, not the p-values. We’ve started to see this in the plots of spindle activity at baseline, during treatment, and post-treatment. For more analysis (e.g., different statistical test and effect size) continue on to other Minis.</p>
+<section id="a-different-test-a-different-result." class="level2">
+<h2 class="anchored" data-anchor-id="a-different-test-a-different-result.">5- A different test … a different result.</h2>
+<p>Originally (in Mini 2), we considered the null hypothesis:</p>
+<ul>
+<li>No difference in mean spindle activity during treatment <strong>from 0</strong>.</li>
+</ul>
+<p>Let’s now consider <strong>a different null hypothesis</strong>:</p>
+<ul>
+<li>No difference in mean spindle activity during treatment <strong>versus baseline</strong>.</li>
+</ul>
+<p>To test this null hypothesis, we’ll apply a different test:</p>
+<ul>
+<li>a subject specific two-sample t-test.</li>
+</ul>
+<div id="a50f0566-35f6-4fda-965d-852a35714276" class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> stats.ttest_ind(baseline, during_treatment, alternative<span class="op">=</span><span class="st">'less'</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>p_value_baseline_vs_during <span class="op">=</span> result.pvalue</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Subject '</span>, k, <span class="st">', p='</span>, np.array2string(p_value_baseline_vs_during[k], precision<span class="op">=</span><span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1effa9e7-5c15-434e-800b-5fe5cc56a50d" class="cell" data-tags="[]">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_baseline_vs_during)<span class="op">;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'Baseline versus During Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Significant p-values during treatment = '</span>,np.<span class="bu">sum</span>(p_value_baseline_vs_during <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Interpret these p-value results in terms of the null hypothesis.</p>
+<p><strong>A:</strong> We conclude that, in most cases, we reject the null hypothesis of no difference in spindle activity between baseline versus during treatment. We conclude that the spindle activity is higher during treatment compared to baseline in most subjects (14/20).</p>
+</div>
+<div class="alert alert-block alert-success">
+<p><strong>Q:</strong> Compare the results of these tests for each human to the results in Mini 2.</p>
+<p><strong>A:</strong> In Mini 2, we computed p-values during treatment versus 0. Now, we compute p-values during treatment versus baseline. These are different tests. The latter tests more directly our scientific question.</p>
+</div>
+</section>
+<section id="so-what-went-wrong" class="level2">
+<h2 class="anchored" data-anchor-id="so-what-went-wrong">6- So, what went wrong?</h2>
+<p>What is the scientifc question we’re actually trying to answer?</p>
+<p>(PENDING): effect-size</p>
+<p>(REVIEW): Two things impact the strength of evidence: - the effect size (i.e., the values of the spindle activity). - the number of observations</p>
+</section>
+<section id="one-test-to-rule-them-all-an-omnibus-test." class="level2">
+<h2 class="anchored" data-anchor-id="one-test-to-rule-them-all-an-omnibus-test.">7- One test to rule them all: an omnibus test.</h2>
+<p>(PENDING)</p>
+</section>
+<section id="beyond-p-values-estimate-what-you-care-about." class="level2">
+<h2 class="anchored" data-anchor-id="beyond-p-values-estimate-what-you-care-about.">8- Beyond p-values: estimate what you care about.</h2>
+<p>(PENDING): estimate effect size during &amp; post, and compare.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">9- Summary</h2>
+
+
+</section>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
