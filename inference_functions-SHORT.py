@@ -37,7 +37,7 @@ def compute_residuals_3d(swim_lessons, drownings, distance_from_ocean):
     return residuals
 
 def plot_spatial_coordinates(x, y, colors):
-    #import plotly.graph_objects as go
+    import plotly.graph_objects as go
 
     # Example x-y coordinates
     x_coordinates = x
