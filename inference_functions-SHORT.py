@@ -95,7 +95,7 @@ def plot_line(swim_lessons, drownings):
     plt.ylabel('Drownings')
     plt.show()
 
-def plot_line_with_residuals(swim_lessons, drownings)
+def plot_line_with_residuals(swim_lessons, drownings):
     
     from statsmodels.formula.api import ols                    # import the required module
     dat                = {"x": swim_lessons, "y": drownings}   # define the predictor "x" and outcome "y"
