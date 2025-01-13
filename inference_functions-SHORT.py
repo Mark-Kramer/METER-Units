@@ -94,3 +94,28 @@ def plot_line(swim_lessons, drownings):
     plt.xlabel('Swim lessons')
     plt.ylabel('Drownings')
     plt.show()
+
+def plot_line_with_residuals(swim_lessons, drownings)
+    
+    from statsmodels.formula.api import ols                    # import the required module
+    dat                = {"x": swim_lessons, "y": drownings}   # define the predictor "x" and outcome "y"
+    regression_results = ols("y ~ 1 + x", data=dat).fit()      # fit the model.
+    
+    # Get model prediction.
+    pred   = regression_results.get_prediction().summary_frame()
+    mn     = pred['mean']
+    
+    # And plot it.
+    indices_sorted = np.argsort(swim_lessons,0)
+    plt.figure(figsize=(6, 4))
+    plt.scatter(swim_lessons,drownings)
+    plt.plot(swim_lessons[indices_sorted],mn[indices_sorted], 'r')
+    plt.xlabel('Swim lessons')
+    plt.ylabel('Drownings')
+    
+    # Draw orange lines from each data point to the regression line
+    for i in range(len(swim_lessons)):
+        plt.plot([swim_lessons[i], swim_lessons[i]],  # x-coordinates
+                 [drownings[i], mn[i]],              # y-coordinates
+                 color='orange', linestyle='--', linewidth=0.8, zorder=0)
+    plt.show()
