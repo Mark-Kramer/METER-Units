@@ -38,6 +38,7 @@ def compute_residuals_3d(swim_lessons, drownings, distance_from_ocean):
 
 def plot_spatial_coordinates(x, y, colors):
 
+    await micropip.install("cartopy")
     import cartopy.crs as ccrs
     import cartopy.feature as cfeature
     import numpy as np
