@@ -35,3 +35,42 @@ def compute_residuals_3d(swim_lessons, drownings, distance_from_ocean):
     regression_results = ols("y ~1 + w + x", data=dat).fit()
     residuals = regression_results.resid
     return residuals
+
+def plot_spatial_coordinates(xy, colors):
+    #import plotly.graph_objects as go
+
+    # Example x-y coordinates
+    x_coordinates = xy[:,1]
+    y_coordinates = xy[:,0]
+    # Create a scattermapbox trace
+    trace = go.Scattermapbox(
+        lat=y_coordinates,
+        lon=x_coordinates,
+        mode='markers',
+        marker=dict(
+            size=10,
+            color=colors, #residuals.to_numpy(),
+            colorscale='RdYlBu',  # Choose a colorscale (Red-Blue in this case)
+            cmin=-0.25, #min(residuals.to_numpy()),
+            cmax= 0.25, #max(residuals.to_numpy()),
+            colorbar=dict(title='Variable'),
+            opacity=0.6
+        ),
+    )
+
+    # Define the layout for the map
+    layout = go.Layout(
+        mapbox=dict(
+            center=dict(lat=sum(y_coordinates)/len(y_coordinates), lon=sum(x_coordinates)/len(x_coordinates)),
+            zoom=9,
+            style='open-street-map'  # You can change the map style
+        ),
+        title='X-Y Coordinates on Map'
+    )
+    
+    # Create the figure
+    fig = go.Figure(data=[trace], layout=layout)
+    fig.update_layout(width=800, height=600)
+    
+    # Show the plot
+    fig.show();
