@@ -3,6 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 import statsmodels.api as sm
+from statsmodels.formula.api import ols
+await micropip.install("cartopy")
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 def load_data():
     import pandas as pd
@@ -37,11 +41,6 @@ def compute_residuals_3d(swim_lessons, drownings, distance_from_ocean):
     return residuals
 
 def plot_spatial_coordinates(x, y, colors):
-
-    await micropip.install("cartopy")
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    import numpy as np
     # Create a figure
     plt.figure(figsize=(10, 8))
     
@@ -70,7 +69,6 @@ def plot_spatial_coordinates(x, y, colors):
     plt.show()
 
 def estimate_line(swim_lessons, drownings):
-    from statsmodels.formula.api import ols                    # import the required module
     dat                = {"x": swim_lessons, "y": drownings}   # define the predictor "x" and outcome "y"
     regression_results = ols("y ~ 1 + x", data=dat).fit()      # fit the model.
     m                = regression_results.params[1]
