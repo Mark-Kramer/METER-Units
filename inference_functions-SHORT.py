@@ -68,3 +68,11 @@ def plot_spatial_coordinates(x, y, colors):
     
     # Show the plot
     plt.show()
+
+def estimate_line(swim_lessons, drownings):
+    from statsmodels.formula.api import ols                    # import the required module
+    dat                = {"x": swim_lessons, "y": drownings}   # define the predictor "x" and outcome "y"
+    regression_results = ols("y ~ 1 + x", data=dat).fit()      # fit the model.
+    m                = regression_results.params[1]
+    m_standard_error = regression_results.bse[1]
+    return m, m_standard_error
