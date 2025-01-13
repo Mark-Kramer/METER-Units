@@ -71,3 +71,26 @@ def estimate_line(swim_lessons, drownings):
     m                = regression_results.params[1]
     m_standard_error = regression_results.bse[1]
     return m, m_standard_error
+
+def plot_line(swim_lessons, drownings):
+    
+    from statsmodels.formula.api import ols                    # import the required module
+    dat                = {"x": swim_lessons, "y": drownings}   # define the predictor "x" and outcome "y"
+    regression_results = ols("y ~ 1 + x", data=dat).fit()      # fit the model.
+    
+    # Get model prediction.
+    pred   = regression_results.get_prediction().summary_frame()
+    mn     = pred['mean']
+    ci_low = pred['mean_ci_lower'] 
+    ci_upp = pred['mean_ci_upper']
+    
+    # And plot it.
+    indices_sorted = np.argsort(swim_lessons,0)
+    plt.figure(figsize=(6, 4))
+    plt.scatter(swim_lessons,drownings)
+    plt.plot(swim_lessons[indices_sorted[:,0]],mn[indices_sorted[:,0]], 'r')
+    plt.plot(swim_lessons[indices_sorted[:,0]],ci_low[indices_sorted[:,0]], ':r')
+    plt.plot(swim_lessons[indices_sorted[:,0]],ci_upp[indices_sorted[:,0]], ':r')
+    plt.xlabel('Swim lessons')
+    plt.ylabel('Drownings')
+    plt.show()
