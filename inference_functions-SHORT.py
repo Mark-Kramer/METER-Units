@@ -9,8 +9,8 @@ def load_data():
     df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/swim_lesson_data.csv")
     swim_lessons = np.array(df.iloc[:,0])
     drownings    = np.array(df.iloc[:,1])
-    x            = np.array(df.iloc[:,2])
-    y            = np.array(df.iloc[:,3])
+    x            = np.array(df.iloc[:,3])
+    y            = np.array(df.iloc[:,2])
     return swim_lessons,drownings,x,y
 
 #def load_more_data():
@@ -37,40 +37,33 @@ def compute_residuals_3d(swim_lessons, drownings, distance_from_ocean):
     return residuals
 
 def plot_spatial_coordinates(x, y, colors):
-    import plotly.graph_objects as go
 
-    # Example x-y coordinates
-    x_coordinates = x
-    y_coordinates = y
-    # Create a scattermapbox trace
-    trace = go.Scattermapbox(
-        lat=y_coordinates,
-        lon=x_coordinates,
-        mode='markers',
-        marker=dict(
-            size=10,
-            color=colors, #residuals.to_numpy(),
-            colorscale='RdYlBu',  # Choose a colorscale (Red-Blue in this case)
-            cmin=-0.25, #min(residuals.to_numpy()),
-            cmax= 0.25, #max(residuals.to_numpy()),
-            colorbar=dict(title='Variable'),
-            opacity=0.6
-        ),
-    )
-
-    # Define the layout for the map
-    layout = go.Layout(
-        mapbox=dict(
-            center=dict(lat=sum(y_coordinates)/len(y_coordinates), lon=sum(x_coordinates)/len(x_coordinates)),
-            zoom=9,
-            style='open-street-map'  # You can change the map style
-        ),
-        title='X-Y Coordinates on Map'
-    )
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
+    import numpy as np
+    # Create a figure
+    plt.figure(figsize=(10, 8))
     
-    # Create the figure
-    fig = go.Figure(data=[trace], layout=layout)
-    fig.update_layout(width=800, height=600)
+    # Define the projection for the map
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    
+    # Add map features
+    ax.set_extent([min(x) - 1, max(x) + 1, min(y) - 1, max(y) + 1], crs=ccrs.PlateCarree())
+    ax.add_feature(cfeature.COASTLINE)
+    ax.add_feature(cfeature.BORDERS, linestyle=':')
+    ax.add_feature(cfeature.LAND, facecolor='lightgrey')
+    ax.add_feature(cfeature.LAKES, edgecolor='black')
+    ax.add_feature(cfeature.RIVERS, edgecolor='blue')
+    
+    # Plot the points
+    sc = plt.scatter(x, y, c=colors, cmap='RdYlBu', s=40, vmin=-0.25, vmax=0.25, alpha=0.6, edgecolor='k', linewidth=0.5, transform=ccrs.PlateCarree())
+    
+    # Add a colorbar
+    cbar = plt.colorbar(sc, orientation='vertical', pad=0.05)
+    cbar.set_label('Variable')
+    
+    # Add a title
+    plt.title('X-Y Coordinates on Map', fontsize=16)
     
     # Show the plot
-    fig.show();
+    plt.show()
