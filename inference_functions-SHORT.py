@@ -45,7 +45,7 @@ def plot_spatial_coordinates(x, y, colors):
     ax = plt.axes(projection=ccrs.PlateCarree())
     
     # Add map features
-    ax.set_extent([min(x) - 1, max(x) + 1, min(y) - 1, max(y) + 1], crs=ccrs.PlateCarree())
+    ax.set_extent([min(x) - 0.25, max(x) + 0.25, min(y) - 0.25, max(y) + 0.25], crs=ccrs.PlateCarree())
     ax.add_feature(cfeature.COASTLINE)
     ax.add_feature(cfeature.BORDERS, linestyle=':')
     ax.add_feature(cfeature.LAND, facecolor='lightgrey')
