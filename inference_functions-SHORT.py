@@ -4,9 +4,6 @@ import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
-await micropip.install("cartopy")
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
 
 def load_data():
     import pandas as pd
