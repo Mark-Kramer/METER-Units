@@ -120,3 +120,12 @@ def plot_line_with_residuals(swim_lessons, drownings):
                  [drownings[i], mn[i]],              # y-coordinates
                  color='orange', linestyle='--', linewidth=0.8, zorder=0)
     plt.show()
+
+def estimate_plane(swim_lessons, drownings, distance_from_ocean):
+    dat = {"w": distance_from_ocean, "x": swim_lessons, "y": drownings}
+    regression_results_2_predictor = ols("y ~1 + x + w", data=dat).fit()
+    m1                = regression_results.params[1]
+    m1_standard_error = regression_results.bse[1]
+    m2                = regression_results.params[2]
+    m2_standard_error = regression_results.bse[2]
+    return m1, m1_standard_error, m2, m2_standard_error
