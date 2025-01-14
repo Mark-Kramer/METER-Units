@@ -14,14 +14,15 @@ def load_data():
     y            = np.array(df.iloc[:,2])
     return swim_lessons,drownings,x,y
 
-#def load_more_data():
-#    import pandas as pd
-#    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/swim_lesson_data.csv")
-#    swim_lessons        = np.array(df.iloc[:,0])
-#    drownings           = np.array(df.iloc[:,1])
-#    xy                  = np.array(df.iloc[:,2])
-#    distance_from_ocean = np.array(df.iloc[:,3])
-#    return swim_lessons,drownings,x,y,distance_from_ocean
+def load_more_data():
+    import pandas as pd
+    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/swim_lesson_data.csv")
+    swim_lessons        = np.array(df.iloc[:,0])
+    drownings           = np.array(df.iloc[:,1])
+    x                   = np.array(df.iloc[:,3])
+    y                   = np.array(df.iloc[:,2])
+    distance_from_ocean = np.array(df.iloc[:,4])
+    return swim_lessons,drownings,x,y,distance_from_ocean
 
 def compute_residuals_2d(swim_lessons, drownings):    
     from statsmodels.formula.api import ols                    # import the required module
