@@ -129,3 +129,60 @@ def estimate_plane(swim_lessons, drownings, distance_from_ocean):
     m2                = regression_results.params[2]
     m2_standard_error = regression_results.bse[2]
     return m1, m1_standard_error, m2, m2_standard_error
+
+def plot_plane(swim_lessons, drownings, distance_from_ocean):
+
+    # Create a meshgrid for 3D plotting
+    x1 = np.transpose(distance_from_ocean)[0];
+    x2 = np.transpose(swim_lessons)[0];
+    y  = np.transpose(drownings)[0]; 
+    x1_range = np.linspace(x1.min(), x1.max(), 100)
+    x2_range = np.linspace(x2.min(), x2.max(), 100)
+    x1_mesh, x2_mesh = np.meshgrid(x1_range, x2_range)
+    
+    # Predict the response for each point in the meshgrid
+    dat = {"w": distance_from_ocean, "x": swim_lessons, "y": drownings}
+    from statsmodels.formula.api import ols                    # import the required module
+    regression_results_2_predictor = ols("y ~1 + w + x", data=dat).fit()
+    coefficients = regression_results_2_predictor.params
+    y_pred_mesh = coefficients[0] + coefficients[1] * x1_mesh + coefficients[2] * x2_mesh
+    
+    # Create an interactive 3D plot using plotly
+    fig = go.Figure()
+    
+    # Scatter plot for data points
+    fig.add_trace(go.Scatter3d(
+        x=x1,
+        y=x2,
+        z=y,
+        mode='markers',
+        marker=dict(size=5, color='red') #,
+    #    name='Data Points'
+    ))
+    
+    # Surface plot for OLS regression surface
+    fig.add_trace(go.Surface(
+        x=x1_mesh,
+        y=x2_mesh,
+        z=y_pred_mesh,
+        #colorscale='blues',
+        opacity=0.7,
+        name='OLS Surface'
+    ))
+    
+    # Set layout
+    fig.update_layout(
+        scene=dict(
+            xaxis_title='Distance from ocean',
+            yaxis_title='Swim lessons',
+            zaxis_title='Drownings',
+        )
+    )
+    
+    fig.update_layout(width=800, height=600)
+    
+    # Show the interactive plot
+    fig.show()
+    
+    # Show the plot
+    plt.show()
