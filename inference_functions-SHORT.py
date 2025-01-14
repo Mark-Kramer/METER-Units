@@ -123,7 +123,7 @@ def plot_line_with_residuals(swim_lessons, drownings):
 
 def estimate_plane(swim_lessons, drownings, distance_from_ocean):
     dat = {"w": distance_from_ocean, "x": swim_lessons, "y": drownings}
-    regression_results_2_predictor = ols("y ~1 + x + w", data=dat).fit()
+    regression_results= ols("y ~1 + x + w", data=dat).fit()
     m1                = regression_results.params[1]
     m1_standard_error = regression_results.bse[1]
     m2                = regression_results.params[2]
