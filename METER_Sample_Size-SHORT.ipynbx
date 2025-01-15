@@ -5,7 +5,19 @@
    "id": "183f8782-7b20-4c50-9b24-330b84c51dee",
    "metadata": {},
    "source": [
-    "# Sample Size - How much data is enough for your experiment?"
+    "---\n",
+    "title: Sample Size How much data is enough for your experiment?\n",
+    "project:\n",
+    "  type: website\n",
+    "format:\n",
+    "  html:\n",
+    "    code-fold: true\n",
+    "    code-tools: true\n",
+    "jupyter: python 3\n",
+    "number-sections: false\n",
+    "filters:\n",
+    "    - pyodide\n",
+    "---"
    ]
   },
   {
@@ -2403,7 +2415,7 @@
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python 3",
+   "display_name": "Python 3 (ipykernel)",
    "language": "python",
    "name": "python3"
   },
@@ -2417,7 +2429,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.8.8"
+   "version": "3.11.7"
   }
  },
  "nbformat": 4,
