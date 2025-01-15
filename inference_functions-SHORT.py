@@ -131,58 +131,38 @@ def estimate_plane(swim_lessons, drownings, distance_from_ocean):
     return m1, m1_standard_error, m2, m2_standard_error
 
 def plot_plane(swim_lessons, drownings, distance_from_ocean):
-
     # Create a meshgrid for 3D plotting
-    x1 = np.transpose(distance_from_ocean)[0];
-    x2 = np.transpose(swim_lessons)[0];
-    y  = np.transpose(drownings)[0]; 
+    x1 = np.transpose(distance_from_ocean)
+    x2 = np.transpose(swim_lessons)
+    y = np.transpose(drownings)
     x1_range = np.linspace(x1.min(), x1.max(), 100)
     x2_range = np.linspace(x2.min(), x2.max(), 100)
     x1_mesh, x2_mesh = np.meshgrid(x1_range, x2_range)
-    
+
     # Predict the response for each point in the meshgrid
     dat = {"w": distance_from_ocean, "x": swim_lessons, "y": drownings}
-    from statsmodels.formula.api import ols                    # import the required module
-    regression_results_2_predictor = ols("y ~1 + w + x", data=dat).fit()
+    regression_results_2_predictor = ols("y ~ 1 + w + x", data=dat).fit()
     coefficients = regression_results_2_predictor.params
     y_pred_mesh = coefficients[0] + coefficients[1] * x1_mesh + coefficients[2] * x2_mesh
-    
-    # Create an interactive 3D plot using plotly
-    fig = go.Figure()
-    
+
+    # Create a 3D plot using matplotlib
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
     # Scatter plot for data points
-    fig.add_trace(go.Scatter3d(
-        x=x1,
-        y=x2,
-        z=y,
-        mode='markers',
-        marker=dict(size=5, color='red') #,
-    #    name='Data Points'
-    ))
-    
+    ax.scatter(x1, x2, y, color='red', label='Data Points')
+
     # Surface plot for OLS regression surface
-    fig.add_trace(go.Surface(
-        x=x1_mesh,
-        y=x2_mesh,
-        z=y_pred_mesh,
-        #colorscale='blues',
-        opacity=0.7,
-        name='OLS Surface'
-    ))
+    ax.plot_surface(x1_mesh, x2_mesh, y_pred_mesh, alpha=0.7, cmap='Blues', edgecolor='none')
+
+    # Set labels and title
+    ax.set_xlabel('Distance from Ocean')
+    ax.set_ylabel('Swim Lessons')
+    ax.set_zlabel('Drownings')
+    ax.set_title('3D Plot with Regression Surface')
     
-    # Set layout
-    fig.update_layout(
-        scene=dict(
-            xaxis_title='Distance from ocean',
-            yaxis_title='Swim lessons',
-            zaxis_title='Drownings',
-        )
-    )
-    
-    fig.update_layout(width=800, height=600)
-    
-    # Show the interactive plot
-    fig.show()
-    
+    # Add legend
+    ax.legend()
+
     # Show the plot
     plt.show()
