@@ -228,7 +228,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n#await micropip.install(\"cartopy\")\nimport cartopy.crs as ccrs\nimport cartopy.feature as cfeature\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/inference_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nswim_lessons, drownings, x,y = load_data()","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":1},{"code":"# Plot the data.\nplt.figure()\nplt.figure(figsize=(10, 5))\nplt.scatter(swim_lessons, drownings)\nplt.xlabel('Swim Lessons')\nplt.ylabel('Drownings')\nplt.show()","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":2},{"code":"plot_spatial_coordinates(x, y, np.zeros(np.size(x)))","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":3},{"code":"m, m_standard_error = estimate_line(swim_lessons, drownings)\nprint('m=',round(m,4))\nprint('standard_error=',round(m_standard_error,4))","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":4},{"code":"plot_line(swim_lessons, drownings)","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":5},{"code":"plot_line(swim_lessons, drownings)","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":6},{"code":"plot_line_with_residuals(swim_lessons, drownings)\nplt.xlim([400, 500])","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":7},{"code":"residuals = compute_residuals_2d(swim_lessons, drownings)\nplt.figure(figsize=(10, 5))\nplt.plot(residuals, '*')\nplt.xlabel('Index')\nplt.ylabel('Residuals')\nplt.show()","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":8},{"code":"plt.figure(figsize=(10, 5))\nplt.scatter(swim_lessons, residuals)\nplt.xlabel('Number of swim lessons')\nplt.ylabel('Model residuals');\nplt.show()","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":9},{"code":"plot_spatial_coordinates(x, y, residuals)","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":10},{"code":"residuals = compute_residuals_2d(swim_lessons, drownings)\nplot_spatial_coordinates(x, y, residuals)","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":11},{"code":"# Load the data with new the variable.\nswim_lessons, drownings, x,y, distance_from_ocean = load_more_data()","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":12},{"code":"# Plot the data in 3-dimensions.\nfig = plt.figure()\nax  = fig.add_subplot(111, projection='3d')\nax.scatter(swim_lessons, distance_from_ocean, drownings)\nax.set_xlabel('Swim lessons')\nax.set_ylabel('Distance from ocean')\nax.set_zlabel('Drownings')\nplt.show()","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":13},{"code":"m1, m1_standard_error, m2, m2_standard_error = estimate_plane(swim_lessons, drownings, distance_from_ocean)\nprint('Swim Lessons:')\nprint('m1=',round(m1,4))\nprint('standard_error=',round(m1_standard_error,4))\nprint('Distance from Ocean:')\nprint('m2=',round(m2,4))\nprint('standard_error=',round(m2_standard_error,4))","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":14},{"code":"plot_plane(swim_lessons, drownings, distance_from_ocean)","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":15},{"code":"residuals = compute_residuals_3d(swim_lessons, drownings, distance_from_ocean)\nplt.figure(figsize=(10, 5))\nplt.scatter(swim_lessons, residuals)\nplt.xlabel('Number of swim lessons')\nplt.ylabel('Model residuals');\nplt.show()","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":16},{"code":"plot_spatial_coordinates(x, y, residuals)","options":{"dpi":72,"read-only":"false","autorun":"","context":"interactive","label":"","warning":"true","out-width":"700px","results":"markup","out-height":"","message":"true","comment":"","fig-cap":"","fig-height":5,"classes":"","output":"true","fig-width":7},"id":17}];
+globalThis.qpyodideCellDetails = [{"id":1,"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n#await micropip.install(\"cartopy\")\nimport cartopy.crs as ccrs\nimport cartopy.feature as cfeature\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/inference_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nswim_lessons, drownings, x,y = load_data()","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":2,"code":"# Plot the data.\nplt.figure()\nplt.figure(figsize=(8, 5))\nplt.scatter(swim_lessons, drownings)\nplt.xlabel('Swim Lessons')\nplt.ylabel('Drownings')\nplt.show()","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":3,"code":"plot_spatial_coordinates(x, y, np.zeros(np.size(x)))","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":4,"code":"m, m_standard_error = estimate_line(swim_lessons, drownings)\nprint('m=',round(m,4))\nprint('standard_error=',round(m_standard_error,4))","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":5,"code":"plot_line(swim_lessons, drownings)","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":6,"code":"plot_line(swim_lessons, drownings)","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":7,"code":"plot_line_with_residuals(swim_lessons, drownings)\nplt.xlim([400, 500])","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":8,"code":"residuals = compute_residuals_2d(swim_lessons, drownings)\nplt.figure(figsize=(10, 5))\nplt.plot(residuals, '*')\nplt.xlabel('Index')\nplt.ylabel('Residuals')\nplt.show()","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":9,"code":"plt.figure(figsize=(10, 5))\nplt.scatter(swim_lessons, residuals)\nplt.xlabel('Number of swim lessons')\nplt.ylabel('Model residuals');\nplt.show()","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":10,"code":"plot_spatial_coordinates(x, y, residuals)","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":11,"code":"residuals = compute_residuals_2d(swim_lessons, drownings)\nplot_spatial_coordinates(x, y, residuals)","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":12,"code":"# Load the data with new the variable.\nswim_lessons, drownings, x,y, distance_from_ocean = load_more_data()","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":13,"code":"# Plot the data in 3-dimensions.\nfig = plt.figure()\nax  = fig.add_subplot(111, projection='3d')\nax.scatter(swim_lessons, distance_from_ocean, drownings)\nax.set_xlabel('Swim lessons')\nax.set_ylabel('Distance from ocean')\nax.set_zlabel('Drownings')\nplt.show()","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":14,"code":"m1, m1_standard_error, m2, m2_standard_error = estimate_plane(swim_lessons, drownings, distance_from_ocean)\nprint('Swim Lessons:')\nprint('m1=',round(m1,4))\nprint('standard_error=',round(m1_standard_error,4))\nprint('Distance from Ocean:')\nprint('m2=',round(m2,4))\nprint('standard_error=',round(m2_standard_error,4))","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":15,"code":"plot_plane(swim_lessons, drownings, distance_from_ocean)","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":16,"code":"residuals = compute_residuals_3d(swim_lessons, drownings, distance_from_ocean)\nplt.figure(figsize=(10, 5))\nplt.scatter(swim_lessons, residuals)\nplt.xlabel('Number of swim lessons')\nplt.ylabel('Model residuals');\nplt.show()","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}},{"id":17,"code":"plot_spatial_coordinates(x, y, residuals)","options":{"output":"true","context":"interactive","warning":"true","comment":"","label":"","out-width":"700px","results":"markup","read-only":"false","fig-cap":"","message":"true","classes":"","autorun":"","fig-width":7,"fig-height":5,"out-height":"","dpi":72}}];
 
 
 </script>
@@ -662,7 +662,7 @@ function checkAnswer() {
 <p>That’s a fine statement.</p>
 <p>However, we’d like to go beyond this qualitative expecation and put some numbers to it.</p>
 <p>For example, does adding 1000 swim lessons to a community (e.g., by providing free programs, by promotion through advertising) reduce the number of drownings by 1, by 10, by 100?</p>
-<p>In what follows, we’ll infer this relationship from the data.</p>
+<p>In what follows, <strong>we’ll infer this expected relationship from the data.</strong></p>
 <p>But before we begin our inference procedure, let’s start by <strong>visualizing the data</strong>.</p>
 <div id="qpyodide-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -676,11 +676,31 @@ Look at the data. Do these data match the intuitive expectation that the number 
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ul>
-<li><p>(Incorrect) Yes, as the number of swim lessons increases, the number of drownings appears to <em>decrease</em>.</p></li>
-<li><p>(Correct) No, as the number of swim lessons increases, the number of drownings appears to <em>increase</em>.</p></li>
-</ul>
+<form id="quiz-form-2">
+<input type="radio" name="answer2" value="incorrect"> Yes, as the number of swim lessons increases, the number of drownings appears to <em>decrease</em>. <br> <input type="radio" name="answer2" value="correct"> No, as the number of swim lessons increases, the number of drownings appears to <em>increase</em>. <br><br> <button type="button" onclick="checkAnswer2()">Submit</button>
+</form>
+<p id="feedback2">
+</p>
+<script>
+function checkAnswer2() {
+    var selected = document.querySelector('input[name="answer2"]:checked');
+    var feedback = document.getElementById("feedback2");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The data suggest that as swim lessons increase, drownings also increase.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. The data actually show an increase in drownings as swim lessons increase.";
+        feedback.style.color = "red";
+    }
+}
+</script>
 </div>
 </div>
 <p>We’re provided one additional piece of information: the location (<code>x</code>,<code>y</code>) of each community with reported results.</p>
@@ -697,10 +717,31 @@ What do you observe in the geographic locations of the communities?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>A:</strong> (Short answer)</p>
-<ul>
-<li><em>The communities vary in spatial location, with a high concentration at a point near the ocean.</em></li>
-</ul>
+<form id="quiz-form-3">
+<input type="radio" name="answer3" value="incorrect1"> All communities are <strong>near</strong> the ocean. <br> <input type="radio" name="answer3" value="incorrect2"> All communities are <strong>far</strong> from the ocean. <br> <input type="radio" name="answer3" value="correct"> Communities are both <strong>near to and far from</strong> the ocean. <br><br> <button type="button" onclick="checkAnswer3()">Submit</button>
+</form>
+<p id="feedback3">
+</p>
+<script>
+function checkAnswer3() {
+    var selected = document.querySelector('input[name="answer3"]:checked');
+    var feedback = document.getElementById("feedback3");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The communities are located both near to and far from the ocean.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. The communities are not exclusively near or far from the ocean.";
+        feedback.style.color = "red";
+    }
+}
+</script>
 </div>
 </div>
 <div class="alert alert-block alert-danger">
@@ -708,7 +749,8 @@ What do you observe in the geographic locations of the communities?
 <ul>
 <li>We visualize the data to draw conclusions (inferences) about a larger population based on the sample of collected data.</li>
 </ul>
-<p>While we utilize data visulzation here, our focus is statisitcal inference, as we discuss next.</p>
+<p>Here we utilize data visulzation to gain some intuition for the data.</p>
+<p>However, <strong>our focus is statisitcal inference</strong>, as we discuss next.</p>
 </div>
 </section>
 <section id="make-an-inference-how-do-the-number-of-swim-lessons-relate-to-drownings" class="level1">
@@ -724,7 +766,7 @@ What do you observe in the geographic locations of the communities?
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="IMG_Inference/Inference_Path_1.jpg" class="img-fluid figure-img"></p>
-<figcaption>Initital statistical inference procedure</figcaption>
+<figcaption>Initital statistical inference procedure. We start here, but will modify this procedure later.</figcaption>
 </figure>
 </div>
 <p>We’ve already collected the data. Our next step is to choose a model for these data.</p>
@@ -745,20 +787,78 @@ What do you observe in the geographic locations of the communities?
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Compare our model to the equation for a line: <span class="math inline">\(y = m x + b\)</span>. What is <span class="math inline">\(m\)</span>? What is <span class="math inline">\(b\)</span>?
+Compare our model to the equation for a line: ( y = mx + b ). Match each variable to the correct interpretation.
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>A:</strong> (Matching)</p>
-<p><span class="math inline">\(y \rightarrow\)</span> drownings</p>
-<p><span class="math inline">\(x \rightarrow\)</span> swim_lessons</p>
-<p><span class="math inline">\(m \rightarrow\)</span> slope</p>
-<p><span class="math inline">\(b \rightarrow\)</span> intercept</p>
+<table>
+<tbody><tr>
+<td>
+<strong>( y )</strong> →
+</td>
+<td>
+<select id="match-y"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<strong>( x )</strong> →
+</td>
+<td>
+<select id="match-x"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<strong>( m )</strong> →
+</td>
+<td>
+<select id="match-m"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<strong>( b )</strong> →
+</td>
+<td>
+<select id="match-b"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+</tbody></table>
+<br> <button onclick="checkMatching()">Submit</button>
+<p id="feedback-matching">
+</p>
+<script>
+function checkMatching() {
+    var matchY = document.getElementById("match-y").value;
+    var matchX = document.getElementById("match-x").value;
+    var matchM = document.getElementById("match-m").value;
+    var matchB = document.getElementById("match-b").value;
+    
+    var feedback = document.getElementById("feedback-matching");
+    
+    if (!matchY || !matchX || !matchM || !matchB) {
+        feedback.innerHTML = "Please match all terms before submitting.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (matchY === "drownings" && matchX === "swim_lessons" && matchM === "slope" && matchB === "intercept") {
+        feedback.innerHTML = "✅ Correct! Your matches are accurate.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. Check your matches and try again.";
+        feedback.style.color = "red";
+    }
+}
+</script>
 </div>
 </div>
 <p>Here, our initial model is a <strong>line</strong>.</p>
-<p>That’s a very simple model of the data.</p>
-<p>We do not expect a line will capture all of the complexity in our data.</p>
+<ul>
+<li><p>That’s a very simple model of the data.</p></li>
+<li><p>We do not expect a line will capture all of the complexity in our data.</p></li>
+</ul>
 <p>However, a line (or <em>linear relationship</em>) often provides a useful first step.</p>
 <p>And, a line is relatively simple to compute and interpret.</p>
 </section>
@@ -781,11 +881,31 @@ What sign (positive or negative) do you expect for the slope <code>m</code>?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ul>
-<li><p>(Incorrect) I expect the slope is positive because I expect <code>drownings</code> will increases with <code>swim_lessons</code>.</p></li>
-<li><p>(Correct) I expect the slope is negative because I expect <code>drownings</code> will decrease with <code>swim_lessons</code>.</p></li>
-</ul>
+<form id="quiz-form-4">
+<input type="radio" name="answer4" value="incorrect"> I expect the slope is positive because I expect <code>drownings</code> will increase with <code>swim_lessons</code>. <br> <input type="radio" name="answer4" value="correct"> I expect the slope is negative because I expect <code>drownings</code> will decrease with <code>swim_lessons</code>. <br><br> <button type="button" onclick="checkAnswer4()">Submit</button>
+</form>
+<p id="feedback4">
+</p>
+<script>
+function checkAnswer4() {
+    var selected = document.querySelector('input[name="answer4"]:checked');
+    var feedback = document.getElementById("feedback4");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! A negative slope means drownings decrease as swim lessons increase.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. A positive slope would mean drownings increase with swim lessons, which is not expected.";
+        feedback.style.color = "red";
+    }
+}
+</script>
 </div>
 </div>
 <p>We expect <span class="math inline">\(m&lt;0\)</span>.</p>
@@ -798,13 +918,13 @@ What sign (positive or negative) do you expect for the slope <code>m</code>?
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p><strong>Meaning:</strong></p>
 <ul>
-<li>The slope estimate <code>m</code> represents the change in the number of <code>drownings</code> when the number of <code>swim_lessons</code> changes by 1.</li>
-<li>The <code>standard_error</code> represents the variability of the slope estimate.</li>
+<li><p>The slope estimate <code>m</code> represents the estimated change in the number of <code>drownings</code> when the number of <code>swim_lessons</code> increases by 1.</p></li>
+<li><p>The <code>standard_error</code> represents the variability of the slope estimate.</p></li>
 </ul>
 <p><strong>Interpretation:</strong></p>
 <ul>
-<li>For a one-unit increase in the number of <code>swim_lessons</code>, we estimate the number of <code>drownings</code>to increase by 0.0014, on average.</li>
-<li>The standard error (0.0002) is small compared to the slope estimate, so the variability in the slope estimate is small; i.e., the estimate is precise.</li>
+<li><p>If the number of <code>swim_lessons</code> increases by 1, we estimate the number of <code>drownings</code>to increase by 0.0014, on average.</p></li>
+<li><p>The standard error (0.0002) is small compared to the slope estimate, so the variability in the slope estimate is small; i.e., the estimate is precise.</p></li>
 </ul>
 <p>Remember our model is a line.</p>
 <p>A line is easy to visualize.</p>
@@ -821,17 +941,38 @@ Looking at this plot, what is the slope of the inferred line?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ul>
-<li><p>(Correct) The slope is positive – the line tilts up.</p></li>
-<li><p>(Incorrect) The slope is negative – the line tilts down.</p></li>
-</ul>
+<form id="quiz-form-5">
+<input type="radio" name="answer5" value="correct"> The slope is positive – the line tilts up. <br> <input type="radio" name="answer5" value="incorrect"> The slope is negative – the line tilts down. <br><br> <button type="button" onclick="checkAnswer5()">Submit</button>
+</form>
+<p id="feedback5">
+</p>
+<script>
+function checkAnswer5() {
+    var selected = document.querySelector('input[name="answer5"]:checked');
+    var feedback = document.getElementById("feedback5");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! A positive slope means the line tilts upward.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. A negative slope would mean the line tilts downward.";
+        feedback.style.color = "red";
+    }
+}
+</script>
 </div>
 </div>
 </section>
 <section id="step-3.-summarize-conclusions." class="level2">
 <h2 class="anchored" data-anchor-id="step-3.-summarize-conclusions.">Step 3. Summarize conclusions.</h2>
-<p>Having chosen the model (Step 1) and inferred model parameters (Step 2), our last step is to summarize the conclusions of our statistical inference.</p>
+<p>We have chosen the model (Step 1) and inferred model parameters (Step 2).</p>
+<p>Our last step is to summarize the conclusions of our statistical inference.</p>
 <p>Let’s start by considering an explict numerical conclusion from our model:</p>
 <ul>
 <li>How does the number of drownings change if we increase the number of swim lessons by 1000?</li>
@@ -846,16 +987,16 @@ We find an increase of 0.0014 <code>drownings</code> for a one-unit increase in 
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>A:</strong></p>
+<p><strong>Answer:</strong></p>
 <p>Our model of the data is a line:</p>
 <p><code>drownings</code> = m <code>swim_lessons</code> + b</p>
 <p>We inferred the model parameter <code>m</code> from the data and found:</p>
 <p><code>drownings</code> = 0.0014 <code>swim_lessons</code> + b</p>
-<p>Consider what happens if the number of swim lessons increases by 1. Then, according to our fit model, the number of drownings increases by:</p>
-<p><code>drownings = 0.0014 * 1 = 0.0014</code></p>
+<p>Consider what happens if the number of swim lessons increases by 1. According to our fit model, the number of drownings increases by:</p>
+<p><span class="math inline">\(0.0014 * 1\)</span> swim lesson <span class="math inline">\(= 0.0014\)</span></p>
 <p>That’s a small increase, in both the number of swim lessons and number of drownings.</p>
-<p>Alternately, consider what happens if the number of swim lessons increases by 1000. Then, plugging into our model, we find the number of drownings increases by:</p>
-<p><code>drownings = 0.0014 * 1000 = 1.4</code></p>
+<p>Alternately, consider what happens if the number of swim lessons increases by 1000. Plugging into our model, we find the number of drownings increases by:</p>
+<p><span class="math inline">\(0.0014 * 1000\)</span> swim lessons <span class="math inline">\(= 1.4\)</span></p>
 <p>That’s perhaps a more interpertable result; a community making a policy decision to promote more swim lessons (e.g., through subsidies, though advertisements) might expect 1 more drowning.</p>
 <p>In this way, we can always interpert the results of a model. It’s often useful to plug in values, and see what happens.</p>
 </div>
@@ -884,14 +1025,29 @@ What’s our next step?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>CENTER generated Button: These results are convincing - let’s advocate for change!</strong></p>
-<ul>
-<li><em>Discussion</em>: That’s a reasonable conclusion, based on the evidence we’ve looked at so far. However, our conclusion is controversial: to reduce drownings, reduce the number of swim lessons. Before we recommend this policy, let’s investigate an essential aspect of our inference - how well our model (the line) fits the data. A good fit to the data inspires confidence in our inference. Alternatively, a poor fit provides us motivation to continue developing our model. Continue on to the next Mini to learn a strategey to answer this question.</li>
-</ul>
-<p><strong>CENTER generate Button: I’m not sure yet!</strong></p>
-<ul>
-<li><em>Discussion</em>: I’m glad you’re not sure. Neither am I. Our results suggest a controverisal conclusion: to reduce drownings, reduce the number of swim lessons. To make this conclusion, we modeled the data as a line. But, is this line a good model of the data? If so, that inspires confidence in our result. However, if the model (a line) is not a good representation of the data, then we might question the result. Continue on to the next Mini to learn a strategey to answer this question.</li>
-</ul>
+<!-- Buttons -->
+<button onclick="showDiscussion('change')" style="display: block; margin: 10px auto; padding: 10px 20px; font-size: 16px;">
+These results are convincing - let’s advocate for change!
+</button>
+<button onclick="showDiscussion('not_sure')" style="display: block; margin: 10px auto; padding: 10px 20px; font-size: 16px;">
+I’m not sure yet!
+</button>
+<!-- Discussion Output -->
+<p id="discussion-output" style="margin-top: 20px; font-weight: lighter;">
+</p>
+<script>
+function showDiscussion(choice) {
+    var output = document.getElementById("discussion-output");
+
+    if (choice === "change") {
+        output.innerHTML = "That's a reasonable conclusion, based on the evidence we've looked at so far. However, our conclusion is controversial: to reduce drownings, reduce the number of swim lessons. Before we recommend this policy, let's investigate an essential aspect of our inference - how well our model (the line) fits the data. A good fit to the data inspires confidence in our inference. Alternatively, a poor fit provides us motivation to continue developing our model. Continue on to the next Mini to learn a strategy to answer this question.";
+        output.style.color = "black";
+    } else if (choice === "not_sure") {
+        output.innerHTML = "I'm glad you're not sure. Neither am I. Our results suggest a controversial conclusion: to reduce drownings, reduce the number of swim lessons. To make this conclusion, we modeled the data as a line. But, is this line a good model of the data? If so, that inspires confidence in our result. However, if the model (a line) is not a good representation of the data, then we might question the result. Continue on to the next Mini to learn a strategy to answer this question.";
+        output.style.color = "black";
+    }
+}
+</script>
 </div>
 </div>
 </section>
