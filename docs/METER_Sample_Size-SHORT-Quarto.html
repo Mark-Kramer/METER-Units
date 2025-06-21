@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -228,7 +228,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N = 100","id":1},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nx,lifespan = load_data(N)             # ... and load the data with this many N.","id":2},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.scatter(x,lifespan)\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","id":3},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat                = {\"x\": x, \"lifespan\": lifespan}\nregression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()","id":4},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"slope_estimate = regression_results.params.iloc[1]\nprint('Slope estimate                   = {:.3f}'.format(slope_estimate))\nprint('Standard error of slope estimate = {:.3f}'.format(regression_results.bse['x']))\nprint('p-value                          = {:.3f}'.format(regression_results.pvalues.iloc[1]))","id":5},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"pred   = regression_results.get_prediction().summary_frame()\nmn     = pred['mean']\nci_low = pred['mean_ci_lower'] \nci_upp = pred['mean_ci_upper']\n\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted],mn[indices_sorted], 'r')\nplt.plot(x[indices_sorted],ci_low[indices_sorted], ':r')\nplt.plot(x[indices_sorted],ci_upp[indices_sorted], ':r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","id":6},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N_resampled = N;","id":7},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"ind = np.random.choice(np.size(x), N_resampled)\nprint(ind)","id":8},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"x_resampled        = x[ind]\nlifespan_resampled = lifespan[ind]","id":9},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_resampled, lifespan_resampled, color='blue', alpha=0.25, label='Resampled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)');\nplt.legend()\nplt.show()","id":10},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Estimate a line from the resampled data.\nfrom statsmodels.formula.api import ols\ndat_resampled                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\nregression_results_resampled = ols(\"lifespan ~ 1 + x\", data=dat_resampled).fit()\n\nprint('Slope estimate (resampled data)                   = {:.3f}'.format(regression_results_resampled.params.iloc[1]))\nprint('Standard error of slope estimate (resampled data) = {:.3f}'.format(regression_results_resampled.bse['x']))\nprint('p-value (resampled data)                          = {:.3f}'.format(regression_results_resampled.pvalues.iloc[1]))","id":11},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N_resampled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","id":12},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","id":13},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","id":14},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","id":15},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N_resampled = N\nalpha       = 0.05\nK           = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_resampled={:.0f}'.format(N_resampled), 'and alpha={:.2f}'.format(alpha))","id":16},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.hist(x)\nplt.xlabel('Biomarker x')\nplt.ylabel('Number of observations')\nplt.show()","id":17},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Estimating the parameters of the normal distribution for the biomarker x\nmean_x = np.mean(x)\nstd_x  = np.std(x)\nprint('Mean of x               = {:.2f}'.format(mean_x))\nprint('Standard deviation of x = {:.2f}'.format(std_x))","id":18},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N_modeled = 100;\nx_modeled = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nprint(x_modeled)","id":19},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.hist(x,         bins=30, alpha=0.5, label='Original Data (x)', color='blue')\nplt.hist(x_modeled, bins=30, alpha=0.5, label='Modeled data (x_modeled)', color='red')\nplt.title('Histogram of Original Data and Samples')\nplt.xlabel('Value')\nplt.ylabel('Frequency')\nplt.legend()\nplt.show()","id":20},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat   = {\"x\": x, \"lifespan\": lifespan}\nmodel = ols(\"lifespan ~ 1 + x\", data=dat).fit()","id":21},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"slope     = model.params.iloc[1]\nintercept = model.params.iloc[0]\n\nprint('Slope estimate     = {:.2f}'.format(slope))\nprint('Intercept estimate = {:.2f}'.format(intercept))","id":22},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Get the model prediciton.\npred   = model.get_prediction().summary_frame();  mn = pred['mean']\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted],mn[indices_sorted], 'r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","id":23},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"dispersion = np.sqrt(model.scale)\nprint('Dispersion parameter = {:.2f}'.format(dispersion))","id":24},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N_modeled = N\nx_modeled        = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nlifespan_modeled = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1])","id":25},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_modeled, lifespan_modeled, color='blue', alpha=0.25, label='Modeled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.legend()\nplt.show()","id":26},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Estimate a line from the modeled data.\nfrom statsmodels.formula.api import ols\ndat_modeled                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\nregression_results_modeled = ols(\"lifespan ~ 1 + x\", data=dat_modeled).fit()\n\nprint('Slope estimate (modeled data)                   = {:.3f}'.format(regression_results_modeled.params.iloc[1]))\nprint('Standard error of slope estimate (modeled data) = {:.3f}'.format(regression_results_modeled.bse['x']))\nprint('p-value (modeled data)                          = {:.3f}'.format(regression_results_modeled.pvalues.iloc[1]))","id":27},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N_modeled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","id":28},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1.05,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","id":29},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","id":30},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","id":31},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"N_modeled = 1000\nalpha     = 0.05\nK         = 1000\np_values  = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_modeled={:.0f}'.format(N_modeled), 'and alpha={:.2f}'.format(alpha))","id":32},{"options":{"context":"interactive","results":"markup","out-width":"700px","message":"true","classes":"","fig-cap":"","comment":"","label":"","output":"true","read-only":"false","fig-width":7,"autorun":"","warning":"true","out-height":"","dpi":72,"fig-height":5},"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nN = 100\ndo_nothing_function(N)","id":33}];
+globalThis.qpyodideCellDetails = [{"code":"N = 100","id":1,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nx,lifespan = load_data(N)             # ... and load the data with this many N.","id":2,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.scatter(x,lifespan)\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","id":3,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat                = {\"x\": x, \"lifespan\": lifespan}\nregression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()","id":4,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"slope_estimate = regression_results.params.iloc[1]\nprint('Slope estimate                   = {:.3f}'.format(slope_estimate))\nprint('Standard error of slope estimate = {:.3f}'.format(regression_results.bse['x']))\nprint('p-value                          = {:.3f}'.format(regression_results.pvalues.iloc[1]))","id":5,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"pred   = regression_results.get_prediction().summary_frame()\nmn     = pred['mean']\nci_low = pred['mean_ci_lower'] \nci_upp = pred['mean_ci_upper']\n\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted],mn[indices_sorted], 'r')\nplt.plot(x[indices_sorted],ci_low[indices_sorted], ':r')\nplt.plot(x[indices_sorted],ci_upp[indices_sorted], ':r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","id":6,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_resampled = N;","id":7,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"ind = np.random.choice(np.size(x), N_resampled)\nprint(ind)","id":8,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"x_resampled        = x[ind]\nlifespan_resampled = lifespan[ind]","id":9,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_resampled, lifespan_resampled, color='blue', alpha=0.25, label='Resampled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)');\nplt.legend()\nplt.show()","id":10,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"# Estimate a line from the resampled data.\nfrom statsmodels.formula.api import ols\ndat_resampled                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\nregression_results_resampled = ols(\"lifespan ~ 1 + x\", data=dat_resampled).fit()\n\nprint('Slope estimate (resampled data)                   = {:.3f}'.format(regression_results_resampled.params.iloc[1]))\nprint('Standard error of slope estimate (resampled data) = {:.3f}'.format(regression_results_resampled.bse['x']))\nprint('p-value (resampled data)                          = {:.3f}'.format(regression_results_resampled.pvalues.iloc[1]))","id":11,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_resampled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","id":12,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","id":13,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","id":14,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","id":15,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_resampled = N\nalpha       = 0.05\nK           = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    ind = np.random.choice(np.size(x), N_resampled)    # ... get N_resampled indices,\n    x_resampled = x[ind]                               # ... to create the pseudodata.\n    lifespan_resampled = lifespan[ind]                 # Estimate the line,\n    dat                = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_resampled={:.0f}'.format(N_resampled), 'and alpha={:.2f}'.format(alpha))","id":16,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"alpha = 0.05\nK = 100\nsample_sizes = np.arange(50, 2001, 100)\nstatistical_power = []\n\nfor N_resampled in sample_sizes:\n    p_values = np.zeros(K)\n    print(N_resampled)\n    for k in range(K):                                 \n        ind = np.random.choice(np.size(x), N_resampled)    \n        x_resampled = x[ind]                               \n        lifespan_resampled = lifespan[ind]                \n        dat = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n        regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n        p_values[k] = regression_results.pvalues.iloc[1]  # p-value for slope\n    \n    power = np.sum(p_values < alpha) / K\n    statistical_power.append(power)\n\nplt.figure()\nplt.plot(sample_sizes, statistical_power)\nplt.grid()\nplt.xlabel('Sample Size')\nplt.ylabel('Statistical Power')\nplt.show()","id":17,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_resampled = 100\nK = 100\nalpha_values = np.linspace(0.01, 0.95, 10)\nstatistical_power = []\n\nfor alpha in alpha_values:\n    p_values = np.zeros(K)\n    print(alpha)\n    for k in range(K):                                 \n        ind = np.random.choice(np.size(x), N_resampled)    \n        x_resampled = x[ind]                               \n        lifespan_resampled = lifespan[ind]                \n        dat = {\"x\": x_resampled, \"lifespan\": lifespan_resampled}\n        regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n        p_values[k] = regression_results.pvalues.iloc[1]  # p-value for slope\n    \n    power = np.sum(p_values < alpha) / K\n    statistical_power.append(power)\n\nplt.figure()\nplt.plot(alpha_values, statistical_power)\nplt.grid()\nplt.xlabel('alpha')\nplt.ylabel('Statistical Power')\nplt.show()","id":18,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.hist(x)\nplt.xlabel('Biomarker x')\nplt.ylabel('Number of observations')\nplt.show()","id":19,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"# Estimating the parameters of the normal distribution for the biomarker x\nmean_x = np.mean(x)\nstd_x  = np.std(x)\nprint('Mean of x               = {:.2f}'.format(mean_x))\nprint('Standard deviation of x = {:.2f}'.format(std_x))","id":20,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_modeled = 100;\nx_modeled = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nprint(x_modeled)","id":21,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.hist(x,         bins=30, alpha=0.5, label='Original Data (x)', color='blue')\nplt.hist(x_modeled, bins=30, alpha=0.5, label='Modeled data (x_modeled)', color='red')\nplt.title('Histogram of Original Data and Samples')\nplt.xlabel('Value')\nplt.ylabel('Frequency')\nplt.legend()\nplt.show()","id":22,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"# Estimate a line from the data.\nfrom statsmodels.formula.api import ols\ndat   = {\"x\": x, \"lifespan\": lifespan}\nmodel = ols(\"lifespan ~ 1 + x\", data=dat).fit()","id":23,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"slope     = model.params.iloc[1]\nintercept = model.params.iloc[0]\n\nprint('Slope estimate     = {:.2f}'.format(slope))\nprint('Intercept estimate = {:.2f}'.format(intercept))","id":24,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"# Get the model prediciton.\npred   = model.get_prediction().summary_frame();  mn = pred['mean']\n# And plot it.\nindices_sorted = np.argsort(x,0)\nplt.figure()\nplt.scatter(x,lifespan)\nplt.plot(x[indices_sorted],mn[indices_sorted], 'r')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.show()","id":25,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"dispersion = np.sqrt(model.scale)\nprint('Dispersion parameter = {:.2f}'.format(dispersion))","id":26,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_modeled = N\nx_modeled        = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])\nlifespan_modeled = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1])","id":27,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.scatter(x, lifespan, color='orange', alpha=0.25, label='Original Data')\nplt.scatter(x_modeled, lifespan_modeled, color='blue', alpha=0.25, label='Modeled Data')\nplt.xlabel('Genetic biomarker x')\nplt.ylabel('Lifespan (years)')\nplt.legend()\nplt.show()","id":28,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"# Estimate a line from the modeled data.\nfrom statsmodels.formula.api import ols\ndat_modeled                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\nregression_results_modeled = ols(\"lifespan ~ 1 + x\", data=dat_modeled).fit()\n\nprint('Slope estimate (modeled data)                   = {:.3f}'.format(regression_results_modeled.params.iloc[1]))\nprint('Standard error of slope estimate (modeled data) = {:.3f}'.format(regression_results_modeled.bse['x']))\nprint('p-value (modeled data)                          = {:.3f}'.format(regression_results_modeled.pvalues.iloc[1]))","id":29,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_modeled = N\nK = 1000\np_values = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.","id":30,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1.05,0.05));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.show()","id":31,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"alpha = 0.05;\nstatistical_power = np.sum(p_values < 0.05)/K\nprint(statistical_power)","id":32,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"plt.figure()\nplt.hist(p_values, bins=np.arange(0,1,0.025));\nplt.xlabel('p-values')\nplt.ylabel('Counts')\nplt.grid()\nplt.axvline(x=0.05, color='red', label='alpha')\nplt.legend()\nplt.show()","id":33,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"N_modeled = 1000\nalpha     = 0.05\nK         = 1000\np_values  = np.zeros(K)\nfor k in np.arange(K):                                 # For each k,\n    x_modeled          = np.random.normal(loc=mean_x, scale=std_x, size=[N_modeled,1])  # Simulate the model of biomarker x\n    lifespan_modeled   = intercept + slope * x_modeled + np.random.normal(loc=0.0, scale=dispersion, size=[N_modeled,1]) # Simulate the model of lifespan\n    dat                = {\"x\": x_modeled, \"lifespan\": lifespan_modeled}\n    regression_results = ols(\"lifespan ~ 1 + x\", data=dat).fit()\n    p_values[k] = regression_results.pvalues.iloc[1]         # ... and save the p-value of the slope.\nstatistical_power = np.sum(p_values < 0.05)/K\nprint('Statistical power = {:.3f}'.format(statistical_power), 'for N_modeled={:.0f}'.format(N_modeled), 'and alpha={:.2f}'.format(alpha))","id":34,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"MeanLifespan = ???","id":35,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"LifespanSD = ???","id":36,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"EffectSize = 5\nSlopeEstimate = EffectSize/4","id":37,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"TrySampleSize=100","id":38,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"for i in np.arange(1000):\n    xi = np.random.randomn(0,1,TrySampleSize,1)\n    yi = LifespanMean+SlopeEstimate*xi+LifespanSD*normrnd(0,1,TrySampleSize,1)\n    [bp,d,sp] = glmfit(xi,yi)\n    pow[i] = (sp.p(2)<0.05)\nmean(pow)","id":39,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}},{"code":"for j=1:length(ms), \n    for i=1:1000,\n        xi = normrnd(0,1,ms(j),1); ; yi = LifespanMean+SlopeEstimate*xi+LifespanSD*normrnd(0,1,ms(j),1);\n        [bp,d,sp] = glmfit(xi,yi);\n        powm(i) = (sp.p(2)<0.05);\n    end;\n    powModel(j) = mean(powm);\n    powSD(j) = sqrt(mean(powm)*(1-mean(powm))/1000);\nend;    \n\nerrorbar(ms,powModel,1```.96*powSD)\n\n# 3D- Do nothing, I'm happy with the current sample size choice {#3D}\n\n```{pyodide-python}\n# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/main/sample_size_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nN = 100\ndo_nothing_function(N)","id":40,"options":{"autorun":"","dpi":72,"read-only":"false","output":"true","out-height":"","message":"true","warning":"true","fig-cap":"","results":"markup","context":"interactive","out-width":"700px","label":"","comment":"","classes":"","fig-height":5,"fig-width":7}}];
 
 
 </script>
@@ -500,13 +500,12 @@ window.Quarto = {
   <li><a href="#standard-error-of-slope-estimate" id="toc-standard-error-of-slope-estimate" class="nav-link" data-scroll-target="#standard-error-of-slope-estimate">Standard error of slope estimate</a></li>
   <li><a href="#p-value" id="toc-p-value" class="nav-link" data-scroll-target="#p-value">p-value</a></li>
   </ul></li>
-  <li><a href="#Choose" id="toc-Choose" class="nav-link" data-scroll-target="#Choose">Choose your own adventure …</a>
+  <li><a href="#Choose" id="toc-Choose" class="nav-link" data-scroll-target="#Choose">Choose your own adventure</a>
   <ul class="collapse">
-  <li><a href="#which-path-will-you-pursue-to-compute-the-sample-size" id="toc-which-path-will-you-pursue-to-compute-the-sample-size" class="nav-link" data-scroll-target="#which-path-will-you-pursue-to-compute-the-sample-size">Which path will you pursue to compute the sample size?</a></li>
-  <li><a href="#a--ill-resample-the-data-turn-to-page-3a." id="toc-a--ill-resample-the-data-turn-to-page-3a." class="nav-link" data-scroll-target="#a--ill-resample-the-data-turn-to-page-3a."><strong>3A-</strong> I’ll resample the data, Turn To Page 3A.</a></li>
-  <li><a href="#b--ill-build-models-using-the-data-turn-to-page-3b." id="toc-b--ill-build-models-using-the-data-turn-to-page-3b." class="nav-link" data-scroll-target="#b--ill-build-models-using-the-data-turn-to-page-3b."><strong>3B-</strong> I’ll build models using the data, Turn To Page 3B.</a></li>
-  <li><a href="#c--ill-build-models-without-the-data-turn-to-page-3c." id="toc-c--ill-build-models-without-the-data-turn-to-page-3c." class="nav-link" data-scroll-target="#c--ill-build-models-without-the-data-turn-to-page-3c."><span style="color:red"><strong>3C-</strong> I’ll build models without the data, Turn To Page 3C.</span></a></li>
-  <li><a href="#d--ill-use-my-current-sample-size-choice-turn-to-page-3d." id="toc-d--ill-use-my-current-sample-size-choice-turn-to-page-3d." class="nav-link" data-scroll-target="#d--ill-use-my-current-sample-size-choice-turn-to-page-3d."><strong>3D-</strong> I’ll use my current sample size choice, Turn to Page 3D.</a></li>
+  <li><a href="#a--ill-resample-the-pilot-data-turn-to-page-3a." id="toc-a--ill-resample-the-pilot-data-turn-to-page-3a." class="nav-link" data-scroll-target="#a--ill-resample-the-pilot-data-turn-to-page-3a."><strong>3A-</strong> I’ll resample the pilot data, Turn To Page 3A.</a></li>
+  <li><a href="#b--ill-use-the-pilot-data-to-build-a-model-turn-to-page-3b." id="toc-b--ill-use-the-pilot-data-to-build-a-model-turn-to-page-3b." class="nav-link" data-scroll-target="#b--ill-use-the-pilot-data-to-build-a-model-turn-to-page-3b."><strong>3B-</strong> I’ll use the pilot data to build a model, Turn To Page 3B.</a></li>
+  <li><a href="#c--ill-ignore-the-pilot-data-and-use-my-prior-knowledge-turn-to-page-3c." id="toc-c--ill-ignore-the-pilot-data-and-use-my-prior-knowledge-turn-to-page-3c." class="nav-link" data-scroll-target="#c--ill-ignore-the-pilot-data-and-use-my-prior-knowledge-turn-to-page-3c."><strong>3C-</strong> I’ll ignore the pilot data and use my prior knowledge, Turn To Page 3C.</a></li>
+  <li><a href="#d--ill-do-nothing-and-stick-with-my-current-sample-size-choice-turn-to-page-3d." id="toc-d--ill-do-nothing-and-stick-with-my-current-sample-size-choice-turn-to-page-3d." class="nav-link" data-scroll-target="#d--ill-do-nothing-and-stick-with-my-current-sample-size-choice-turn-to-page-3d."><strong>3D-</strong> I’ll do nothing and stick with my current sample size choice, Turn to Page 3D.</a></li>
   </ul></li>
   <li><a href="#3A" id="toc-3A" class="nav-link" data-scroll-target="#3A">3A- With resampling you can compute the sample size!</a>
   <ul class="collapse">
@@ -521,6 +520,11 @@ window.Quarto = {
   <li><a href="#resampling-procedure-steps-1-4" id="toc-resampling-procedure-steps-1-4" class="nav-link" data-scroll-target="#resampling-procedure-steps-1-4">Resampling procedure: Steps 1-4</a></li>
   <li><a href="#resampling-procedure-step-5" id="toc-resampling-procedure-step-5" class="nav-link" data-scroll-target="#resampling-procedure-step-5">Resampling procedure: Step 5</a></li>
   <li><a href="#resampling-procedure-step-6" id="toc-resampling-procedure-step-6" class="nav-link" data-scroll-target="#resampling-procedure-step-6">Resampling procedure: Step 6</a></li>
+  <li><a href="#conclusion-our-original-study-was-severly-underpowered." id="toc-conclusion-our-original-study-was-severly-underpowered." class="nav-link" data-scroll-target="#conclusion-our-original-study-was-severly-underpowered.">Conclusion: our original study was severly underpowered.</a></li>
+  <li><a href="#design-a-future-experiment-with-enough-statistical-power." id="toc-design-a-future-experiment-with-enough-statistical-power." class="nav-link" data-scroll-target="#design-a-future-experiment-with-enough-statistical-power.">Design a future experiment with enough statistical power.</a></li>
+  <li><a href="#what-happens-to-the-statistical-power-as-n_resampled-increases" id="toc-what-happens-to-the-statistical-power-as-n_resampled-increases" class="nav-link" data-scroll-target="#what-happens-to-the-statistical-power-as-n_resampled-increases">What happens to the statistical power as <code>N_resampled</code> increases?</a></li>
+  <li><a href="#a-loophole-in-the-statistical-power-increase-alpha" id="toc-a-loophole-in-the-statistical-power-increase-alpha" class="nav-link" data-scroll-target="#a-loophole-in-the-statistical-power-increase-alpha">A loophole in the statistical power: increase <code>alpha</code>?</a></li>
+  <li><a href="#resampling-is-a-universal-way-to-calculate-power-and-sample-size-but-only-works-if-the-resampled-data-captures-the-effect-of-interest." id="toc-resampling-is-a-universal-way-to-calculate-power-and-sample-size-but-only-works-if-the-resampled-data-captures-the-effect-of-interest." class="nav-link" data-scroll-target="#resampling-is-a-universal-way-to-calculate-power-and-sample-size-but-only-works-if-the-resampled-data-captures-the-effect-of-interest.">Resampling is a universal way to calculate power and sample size, but only works if the resampled data captures the effect of interest.</a></li>
   <li><a href="#turn-to-page-4-summary" id="toc-turn-to-page-4-summary" class="nav-link" data-scroll-target="#turn-to-page-4-summary">Turn to Page 4 Summary</a></li>
   </ul></li>
   <li><a href="#3B" id="toc-3B" class="nav-link" data-scroll-target="#3B">3B- Build models with the data to compute the sample size!</a>
@@ -539,7 +543,6 @@ window.Quarto = {
   <li><a href="#turn-to-page-4-summary." id="toc-turn-to-page-4-summary." class="nav-link" data-scroll-target="#turn-to-page-4-summary.">Turn to Page 4 Summary.</a></li>
   </ul></li>
   <li><a href="#3C" id="toc-3C" class="nav-link" data-scroll-target="#3C">3C- Build models without the data to compute the sample size!</a></li>
-  <li><a href="#3D" id="toc-3D" class="nav-link" data-scroll-target="#3D">3D- Do nothing, I’m happy with the current sample size choice</a></li>
   <li><a href="#Summary" id="toc-Summary" class="nav-link" data-scroll-target="#Summary">4- Summary</a></li>
   </ul>
 </nav>
@@ -585,14 +588,14 @@ window.Quarto = {
 <li><p><strong>Distribution of Substance <span class="math inline">\(x\)</span>:</strong> The expression levels of substance <span class="math inline">\(x\)</span> in people follow a normal distribution.</p></li>
 <li><p><strong>Impact on Longevity:</strong> Individuals at the high end of the expression spectrum tend to live approximately 5 years longer than those at the low end.</p></li>
 </ol>
-<p>Given these insights, our task is to calculate a sample size that can yield statistically significant results. This endeavor will not only help us test our hypothesis with precision but also pave the way for future research that could revolutionize our understanding of genetic influences on lifespan. Let’s proceed with this vital calculation, knowing that the outcomes will bring us one step closer to potentially groundbreaking discoveries in genetic biomarkers and longevity.</p>
+<p>Given these insights, our task is to calculate a sample size that can yield statistically significant results. This endeavor will not only help us test our hypothesis with precision but also pave the way for future research that could revolutionize our understanding of genetic influences on lifespan. We will see that the sample size required to generate data that can support a scientific hypothesis depends directly on the prior beliefs and knowledge about that hypothesis. Let’s proceed with this vital calculation, knowing that the outcomes will bring us one step closer to potentially groundbreaking discoveries in genetic biomarkers and longevity.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Given this information, how many individuals should we include in our study to have a reasonable chance of demonstrating this hypothesis is correct? (I.e., What is the <strong>sample size</strong>?)
+Given this information, from how many individuals do we need to collect data to have a reasonable chance of demonstrating this hypothesis is correct? (I.e., What is the <strong>sample size</strong>?)
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -698,7 +701,7 @@ We provided very little information and asked you to compute the sample size. Wh
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-What do you observe? Does the hypothesized relationship between the biomarker <span class="math inline">\(x\)</span> and lifespan appear present in the data?
+Do you observe the hypothesized relationship between the biomarker <span class="math inline">\(x\)</span> and lifespan in these data?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -789,41 +792,47 @@ Wait, this doesn’t make sense!
 </section>
 </section>
 <section id="Choose" class="level1">
-<h1>Choose your own adventure …</h1>
-<div class="alert alert-block alert-danger">
-<p><b>Alert to CENTER:</b> What follows is a “choose your own adventure” format, in the style of the old books. The learner picks an option below to continue (either 3A, 3B, or 3C). Not all choices lead to good outcomes. This supports “replayability” of the Mini (e.g., learner can return and play another path).</p>
-</div>
-<p>To make sense of these confusing results, we’ll use the data collected to estimate the power and improve our choice of sample size.</p>
-<section id="which-path-will-you-pursue-to-compute-the-sample-size" class="level2">
-<h2 class="anchored" data-anchor-id="which-path-will-you-pursue-to-compute-the-sample-size">Which path will you pursue to compute the sample size?</h2>
+<h1>Choose your own adventure</h1>
+<p>Many alternatives exist to calculate sample size.</p>
+<p>These include using our prior knowledge or, when available, using prior collected data.</p>
+<p>Now, it’s your choice.</p>
+<p><strong>Choose a path to compute the sample size.</strong></p>
+<section id="a--ill-resample-the-pilot-data-turn-to-page-3a." class="level3">
+<h3 class="anchored" data-anchor-id="a--ill-resample-the-pilot-data-turn-to-page-3a."><strong>3A-</strong> I’ll resample the pilot data, <a href="#3A">Turn To Page 3A</a>.</h3>
 </section>
-<section id="a--ill-resample-the-data-turn-to-page-3a." class="level2">
-<h2 class="anchored" data-anchor-id="a--ill-resample-the-data-turn-to-page-3a."><strong>3A-</strong> I’ll resample the data, <a href="#3A">Turn To Page 3A</a>.</h2>
+<section id="b--ill-use-the-pilot-data-to-build-a-model-turn-to-page-3b." class="level3">
+<h3 class="anchored" data-anchor-id="b--ill-use-the-pilot-data-to-build-a-model-turn-to-page-3b."><strong>3B-</strong> I’ll use the pilot data to build a model, <a href="#3B">Turn To Page 3B</a>.</h3>
 </section>
-<section id="b--ill-build-models-using-the-data-turn-to-page-3b." class="level2">
-<h2 class="anchored" data-anchor-id="b--ill-build-models-using-the-data-turn-to-page-3b."><strong>3B-</strong> I’ll build models using the data, <a href="#3B">Turn To Page 3B</a>.</h2>
+<section id="c--ill-ignore-the-pilot-data-and-use-my-prior-knowledge-turn-to-page-3c." class="level3">
+<h3 class="anchored" data-anchor-id="c--ill-ignore-the-pilot-data-and-use-my-prior-knowledge-turn-to-page-3c."><strong>3C-</strong> I’ll ignore the pilot data and use my prior knowledge, <a href="#3C">Turn To Page 3C</a>.</h3>
 </section>
-<section id="c--ill-build-models-without-the-data-turn-to-page-3c." class="level2">
-<h2 class="anchored" data-anchor-id="c--ill-build-models-without-the-data-turn-to-page-3c."><span style="color:red"><strong>3C-</strong> I’ll build models without the data, <a href="#3C">Turn To Page 3C</a>.</span></h2>
-</section>
-<section id="d--ill-use-my-current-sample-size-choice-turn-to-page-3d." class="level2">
-<h2 class="anchored" data-anchor-id="d--ill-use-my-current-sample-size-choice-turn-to-page-3d."><strong>3D-</strong> I’ll use my current sample size choice, <a href="#3D">Turn to Page 3D</a>.</h2>
+<section id="d--ill-do-nothing-and-stick-with-my-current-sample-size-choice-turn-to-page-3d." class="level3">
+<h3 class="anchored" data-anchor-id="d--ill-do-nothing-and-stick-with-my-current-sample-size-choice-turn-to-page-3d."><strong>3D-</strong> I’ll do nothing and stick with my current sample size choice, <a href="#3D">Turn to Page 3D</a>.</h3>
 <hr>
 </section>
 </section>
 <section id="3A" class="level1">
 <h1>3A- With resampling you can compute the sample size!</h1>
-<p>The data provided in Mini 2 represent one instantiation of the experiment, conducted with a sample size <code>N</code>. While our analysis of these data did not yield evidence to support our hypothesis, they remain extremely useful for our continued investigation into sample size. Specifically, we can leverage these data to estimate the necessary sample size for a subsequent experiment. By implementing a resampling procedure, we will systematically examine how variations in sample size <code>N</code> influence our capacity to detect a significant result, thus optimizing our experimental design for future investigations.</p>
+<p>The data provided in Mini 2 represent one instantiation of the experiment, conducted with a sample size <code>N</code>.</p>
+<p>Our analysis of these data did not yield evidence to support our hypothesis.</p>
+<p>However, these data remain extremely useful for our continued investigation into sample size.</p>
+<p>We can leverage these data to estimate the necessary sample size for a subsequent experiment.</p>
+<p>We’ll implement a resampling procedure and systematically examine how variations in sample size <code>N</code> influence our capacity to detect a significant result.</p>
+<p>Doing so will let us optimize our experimental design for future investigations.</p>
 <section id="resampling-procedure-introduction" class="level3">
 <h3 class="anchored" data-anchor-id="resampling-procedure-introduction">Resampling procedure (Introduction)</h3>
-<p>We’re going to attempt something that seems far-fetched and magical: we’ll generate new data from our existing data. To do so, we’ll implement a nonparametric bootstrap to generate new pseudodata from the observed data.</p>
+<p>We’re going to attempt something that seems far-fetched and magical:</p>
+<ul>
+<li>we’ll generate new data from our existing data.</li>
+</ul>
+<p>To do so, we’ll implement a <strong>nonparametric bootstrap</strong> and generate pseudodata from our observed data.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-A note on the nonparametric bootstrap.
+A note on the nonparametric bootstrap
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -836,9 +845,9 @@ A note on the nonparametric bootstrap.
 <p>Our resampling procedure consists of 4 steps:</p>
 <ol type="1">
 <li>Choose a new sample size (call it <code>N_resampled</code>).</li>
-<li>Draw a new (random) set of <code>N_resampled</code> labels we can use to index our data (biomarker <span class="math inline">\(x\)</span> and lifespan).</li>
+<li>Draw a new (random) set of <code>N_resampled</code> labels to index our data (biomarker <span class="math inline">\(x\)</span> and lifespan).</li>
 <li>Use these indices to create new pseudodata: a resampled data set.</li>
-<li>Compute the relationship (and its statistical significance) between the biomarker <span class="math inline">\(x\)</span> and lifespan in our resampled data.</li>
+<li>Compute the relationship between the biomarker <span class="math inline">\(x\)</span> and lifespan in our resampled data.</li>
 </ol>
 <p>We’ll now describe each step. For a related example, <a href="https://youtu.be/mqDEJyW_z4c?si=heigY8z5PqAjnwKZ">see this video</a>.</p>
 </section>
@@ -855,21 +864,21 @@ What will you choose for <code>N_resampled</code>?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ul>
-<li>Our original choice of sample size resulted in a positive slope estimate, indicating a potential relationship between the genetic biomarker <code>x</code> and <code>lifespan</code>. But, the high standard error and non-significant p-value imply that this relationship is not statistically significant. Further investigation with more data may draw more definitive conclusions. However, to start, let’s fix <code>N_resampled = N</code>, the original sample size.</li>
-</ul>
+<p>Our original choice of sample size resulted in a positive slope estimate, indicating a potential relationship between the genetic biomarker <code>x</code> and <code>lifespan</code>. But, the high standard error and non-significant p-value imply that this relationship is not statistically significant. Further investigation with more data may draw more definitive conclusions. However, to start, let’s fix <code>N_resampled = N</code>, the original sample size.</p>
 </div>
 </div>
 <div id="qpyodide-insertion-location-7"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>We’ll start by fixing <code>N_resampled = N</code>, the original sample size. In what follows, we’ll adjust this value and examine the impact.</p>
+<p>We’ll start by fixing <code>N_resampled = N</code>, the original sample size.</p>
+<p>In what follows, we’ll adjust this value and examine the impact.</p>
 <p><strong>Thus concludes Step 1 of our resampling procedure.</strong></p>
 <hr>
 </section>
 <section id="resampling-procedure-step-2" class="level3">
 <h3 class="anchored" data-anchor-id="resampling-procedure-step-2">Resampling procedure: Step 2</h3>
 <p>Our second step is to draw a random set of <code>N_resampled</code> labels to index our data (biomarker <code>x</code> and <code>lifespan</code>).</p>
-<p>To visualize this procedure, imagine we assign each patient in the original data set a number, from <span class="math inline">\(0\)</span> up to <code>N</code>. We then write each number on a marble and place all <code>N</code> marbles in an opaque bag. Each marble is assigned a unique integer value from 0 to <code>N</code>-1. Now, reach your hand into the bag, grab a marble, record its number, and replace the marble in the bag. We assume that each marble is equally likely to be selected at each draw (i.e., there are no special features that allow some marbles to be drawn more often). Repeat this procedure <code>N_resampled</code> times to create a list of <code>N_resampled</code> integers. Notice that after recording the drawn marble’s number, we replace it in the bag. So, we could potentially draw the same marble <code>N_resampled</code> times, although that’s extremely unlikely.</p>
+<p>To visualize this procedure, imagine we assign each patient in the original data set a number, from <span class="math inline">\(0\)</span> up to <code>N</code>-1. We then write each number on a marble and place all <code>N</code> marbles in an opaque bag. Each marble is assigned a unique integer value from <span class="math inline">\(0\)</span> to <code>N</code>-1.</p>
+<p>Now, reach your hand into the bag, grab a marble, record its number, and replace the marble in the bag. We assume that each marble is equally likely to be selected at each draw (i.e., there are no special features that allow some marbles to be drawn more often). Repeat this procedure <code>N_resampled</code> times to create a list of <code>N_resampled</code> integers. Notice that after recording the drawn marble’s number, we replace it in the bag. So, we could potentially draw the same marble <code>N_resampled</code> times, although that’s extremely unlikely.</p>
 <p>Performing this sampling with replacement procedure by hand would, of course, be extremely time consuming (e.g., who will paint integers on each marble?). Fortunately, this is the type of boring task where a computer excels.</p>
 <p>Let’s have a look at this “marble draw”:</p>
 <div id="qpyodide-insertion-location-8"></div>
@@ -896,7 +905,7 @@ Look at the values in <code>ind</code>. What do they mean?
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Run the code to generate <code>ind</code> again. What do you find? (I.e., is it the same or different than the first time?)
+Run the code to generate <code>ind</code> again. What do you find? (i.e., is it the same or different than the first time?)
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -905,13 +914,16 @@ Run the code to generate <code>ind</code> again. What do you find? (I.e., is it 
 </ul>
 </div>
 </div>
-<p>We can now generate a set of random indices to our data. We’ll use these to create pseudodata in the next step.</p>
+<p>We can now generate a set of random indices to our data.</p>
+<p>We’ll use these to create pseudodata in the next step.</p>
 <p><strong>Thus concludes Step 2 of our resampling procedure.</strong></p>
 <hr>
 </section>
 <section id="resampling-procedure-step-3" class="level3">
 <h3 class="anchored" data-anchor-id="resampling-procedure-step-3">Resampling procedure: Step 3</h3>
-<p>Our third step is to use these indices to generate the resampled data. To do so, we’ll draw data from the study participants using the indices in <code>ind</code>. Again, this is a task for a computer:</p>
+<p>Our third step is to use these indices to generate the resampled data.</p>
+<p>To do so, we’ll draw data from the study participants using the indices in <code>ind</code>.</p>
+<p>Again, this is the type of boring task that computers love:</p>
 <div id="qpyodide-insertion-location-9"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -948,14 +960,16 @@ Compare the plots of the original data (<code>x</code> and <code>lifespan</code>
 </ul>
 </div>
 </div>
-<p>We can now generate pseudodata from our original data. We’ll assess the relationship between these pseudodata in the next step.</p>
+<p>We can now generate pseudodata from our original data.</p>
+<p>We’ll assess the relationship between these pseudodata in the next step.</p>
 <p><strong>Thus concludes Step 3 of our resampling procedure.</strong></p>
 <hr>
 </section>
 <section id="resampling-procedure-step-4" class="level3">
 <h3 class="anchored" data-anchor-id="resampling-procedure-step-4">Resampling procedure: Step 4</h3>
 <p>Our fourth step is to compute the relationship (and its statistical significance) between the resampled biomarker <span class="math inline">\(x\)</span> and resampled lifespan.</p>
-<p>To do so, we’ll follow the same approach as above. We’ll fit the same line to new resampled data, and again compute the slope and significance.</p>
+<p>To do so, we’ll follow the exact same approach as above.</p>
+<p>We’ll fit a line to new resampled data and again compute the slope and significance.</p>
 <div id="qpyodide-insertion-location-11"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -989,28 +1003,33 @@ So far, we’ve fixed <code>N_resampled = N</code>, the original sample size. Ch
 </ul>
 </div>
 </div>
-<p>We’ve now marched through the entire modeling procedure.</p>
-<p>As a final step of this procedure, we’ll use this modeling approach to estimate the statsitcal power of our original experiment and a good sample size for increased power.</p>
+<p>We’ve now marched through the entire resampling procedure.</p>
+<p>As a final step , we’ll use this resampling approach to estimate the statsitcal power of our original experiment and a good sample size for increased power.</p>
 <p><strong>Thus concludes Step 4 of our resampling procedure.</strong></p>
 <hr>
 </section>
 <section id="putting-it-all-together" class="level3">
 <h3 class="anchored" data-anchor-id="putting-it-all-together">Putting it all together</h3>
 <p>We’ll now use resampling to determine a good sample size for our experiment.</p>
-<p>To do so, we’ll first introduce the concept of <strong>statistical power</strong>.</p>
-<p>In the context of statistical analysis, power and sample size are closely interrelated concepts.</p>
-<p><strong>Statistical Power</strong> is the probability that a test will correctly reject a false null hypothesis (i.e., detect an effect if there is one). Higher power reduces the risk of a Type II error, where a real effect is missed (failing to reject a false null hypothesis).</p>
-<p>Our initial challenge was to compute the <strong>sample size</strong>: the number of observations or data points included in a study. Our initial choice <code>N</code> was too small; with this choice, we did not detect a significant relationship between the biomarker <code>x</code> and lifespan, i.e., we did not have enough <strong>statistical power</strong>.</p>
-<p>Using resampling, we generated pseudodata with an increased sample size <code>N_resampled</code>. Doing so in the exercise above, you might have found (sometimes) a significant relationship between the siualted biomarker <code>x</code> and simulated lifespan; you might have (sometimes) found p&lt;0.05, the arbitrary magical threshold often used to declare a significant effect. If you’d like to understand this magic, check out [LINKS TO OTHER METERS].</p>
-<p>We can use this same resampling procedure to compute the statistical power of our test given the sample size. We’ll do so in a few steps:</p>
+<p>To do so, let’s first review the concept of <strong>statistical power</strong>.</p>
+<p>In the context of statistical analysis, power and sample size are interrelated concepts.</p>
+<p><strong>Statistical power</strong> is the probability that a test will correctly reject a false null hypothesis (i.e., detect an effect if there is one). Higher power reduces the risk of a Type II error, where a real effect is missed (failing to reject a false null hypothesis).</p>
+<p>Our initial challenge was to compute the <strong>sample size</strong>: the number of observations or data points included in a study. Using our initial choice <code>N</code>, we failed to detect a significant relationship between biomarker <code>x</code> and lifespan. This failure may occur because:</p>
+<ol type="1">
+<li>There is <em>no</em> relationship between biomarker <code>x</code> and lifespan.</li>
+<li>There is a relationship between biomarker <code>x</code> and lifespan, but we did not collect enough data to detect it.</li>
+</ol>
+<p>We’d like to rule out the scenario #2. To do so, we need to understand the <strong>statistical power</strong> of our original experiment.</p>
+<p>Let’s now use our resampled data to compute the statistical power for our original sample size choice <code>N</code>.</p>
+<p>We’ll do so in a few steps:</p>
 </section>
 <section id="resampling-procedure-to-estimate-the-statistical-power-6-steps" class="level3">
 <h3 class="anchored" data-anchor-id="resampling-procedure-to-estimate-the-statistical-power-6-steps">Resampling procedure to estimate the statistical power (6 steps)</h3>
 <ol type="1">
-<li>Choose a new sample size (call it <code>N_resampled</code>).</li>
-<li>Draw a new (random) set of <code>N_resampled</code> labels we can use to index our data (biomarker <span class="math inline">\(x\)</span> and lifespan).</li>
+<li>Choose a sample size (call it <code>N_resampled</code>).</li>
+<li>Draw a new (random) set of <code>N_resampled</code> labels to index our data.</li>
 <li>Use these indices to create new pseudodata: a resampled data set.</li>
-<li>Compute statistical significance (p-value) between the biomarker <span class="math inline">\(x\)</span> and lifespan in our resampled data.</li>
+<li>Perform the statistical test of interest (i.e., compute a p-value).</li>
 <li>Repeat Steps 1-5 <code>K</code> times, saving the p-value each time.</li>
 <li>The <strong>statistical power</strong> is the proportion of p-values below a chosen threshold <code>alpha</code>.</li>
 </ol>
@@ -1048,7 +1067,7 @@ What p-values do you observe?
 </section>
 <section id="resampling-procedure-step-6" class="level3">
 <h3 class="anchored" data-anchor-id="resampling-procedure-step-6">Resampling procedure: Step 6</h3>
-<p>Our last step to compute the statistical power is the proportion of p-values below a chosen threshold <code>alpha</code>.</p>
+<p>Our last step to compute the statistical power is to deteremine the proportion of p-values below a chosen threshold <code>alpha</code>.</p>
 <p>The threshold <code>alpha</code> represents the threshold for rejecting the null hypothesis when it is actually true. It’s conventional to set</p>
 <p><code>alpha = 0.05</code></p>
 <p>which means that there is a 5% chance of committing a Type I error, which is the error of incorrectly rejecting a true null hypothesis. This value is not inherently magical or optimal in all circumstances. But, it has become a convention primarily because it offers a middle ground that has been deemed acceptable by the scientific community for controlling Type I errors.</p>
@@ -1077,7 +1096,40 @@ Interpret the value in <code>statistical_power</code>. What does it mean?
 <p>In this plot, the <strong>statistical power</strong> is the proportion of values to the left (i.e., smaller than) the red line.</p>
 <p>And that’s it!</p>
 <p>The <strong>statistical power</strong> is not a mystical quantity. It’s the probability that a test will correctly reject a false null hypothesis. And, using the data we collected, we can compute this <strong>statistical power</strong> for different choices of sample size (<code>N_resample</code>).</p>
-<p>Let’s collect all the code, and perform one more experiment:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What value do you compute for the statistical power?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For our initial choice of sample size <code>N</code>, we find a statistical power less than 0.15.</p>
+</div>
+</div>
+</section>
+<section id="conclusion-our-original-study-was-severly-underpowered." class="level3">
+<h3 class="anchored" data-anchor-id="conclusion-our-original-study-was-severly-underpowered.">Conclusion: our original study was severly underpowered.</h3>
+<p>Using the resampling procedure, we conclude that our initial sample size <code>N</code> results in a statistical power less than 0.15.</p>
+<p>This means that, if the effect (a relationship between biomarker <code>x</code> and lifespan) truly exists, we have less than a <strong>15% chance</strong> of detecting it.</p>
+<p>At this sample size, our study is <strong>severly underpowered</strong>. The statistical power is well below the recommended threshold of 0.8.</p>
+<p>There is high false negative risk. There is at least a <strong>85% chance</strong> that our study will fail to detect a true effect (Type II error).</p>
+<p><strong>Conclusion</strong></p>
+<p>Our original study found no statistically significant result. However, the statistical power of our original study was low.</p>
+<p>Therefore, we should not conclude that there is no effect - our test is likely too weak to detect one (if it exists).</p>
+</section>
+<section id="design-a-future-experiment-with-enough-statistical-power." class="level3">
+<h3 class="anchored" data-anchor-id="design-a-future-experiment-with-enough-statistical-power.">Design a future experiment with enough statistical power.</h3>
+<p>We would like to perform a future experiment with enough statistical power.</p>
+<p>In other words, we’d like our future experiment to protect against failing to detect a true effect (i.e., protect against Type II error).</p>
+<p>It’s common to design experiemnts with a statistical power of 0.8. In that case, there’s a 20% chance of failing to detect a true effect ( i.e., of a Type II error); that’s a big improvement compared to our original experiement, which had at least an 85% chacne of failing to detect a true effect.</p>
+<p>Our goal, therefore, is to design a future experiement with a large enough sample size <code>N</code> to have 80% power.</p>
+<p>So, what is the smallest sample size <code>N</code> we can choose to have 80% power?</p>
+<p>To answer this, let’s use our resampling procedure with different choices of <code>N_resampled</code>.</p>
+<p>Run the code below with different values of <code>N_resampled</code>.</p>
+<p>What is the smallest value of <code>N_resampled</code> the provides 80% power?</p>
 <div id="qpyodide-insertion-location-16"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1086,15 +1138,13 @@ Interpret the value in <code>statistical_power</code>. What does it mean?
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-We’ve used our original sample size by setting <code>N_resampled = N</code> in the code above. What is the statistical power? Does this make sense with our original conclusion in Mini 2?
+Why are we interested in the <em>smallest</em> sample size that provides 80% power?
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>Using our original sample size (<code>N=100</code>), the statistical power is small, less than 0.15.</li>
-<li>The probability that the test will correctly reject a false null hypothesis (here, no relationship between biomarker <span class="math inline">\(x\)</span> and longevitiy) is 0.15. That’s not very high …</li>
-<li>Therefore, with this sample size, we do not expect enough power to detect a significant effect.</li>
-<li>This is consistent with the results in Mini 2, in which we failed to detect a significant effect.</li>
+<li>Larger sample sizes can escalate the costs and logistical complexity of a study.</li>
+<li>The choice of 0.8 is considered a good trade-off between increasing precision and controlling operational constraints.</li>
 </ul>
 </div>
 </div>
@@ -1104,23 +1154,7 @@ We’ve used our original sample size by setting <code>N_resampled = N</code> in
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Increase <code>N_resampled</code> in the code above. What happens to the statistical power?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>Statistical power increases with <code>N_resampled</code>.</li>
-<li>Larger samples provide more information about the population, leading to more precise estimates of the population parameters. This precision reduces the standard error and widens the gap between the null hypothesis and the alternative hypothesis if there is a true effect, making it easier to detect significant differences. Therefore, increasing the sample size typically increases the power of a statistical test.</li>
-</ul>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-At what value of <code>N_resampled</code> does the statistical power equal 0.80?
+At what value of <code>N_resampled</code> does the statistical power approximately equal 0.80?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1129,13 +1163,26 @@ At what value of <code>N_resampled</code> does the statistical power equal 0.80?
 </ul>
 </div>
 </div>
+<p>To answer the question above, and determine the <code>N_resampled</code> that gives approximately 80% power, you probably ran the same code over and over again, with different values of <code>N_resampled</code>.</p>
+<p>That’s a fine approach.</p>
+<p>In doing so, you may have gotten a sense of how the statistical power varies with <code>N_resampled</code>.</p>
+<p>That leads to our next question:</p>
+</section>
+<section id="what-happens-to-the-statistical-power-as-n_resampled-increases" class="level2">
+<h2 class="anchored" data-anchor-id="what-happens-to-the-statistical-power-as-n_resampled-increases">What happens to the statistical power as <code>N_resampled</code> increases?</h2>
+<p>To answer this question, let’s compute the power at different choices of <code>N_resampled</code> and plot the results.</p>
+<p>To do so, we’ll set <code>K=100</code> so the code runs in your browser. The plot will be jagged, but you’ll get the idea.</p>
+<div id="qpyodide-insertion-location-17"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>We find that the statistical power increases with <code>N_resampled</code>.</p>
+<p>Larger samples provide more information about the population, leading to more precise estimates of the population parameters. This precision reduces the standard error and widens the gap between the null hypothesis and the alternative hypothesis if there is a true effect, making it easier to detect significant differences. Therefore, increasing the sample size typically increases the power of a statistical test.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Why do we choose statistical power 0.8?
+Aside: Why do we choose statistical power 0.8?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1145,21 +1192,57 @@ Why do we choose statistical power 0.8?
 <p>The 0.8 level has become somewhat of a standard through historical precedent and its endorsement in statistical texts and guidelines. Researchers often follow these conventions to align with accepted practices, making their studies comparable to others in the field.</p>
 </div>
 </div>
+</section>
+<section id="a-loophole-in-the-statistical-power-increase-alpha" class="level2">
+<h2 class="anchored" data-anchor-id="a-loophole-in-the-statistical-power-increase-alpha">A loophole in the statistical power: increase <code>alpha</code>?</h2>
+<p>Increasing the sample size is one way to increase the statistical power.</p>
+<p>However, other approaches exist.</p>
+<p>For example, what if we increase <code>alpha</code>, the Type I error rate?</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Resampling is a universal way to calculate power and sample size, but only works if the resampled data captures the effect of interest.
+How do we interpret an increase in <code>alpha</code> from 0.05 (the standard value) to 0.1?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><span style="color:red"> When preliminary data exist and these data accurately represent the effect of interest, then resampling is a powerful and universal appraoch to calculate power and sample size. </span></p>
-<p><span style="color:red">In this case, our preliminary data (see Mini 2) do capture the expected effect of interest - a weak positive relationship between biomarker <code>x</code> and <code>longevity</code>, although when the sample size <code>N</code> is too small, we fail to detect a significant relationship between these features. </span></p>
-<p><span style="color:red"><strong>However, you might imagine an alternative scenario.</strong> What if our preliminary data revealed a <em>negative</em> relationship between biomarker <code>x</code> and <code>longevity</code>? That could happen, for example, if the observations were noisy or the initial sample size <code>N</code> was small. In that case, the resampled data will <strong>not</strong> capture the effect of interest; resampling these data to calculate power and sample size is a poor choice. Instead, you might pursue alterantive appraoches, including such as <a href="#3C">Building models without the data</a>.</span></p>
+<ul>
+<li><p>Increasing the significance level <code>alpha</code> from 0.05 to 0.1 means we’re more willing to reject the null hypothesis. We’ll accept a higher risk of rejecting the null hypothesis when it’s actually true (i.e., a higher Type I error).</p></li>
+<li><p>At this looser threshold for significance, it’s easier to declare a result significant. But, the risk of false positives increases - more results will appear significant, but more could be false.</p></li>
+</ul>
 </div>
 </div>
+<p>To study the impact of increasing <code>alpha</code> on the statistical power, let’s compute it.</p>
+<p>We’ll do so using a sample size <code>N_resampled=100</code>. (Wait, is that a good choice? Let’s see …)</p>
+<p>We’ll again set <code>K=100</code> so the code runs in your browser. The plot will be jagged, but you’ll get the idea.</p>
+<div id="qpyodide-insertion-location-18"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>We find that, at the low sample size <code>N_resampled=100</code>, we can still acheive 80% power if we accept <code>alpha</code> <span class="math inline">\(\approx\)</span> 0.75.</p>
+<p><strong>Did we find a loophole? Can we get the statistical power we want (0.8) at a low sample size?</strong></p>
+<p>No, we did not find a loophole.</p>
+<p>What we’ve discovered is a <strong>fundamental tradeoff in hypothesis testing</strong>: you can increase statistical power by increasing <code>alpha</code>, but at a cost.</p>
+<p>Statistical power depends on sample size and the signficance threshold (<code>alpha</code>).</p>
+<p>By setting <code>alpha=0.75</code>, we’re saying:</p>
+<ul>
+<li><em>I’m willing to reject the null hypothesis 75% of the time even when it is true.</em></li>
+</ul>
+<p>This results in:</p>
+<ul>
+<li><p>Very high false positive rate (Type I error = 75%)</p></li>
+<li><p>Artificially inflated power (since it’s now very easy to reject the null)</p></li>
+<li><p>A test that’s statistically meaningless by conventional standards</p></li>
+</ul>
+<p>It’s like lowering the bar so much that everyone passes the test. Sure, your “pass rate” (power) goes up—but the test no longer distinguishes between those who know the material and those who don’t.</p>
+<p>So, did we find a loophole?</p>
+<p>No! We can always increase power by increasing <code>alpha</code>, but that destroys the credibility of our findings. At <code>alpha=0.75</code> there is a very high probability of being a false positive.</p>
+</section>
+<section id="resampling-is-a-universal-way-to-calculate-power-and-sample-size-but-only-works-if-the-resampled-data-captures-the-effect-of-interest." class="level2">
+<h2 class="anchored" data-anchor-id="resampling-is-a-universal-way-to-calculate-power-and-sample-size-but-only-works-if-the-resampled-data-captures-the-effect-of-interest.">Resampling is a universal way to calculate power and sample size, but only works if the resampled data captures the effect of interest.</h2>
+<p>When preliminary data exist and these data accurately represent the effect of interest, then resampling is a powerful and universal appraoch to calculate power and sample size.</p>
+<p>In this case, our preliminary data (see Mini 2) do capture the expected effect of interest - a weak positive relationship between biomarker <code>x</code> and <code>longevity</code>, although when the sample size <code>N</code> is too small, we fail to detect a significant relationship between these features.</p>
+<p><strong>However, you might imagine an alternative scenario.</strong> What if our preliminary data revealed a <em>negative</em> relationship between biomarker <code>x</code> and <code>longevity</code>? That could happen, for example, if the observations were noisy or the initial sample size <code>N</code> was small. In that case, the resampled data will <strong>not</strong> capture the effect of interest; resampling these data to calculate power and sample size is a poor choice. Instead, you might pursue alterantive appraoches, including such as <a href="#3C">Building models without the data</a>.</p>
 <div class="alert alert-block alert-danger">
 <b>Warning:</b>
 <p></p>
@@ -1192,7 +1275,7 @@ Resampling is a universal way to calculate power and sample size, but only works
 <h3 class="anchored" data-anchor-id="modeling-procedure-step-1">Modeling procedure: Step 1</h3>
 <p>Our first step is to estimate a model for biomarker <code>x</code>.</p>
 <p>To do so, let’s begin by visualizing the biomarker <code>x</code> in a historgram:</p>
-<div id="qpyodide-insertion-location-17"></div>
+<div id="qpyodide-insertion-location-19"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1215,7 +1298,7 @@ Describe the histogram. What does it look like?
 <p>That’s very useful, because it suggests we can model the data as normally distributed.</p>
 <p>Normal distributions are nice because we only need to estimate two parameters: <strong>the mean and standard deviation</strong>.</p>
 <p>Let’s compute those values in Python:</p>
-<div id="qpyodide-insertion-location-18"></div>
+<div id="qpyodide-insertion-location-20"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1237,7 +1320,7 @@ Interpert the values of <code>mean_x</code> and <code>std_x</code>. How do they 
 <p>In words, we’ll model <code>x</code> as normally distributed with mean <code>mean_x</code> = 0.03 and standard deviation <code>std_x</code> = 0.71.</p>
 <p>In Python, it’s <strong>easy to simulate values from this model.</strong></p>
 <p>Let’s do so, and simulate 100 values from the model.</p>
-<div id="qpyodide-insertion-location-19"></div>
+<div id="qpyodide-insertion-location-21"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1255,7 +1338,7 @@ Compared <code>x_modeled</code> to the original values <code>x</code>. Do the va
 </div>
 </div>
 <p>Let’s also plot histograms for the original data <code>x</code> and the modeled data <code>x_modeled</code>.</p>
-<div id="qpyodide-insertion-location-20"></div>
+<div id="qpyodide-insertion-location-22"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1282,15 +1365,15 @@ Compared the histograms of <code>x_modeled</code> and the original values <code>
 <p>Thankfully, we’ve already completed this step!</p>
 <p>In Mini 2, we modeled the relationship between biomarker <span class="math inline">\(x\)</span> and lifespan as a line.</p>
 <p>Here’s that code again:</p>
-<div id="qpyodide-insertion-location-21"></div>
+<div id="qpyodide-insertion-location-23"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>As we discussed in Mini 2, the model consists of two parameters: the <code>slope</code> and <code>intercept</code>.</p>
 <p>Let’s define and print those:</p>
-<div id="qpyodide-insertion-location-22"></div>
+<div id="qpyodide-insertion-location-24"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Do those values make sense?</p>
 <p>Let’s check by plotting the data with our estimated line:</p>
-<div id="qpyodide-insertion-location-23"></div>
+<div id="qpyodide-insertion-location-25"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1311,7 +1394,7 @@ Examine the plot above. Do the estimated values for <code>slope</code> and <code
 <p>To simulate the model of lifespan, we’ll need to extract one more parameter from the estimated model: the <strong>dispersion</strong>.</p>
 <p>The <strong>dispersion parameter</strong> describes the amount of uncertainty in our ability to predinct each data point. In this case, it is the residual standard deviation of the lifespan after we have tried to predict it using the expression level of substance <span class="math inline">\(x\)</span>.</p>
 <p>Let’s get the dispersion from the estimated model:</p>
-<div id="qpyodide-insertion-location-24"></div>
+<div id="qpyodide-insertion-location-26"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1390,7 +1473,7 @@ Describe - in words - each term in the equations above.
 <p>With the estimated models in hand, it’s now simple to simulate data from the models.</p>
 <p>To do so, we must choose a value for <code>N_modeled</code>.</p>
 <p>Let’s start by setting <code>N_modeled = N</code>, our original sample size, and then simulate the models. To do so,</p>
-<div id="qpyodide-insertion-location-25"></div>
+<div id="qpyodide-insertion-location-27"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1408,7 +1491,7 @@ How many values are in the simulated data <code>x_sampled</code> and <code>lifes
 </div>
 </div>
 <p>Let’s see what those modeled values look like, compared to our original data set.</p>
-<div id="qpyodide-insertion-location-26"></div>
+<div id="qpyodide-insertion-location-28"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1433,7 +1516,7 @@ Compare the plots of the original data (<code>x</code> and <code>lifespan</code>
 <h3 class="anchored" data-anchor-id="modeling-procedure-step-4">Modeling procedure: Step 4</h3>
 <p>Our fourth step is to compute the relationship (and its statistical significance) between the modeled biomarker <span class="math inline">\(x\)</span> and modeled lifespan.</p>
 <p>To do so, we’ll follow the same approach as above. We’ll fit the same line to new modeled data, and again compute the slope and significance.</p>
-<div id="qpyodide-insertion-location-27"></div>
+<div id="qpyodide-insertion-location-29"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1500,10 +1583,10 @@ So far, we’ve fixed <code>N_modeled = N</code>, the original sample size. Chan
 <h3 class="anchored" data-anchor-id="modeling-procedure-step-5">Modeling procedure: Step 5</h3>
 <p>We’ve added Step 5, in which we create <code>K</code> new instances of the modeled data. For each instance, we calculate and save the p-value corresponding to the statistical significance of the relationship between the biomarker <span class="math inline">\(x\)</span> and lifespan in our modeled data.</p>
 <p>At the end of Step 5, we’ll have created a vector of <code>K</code> p-values. Let’s do so now, with <code>N_modeled=N</code>.</p>
-<div id="qpyodide-insertion-location-28"></div>
+<div id="qpyodide-insertion-location-30"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Let’s investigate this list of p-values by plotting a historgram:</p>
-<div id="qpyodide-insertion-location-29"></div>
+<div id="qpyodide-insertion-location-31"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1529,7 +1612,7 @@ What p-values do you observe?
 <p><code>alpha = 0.05</code></p>
 <p>which means that there is a 5% chance of committing a Type I error, which is the error of incorrectly rejecting a true null hypothesis. This value is not inherently magical or optimal in all circumstances. But, it has become a convention primarily because it offers a middle ground that has been deemed acceptable by the scientific community for controlling Type I errors.</p>
 <p>To implement Step 6, let’s compute the <code>statistical_power</code> as the proportion of times that <code>p_values</code> is less than the threshold <code>alpha</code>.</p>
-<div id="qpyodide-insertion-location-30"></div>
+<div id="qpyodide-insertion-location-32"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1548,14 +1631,14 @@ What p-values do you observe?
 </div>
 <p>The value in <code>statistical_power</code> is the <strong>statistical power</strong> of our test. It represents the proportion of times we reject the null hypothesis and declare a significant relationship between the biomarker <code>x</code> and lifespan.</p>
 <p>To make this graphically explicit, let’s replot the histogram of <code>p-values</code> with a line at our threshold <code>alpha</code>.</p>
-<div id="qpyodide-insertion-location-31"></div>
+<div id="qpyodide-insertion-location-33"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>In this plot, the <strong>statistical power</strong> is the proportion of values to the left (i.e., smaller than) the red line.</p>
 <p>And that’s it!</p>
 <p>The <strong>statistical power</strong> is not a mystical quantity. It’s the probability that a test will correctly reject a false null hypothesis.</p>
 <p>And, using the data we collected, we can compute how the <strong>statistical power</strong> depends on sample size by changing the value of (<code>N_modeled</code>).</p>
 <p>To that end, let’s collect all the code, and perform one more experiment:</p>
-<div id="qpyodide-insertion-location-32"></div>
+<div id="qpyodide-insertion-location-34"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1633,11 +1716,77 @@ Modeling preliminary data is a universal way to calculate power and sample size,
 </section>
 <section id="3C" class="level1">
 <h1>3C- Build models without the data to compute the sample size!</h1>
-<p><span style="color:red"> (PENDING) </span></p>
-</section>
-<section id="3D" class="level1">
-<h1>3D- Do nothing, I’m happy with the current sample size choice</h1>
-<div id="qpyodide-insertion-location-33"></div>
+<ul>
+<li>The previous analysis created surrogate data by resampling from a pilot study.</li>
+<li>This assumed that pilot data was available and that this pilot data reflects the real effect and variability we expect to see in a full experiment.</li>
+<li>If pilot data is not available or doesn’t reflect what we expect, another way to generate surrogate data is to simulate it directly</li>
+</ul>
+<p>In the alternative paths, we tried to use pilot data from Mini 2 to learn enough about the properties of our experiment to compute the power of our proposed analysis for different sample sizes. For this alternate approach, we will ignore everything from the pilot data. We will still generate surrogate data and compute statistical power for experiments with different sample sizes, but instead of using pilot data, we will use our prior knowledge and beliefs about the experiment to generate that surrogate data.</p>
+<p>Let’s begin by trying to quantify our beliefs about the data:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What would you guess is the mean lifespan (in years) for an individual from this population?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<div id="qpyodide-insertion-location-35"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="alert alert-block alert-danger">
+<b>Note:</b>
+<p></p>
+<p>While you chose a specific guess for lifespan here, you will later investigate how changing this value affects the statistical power.</p>
+</div>
+<p>Next we need a guess for the <strong>standard deviation</strong> for the lifespan of an individual in this population.</p>
+<p>You might be able to guess based on your knowledge of human lifespans and standard deviations.</p>
+<p>For example, you could guess a range of lifespans for 95% of humans and divide the difference between the top and bottom of that age range by 4. Thus reflects the idea that human age ranges follow an approximate normal distribution and that 95% of the data from a normal distribution falls between +/- 2 standard deviations of the mean.</p>
+<div id="qpyodide-insertion-location-36"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="alert alert-block alert-danger">
+<b>Note:</b>
+<p></p>
+<p>While you chose a specific guess for the standard deviation here, you will later investigate how changing this value affects the statistical power.</p>
+</div>
+<p>Finally, we need to decide what effect we expect an increase in substance X to have on lifespan in our experiment.</p>
+<p>Before we started the experiment we stated a scientific hypothesis that people in the highest range of values for substance X tend to live an average of 5 years longer than people in the lowest range.</p>
+<p>The difference between the effect we expect when the null hypothesis is true and when our scientific hypothesis is true is called the <strong>effect size</strong>.</p>
+<p>We can translate our statement of the scientific hypothesis in words to a mathematical statement of our hypothesis in terms of the analysis we plan to conduct in our experiment.</p>
+<p>Specifically, we plan to compute a linear regression between the expression level of substance X and a person’s lifespan.</p>
+<p>If we know that substance X is normally distributed in the population and we say that a person in the lowest range of values is in the 5th percentile and a person in the highest range is in the 95th percentile, then we would want the expected lifespan to increase 5 years between a z-scored value for substance X of -2 to +2.</p>
+<p>So under our scientific hypothesis, the slope would be 5/4 years increase per unit increase in the z score of substance X.</p>
+<div id="qpyodide-insertion-location-37"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>We can generate surrogate data from the model representing our scientific hypothesis and compute the probability that our analysis will correctly reject the null hypothesis.</p>
+<p>Let’s start by guessing a sample size for our analysis:</p>
+<div id="qpyodide-insertion-location-38"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>Now we’ll generate 1000 datasets, each of size <code>TrySampleSize</code>, which have the data properties we defined above.</p>
+<p>Most importantly, for each of these surrogate datasets our scientific hypothesis is true.</p>
+<p>Therefore, a successful statistical analysis should correctly reject the null hypothesis of no difference in lifespan as a function of substance X levels.</p>
+<div id="qpyodide-insertion-location-39"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Out of these 1000 datasets, in what fraction could we successfully reject the null hypothesis?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<p>How does our statistical power depend on our choice of <code>TrySampleSize</code>?</p>
+<p>Let’s repeat the above analysis for a range of values of <code>TrySampleSize</code>.</p>
+<div id="qpyodide-insertion-location-40"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="Summary" class="level1">
