@@ -11,12 +11,9 @@ from tqdm import tqdm
 
 def load_data():
     import pandas as pd
-    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/pvalue_baseline.csv")
-    swim_lessons = np.array(df.iloc[:,0])
-    drownings    = np.array(df.iloc[:,1])
-    x            = np.array(df.iloc[:,3])
-    y            = np.array(df.iloc[:,2])
-    return swim_lessons,drownings,x,y
+    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/spindle_data_baseline.csv", header=None)
+    baseline = df.to_numpy()
+    return baseline
 
 def load_data(using_colab=0):
     # Load the data.
