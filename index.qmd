@@ -15,7 +15,7 @@ title: "BU METER"
 
 
 ### Putting the p-value in context: p<0.05, but what does it REALLY mean?
-- Static [notebook](https://github.com/Mark-Kramer/METER-Units/blob/main/METER_P_Values.ipynb)
+- Interactive [notebook](METER_P_Values-Quarto.html)
 
 ---
 

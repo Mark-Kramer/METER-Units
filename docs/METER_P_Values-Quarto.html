@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -262,7 +228,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/pvalue_functions.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nswim_lessons, drownings, x,y = load_data()","id":1,"options":{"message":"true","warning":"true","classes":"","results":"markup","output":"true","label":"","comment":"","autorun":"","context":"interactive","fig-cap":"","dpi":72,"read-only":"false","fig-width":7,"out-height":"","fig-height":5,"out-width":"700px"}}];
+globalThis.qpyodideCellDetails = [{"id":1,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"import pandas as pd\n\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/pvalue_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nbaseline, during_treatment, post_treatment= load_data()"},{"id":2,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"print(baseline.shape)\nprint(during_treatment.shape)\nprint(post_treatment.shape)"},{"id":3,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"f, ax = plt.subplots(3,1)\nax[0].plot(baseline[:,0]);         ax[0].set_xlim([0,850]); ax[0].set_ylim([-6,6]); ax[0].set_title('Baseline');\nax[1].plot(during_treatment[:,0]); ax[1].set_xlim([0,850]); ax[1].set_ylim([-6,6]); ax[1].set_title('During Treatment');\nax[2].plot(post_treatment[:,0]);   ax[2].set_xlim([0,850]); ax[2].set_ylim([-6,6]); ax[2].set_title('Post-Treatment');\nplt.xlabel('Samples'); plt.ylabel('Spindle activity');\nplt.show()"},{"id":4,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"import scipy.stats as stats\nresult = stats.ttest_ind(baseline, during_treatment)\np_values = result.pvalue\nprint(p_values)"},{"id":5,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"import numpy as np\nfor k in np.arange(0,20):\n    print('Subject ', k, ', p=', np.array2string(p_values[k], precision=4))"},{"id":6,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"plt.figure()\nplt.stem(p_values)\nplt.axhline(y=0.05, color='r', linestyle='--')\nplt.xticks(np.arange(len(p_values)))  \nplt.xlabel('Subject'); plt.ylabel('p value'); plt.title('During Treatment'); plt.yscale('log')\nplt.show()"},{"id":7,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"plt.figure()\nplt.stem(p_values)\nplt.axhline(y=0.05/20, color='r', linestyle='--')\nplt.xticks(np.arange(len(p_values)))  \nplt.xlabel('Subject'); plt.ylabel('p value'); plt.title('During Treatment'); plt.yscale('log')\nplt.show()\nprint('Significant p-values during treatment = ',np.sum(p_values < 0.05/20))"},{"id":8,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"import scipy.stats as stats\nresult = stats.ttest_ind(baseline, post_treatment)\np_values_post = result.pvalue\nprint(p_values_post)"},{"id":9,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"import numpy as np\nfor k in np.arange(0,20):\n    print('Subject ', k, ', p=', np.array2string(p_values_post[k], precision=4))"},{"id":10,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"plt.figure()\nplt.stem(p_values_post)\nplt.axhline(y=0.05, color='r', linestyle='--')\nplt.xticks(np.arange(len(p_values_post)))  \nplt.xlabel('Subject'); plt.ylabel('p value'); plt.title('Post-Treatment'); plt.yscale('log')\nplt.show()"},{"id":11,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"plt.figure()\nplt.stem(p_values_post)\nplt.axhline(y=0.05/20, color='r', linestyle='--')\nplt.xticks(np.arange(len(p_values_post)))  \nplt.xlabel('Subject'); plt.ylabel('p value'); plt.title('Post-Treatment'); plt.yscale('log')\nplt.show()\nprint('Significant p-values post-treatment = ',np.sum(p_values_post < 0.05/20))"},{"id":12,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"import scipy.stats as stats\nimport numpy as np\nresult = stats.ttest_ind(baseline, during_treatment)\np_values_during = result.pvalue\nresult = stats.ttest_ind(baseline, post_treatment)\np_values_post = result.pvalue\n\nfig, ax = plt.subplots()\nx = np.arange(p_values_during.shape[0])\nax.stem(x, p_values_during, linefmt='r-', markerfmt='ro', basefmt=' ', label='During Treatment')\nax.stem(x, p_values_post,   linefmt='b-', markerfmt='bo', basefmt=' ', label='Post-treatment')\nax.axhline(y=0.05/20, color='k', linestyle='--', label='Bonferroni Threshold')\nax.set_xticks(x);\nax.set_xlabel('Subject'); ax.set_ylabel('p value'); ax.set_yscale('log')\nax.set_title('During Treatment (red), Post-treatment (blue)')\nax.legend()\nplt.show()"},{"id":13,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"import numpy as np\nplt.figure()\nplt.plot(np.tile(0,(840,1))-0.25, baseline[:,7], '.', color='k')\nplt.plot(np.tile(0,(30,1)), during_treatment[:,7], '.', color='r')\nplt.plot(np.tile(0,(840,1))+0.25, post_treatment[:,7], '.', color='b')\nplt.axhline(y=0, color='k')\nplt.xlabel('Subject 6'); plt.ylabel('Spindle activity'); plt.title('Baseline (black), During Treatment (red), Post-Treatment (blue)'); #plt.ylim([0,1]);\nplt.xticks([]);\nplt.show()"},{"id":14,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"plt.figure()\nfor k in np.arange(0,20):\n    plt.plot(np.tile(k,(840,1))-0.25, baseline[:,k], '.', color='k')\nfor k in np.arange(0,20):\n    plt.plot(np.tile(k,(30,1)), during_treatment[:,k], '.', color='r')\nfor k in np.arange(0,20):\n    plt.plot(np.tile(k,(840,1))+0.25, post_treatment[:,k], '.', color='b')\nplt.axhline(y=0, color='k')\nplt.xlabel('Subject'); plt.ylabel('Spindle activity'); plt.title('Baseline (black), During Treatment (red), Post-Treatment (blue)'); #plt.ylim([0,1]);\nplt.xticks(np.arange(0,20));\nplt.show()"},{"id":15,"options":{"autorun":"","classes":"","dpi":72,"fig-height":5,"results":"markup","context":"interactive","warning":"true","label":"","fig-width":7,"read-only":"false","message":"true","comment":"","out-height":"","out-width":"700px","output":"true","fig-cap":""},"code":"plt.figure()\nfor k in np.arange(0,20):\n    mn = np.mean(baseline[:,k]);\n    sd = np.std( baseline[:,k]);\n    K  = np.shape(baseline)[0];\n    plt.plot(k-0.2, mn, 'o', color='k')\n    plt.plot([k-0.2,k-0.2], [mn-2*sd/np.sqrt(K), mn+2*sd/np.sqrt(K)], color='k')\nfor k in np.arange(0,20):\n    mn = np.mean(during_treatment[:,k]);\n    sd = np.std( during_treatment[:,k]);\n    K  = np.shape(during_treatment)[0];\n    plt.plot(k, mn, 'o', color='r')\n    plt.plot([k,k], [mn-2*sd/np.sqrt(K), mn+2*sd/np.sqrt(K)], color='r')\nfor k in np.arange(0,20):\n    mn = np.mean(post_treatment[:,k]);\n    sd = np.std( post_treatment[:,k]);\n    K  = np.shape(post_treatment)[0];\n    plt.plot(k+0.2, mn, 'o', color='b')\n    plt.plot([k+0.2,k+0.2], [mn-2*sd/np.sqrt(K), mn+2*sd/np.sqrt(K)], color='b')\nplt.axhline(y=0, color='k')\nplt.xlabel('Subject'); plt.ylabel('Spindle activity'); plt.title('Baseline (black), During Treatment (red), Post-Treatment (blue)');\nplt.xticks(np.arange(0,20));\nplt.show()"}];
 
 
 </script>
@@ -535,33 +501,26 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#what-does-a-p-value-mean" id="toc-what-does-a-p-value-mean" class="nav-link" data-scroll-target="#what-does-a-p-value-mean">What does a p-value mean?</a></li>
   <li><a href="#what-does-p0.05-mean" id="toc-what-does-p0.05-mean" class="nav-link" data-scroll-target="#what-does-p0.05-mean">What does p&lt;0.05 mean?</a></li>
-  <li><a href="#lets-now-compute-the-p-values-during-treatment." id="toc-lets-now-compute-the-p-values-during-treatment." class="nav-link" data-scroll-target="#lets-now-compute-the-p-values-during-treatment.">Let’s now compute the p-values during <code>treatment</code>.</a></li>
-  <li><a href="#do-we-have-evidence-to-reject-the-null-hypothesis" id="toc-do-we-have-evidence-to-reject-the-null-hypothesis" class="nav-link" data-scroll-target="#do-we-have-evidence-to-reject-the-null-hypothesis">Do we have evidence to reject the null hypothesis?</a>
-  <ul class="collapse">
+  <li><a href="#is-there-a-significant-effect-treatment-lets-now-compute-some-p-values." id="toc-is-there-a-significant-effect-treatment-lets-now-compute-some-p-values." class="nav-link" data-scroll-target="#is-there-a-significant-effect-treatment-lets-now-compute-some-p-values.">Is there a significant effect treatment? Let’s now compute some p-values.</a></li>
+  <li><a href="#do-we-have-evidence-to-reject-the-null-hypothesis" id="toc-do-we-have-evidence-to-reject-the-null-hypothesis" class="nav-link" data-scroll-target="#do-we-have-evidence-to-reject-the-null-hypothesis">Do we have evidence to reject the null hypothesis?</a></li>
   <li><a href="#mini-summary-review" id="toc-mini-summary-review" class="nav-link" data-scroll-target="#mini-summary-review">Mini Summary &amp; Review</a></li>
-  </ul></li>
   </ul></li>
   <li><a href="#maybe-theres-something-else-we-can-publish" id="toc-maybe-theres-something-else-we-can-publish" class="nav-link" data-scroll-target="#maybe-theres-something-else-we-can-publish">3- Maybe there’s something else we can publish?</a>
   <ul class="collapse">
-  <li><a href="#our-results-seem-to-reveal-a-new-conclusion" id="toc-our-results-seem-to-reveal-a-new-conclusion" class="nav-link" data-scroll-target="#our-results-seem-to-reveal-a-new-conclusion">Our results <strong>seem</strong> to reveal a new conclusion:</a></li>
+  <li><a href="#our-results-seem-to-reveal-a-new-conclusion" id="toc-our-results-seem-to-reveal-a-new-conclusion" class="nav-link" data-scroll-target="#our-results-seem-to-reveal-a-new-conclusion">Our results seem to reveal a new conclusion:</a></li>
   <li><a href="#but-are-we-sure" id="toc-but-are-we-sure" class="nav-link" data-scroll-target="#but-are-we-sure">But are we sure?</a></li>
-  <li><a href="#so-are-you-sure-about-the-post-treatment-results" id="toc-so-are-you-sure-about-the-post-treatment-results" class="nav-link" data-scroll-target="#so-are-you-sure-about-the-post-treatment-results">So, are you sure about the <code>post-treatment</code> results?</a>
-  <ul class="collapse">
+  <li><a href="#so-are-you-sure-about-the-post-treatment-results" id="toc-so-are-you-sure-about-the-post-treatment-results" class="nav-link" data-scroll-target="#so-are-you-sure-about-the-post-treatment-results">So, are you sure about the <code>post-treatment</code> results?</a></li>
   <li><a href="#mini-summary-review-1" id="toc-mini-summary-review-1" class="nav-link" data-scroll-target="#mini-summary-review-1">Mini Summary &amp; Review</a></li>
-  </ul></li>
   </ul></li>
   <li><a href="#not-so-fast-visualize-the-measured-data-always." id="toc-not-so-fast-visualize-the-measured-data-always." class="nav-link" data-scroll-target="#not-so-fast-visualize-the-measured-data-always.">4- Not so fast: visualize the measured data, always.</a>
   <ul class="collapse">
   <li><a href="#to-resolve-these-confusing-conclusions-lets-think-more-carefully-about-what-the-p-value-represents." id="toc-to-resolve-these-confusing-conclusions-lets-think-more-carefully-about-what-the-p-value-represents." class="nav-link" data-scroll-target="#to-resolve-these-confusing-conclusions-lets-think-more-carefully-about-what-the-p-value-represents.">To resolve these confusing conclusions, let’s think more carefully about what the p-value represents.</a></li>
   <li><a href="#conclusion-summary-morale" id="toc-conclusion-summary-morale" class="nav-link" data-scroll-target="#conclusion-summary-morale">Conclusion / Summary / Morale:</a></li>
   </ul></li>
-  <li><a href="#refine-your-hypothesis-test-to-match-your-scientific-question." id="toc-refine-your-hypothesis-test-to-match-your-scientific-question." class="nav-link" data-scroll-target="#refine-your-hypothesis-test-to-match-your-scientific-question.">5- Refine your hypothesis test to match your scientific question.</a></li>
-  <li><a href="#now-4-discussion---so-what-went-wrong" id="toc-now-4-discussion---so-what-went-wrong" class="nav-link" data-scroll-target="#now-4-discussion---so-what-went-wrong">6 (now 4 Discussion )- So, what went wrong?</a></li>
-  <li><a href="#one-test-to-rule-them-all-an-omnibus-test." id="toc-one-test-to-rule-them-all-an-omnibus-test." class="nav-link" data-scroll-target="#one-test-to-rule-them-all-an-omnibus-test.">7- One test to rule them all: an omnibus test.</a>
-  <ul class="collapse">
-  <li><a href="#optional-section-lme" id="toc-optional-section-lme" class="nav-link" data-scroll-target="#optional-section-lme">7.5 - Optional Section: LME</a></li>
-  </ul></li>
-  <li><a href="#omit-8--beyond-p-values-estimate-what-you-care-about." id="toc-omit-8--beyond-p-values-estimate-what-you-care-about." class="nav-link" data-scroll-target="#omit-8--beyond-p-values-estimate-what-you-care-about.">OMIT 8- Beyond p-values: estimate what you care about.</a></li>
+  <li><a href="#so-what-went-wrong" id="toc-so-what-went-wrong" class="nav-link" data-scroll-target="#so-what-went-wrong">5- So, what went wrong?</a></li>
+  <li><a href="#one-test-to-rule-them-all-an-omnibus-test." id="toc-one-test-to-rule-them-all-an-omnibus-test." class="nav-link" data-scroll-target="#one-test-to-rule-them-all-an-omnibus-test.">6- One test to rule them all: an omnibus test.</a></li>
+  <li><a href="#optional-section-lme" id="toc-optional-section-lme" class="nav-link" data-scroll-target="#optional-section-lme">7 - Optional Section: LME</a></li>
+  <li><a href="#omit-8--beyond-p-values-estimate-what-you-care-about." id="toc-omit-8--beyond-p-values-estimate-what-you-care-about." class="nav-link" data-scroll-target="#omit-8--beyond-p-values-estimate-what-you-care-about.">OMIT? 8- Beyond p-values: estimate what you care about.</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">9- Summary</a></li>
   </ul>
 </nav>
@@ -581,7 +540,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Putting the p-value in Context</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+<h1 class="title">Putting the p-value in Context</h1>
 </div>
 
 
@@ -601,7 +560,6 @@ window.Quarto = {
 <p>Neuroscience researchers typically report p-values to express the strength of statistical evidence; but p-values are not sufficient on their own to understand the meaning and value of a scientific inference. In this unit, learners will learn how to interpret the p-value, how to express the size of an effect and uncertainty about a result, and how to interpret results at both the individual and population levels.</p>
 <section id="you-want-to-do-some-science-your-pi-just-wants-the-ps" class="level1">
 <h1>1 - You want to do some science; your PI just wants the p’s!</h1>
-<p>Introduce idea that some people respond and some don’t which motivates individaul tests.</p>
 <section id="introduction" class="level2 alert alert-block alert-info">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <ul>
@@ -616,7 +574,7 @@ window.Quarto = {
 </ul></li>
 </ul>
 <p>Here’s a graphical representation of the data collected from one subject: <img src="IMG_Pvalue/Data_Layout.jpg" class="img-fluid" alt="title"></p>
-<p>Your PI says: “<em>I hypothesize that some subjects will show an increase in spindle activity as a result of this treatment. Conduct a hypothesis test for each subject to determine if they are responsive and report the p-values associated with each test.</em>”</p>
+<p>Your PI says: “<em>I hypothesize that some subjects will show an increase in spindle activity as a result of this treatment. Other subjects may not respond to the treatment. Conduct a hypothesis test for each subject to determine if they are responsive and report the p-values associated with each test.</em>”</p>
 </section>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -738,15 +696,16 @@ function showFeedback(questionNumber, choice) {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Discussion Q: Based on your understanding of how to interpret p-values, are there any concerns about your PIs analysis plan to just report p-values for separate tests conducted on each subject? What other approaches could you use to evaluate the effect of treatment in the subject population?
+Discussion
 </div>
 </div>
 <div class="callout-body-container callout-body">
-
+<p>Based on your understanding of how to interpret p-values, are there any concerns about your PIs analysis plan to just report p-values for separate tests conducted on each subject? What other approaches could you use to evaluate the effect of treatment in the subject population?</p>
 </div>
 </div>
 <p>At this point, perhaps you feel that we should just get rid of p-values entirely. Good idea! Many researchers and statisticians agree with you. But despite multiple organized efforts to downplay the use of p-values in scientific research, a focus on computing and reporting p-values has persisted.</p>
 <p>You have a detailed discussion with your PI about the issues with focusing on p-values for this study, but your PI says: “We’re not going to be able to publish anything unless we show statistical significance so just give me the p’s!”</p>
+<hr>
 </section>
 <section id="lets-do-it-define-compute-p-values." class="level1">
 <h1>2- Let’s do it: Define &amp; compute p-values.</h1>
@@ -804,183 +763,315 @@ function checkNullHypothesis() {
 <p>The probability of observing the data, or something more extreme, under the null hypothesis is less than 5%. This is typically considered sufficient evidence to reject the null hypothesis in favor of the alternative hypothesis (which posits that there is an effect or a difference). In other words, a p-value less than 0.05 suggests that the observed data is unlikely to have occurred by random chance alone, assuming the null hypothesis is true, leading researchers to reject the null hypothesis.</p>
 <p>In our case, the null hypothesis we will first investigate is:</p>
 <p><strong>Null hypothesis:</strong> No difference in average spindle activity between treatment and baseline conditions.</p>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Which of the following factors might impact the evidence you have to reject this null hypothesis?</p>
-<p><strong>A:</strong> (Multiple Choice - all are correct)</p>
-<ul>
-<li><strong>Sample Size</strong>: Collecting more spindle samples reduces random error and provides more precise estimates.<br>
-</li>
-<li><strong>Effect Size</strong>: Bigger differences in spindle activity between conditions are easier to detect.<br>
-</li>
-<li><strong>Variability (or Noise) in Measurements</strong>: High variability in the spindle estimates during treatment can make it harder to detect a real effect.</li>
-</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Which of the following factors might impact the evidence you have to reject this null hypothesis?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>(<em>Select all that apply</em>)</p>
+<form id="factors-form">
+<input type="checkbox" name="factors" value="sample_size"> Sample Size: Collecting more spindle samples reduces random error and provides more precise estimates.<br> <input type="checkbox" name="factors" value="effect_size"> Effect Size: Bigger differences in spindle activity between conditions are easier to detect.<br> <input type="checkbox" name="factors" value="variability"> Variability (or Noise) in Measurements: High variability in the spindle estimates during treatment can make it harder to detect a real effect.<br><br> <button type="button" onclick="checkFactors()">Submit</button>
+</form>
+<p id="factors-feedback">
+</p>
+<script>
+function checkFactors() {
+    const correct = ["sample_size", "effect_size", "variability"];
+    const selected = Array.from(document.querySelectorAll('input[name="factors"]:checked')).map(cb => cb.value);
+    const feedback = document.getElementById("factors-feedback");
+
+    if (selected.length === 0) {
+        feedback.innerHTML = "Please select at least one factor.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    const missed = correct.filter(x => !selected.includes(x));
+    const incorrect = selected.filter(x => !correct.includes(x));
+
+    if (missed.length === 0 && incorrect.length === 0) {
+        feedback.innerHTML = "✅ Correct! All of these factors influence the evidence against the null hypothesis.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Not quite. All listed factors affect the strength of evidence you have to reject the null hypothesis.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
 </div>
 <p>Now, let’s load the spindle data and compute p-values to test our null hypothesis</p>
 <div id="qpyodide-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<div id="8ae7402f-3399-4340-a306-0c557f42893d" class="cell" data-tags="[]" data-execution_count="1">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load modules</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pvalue_functions <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="33807648-6ab3-48ef-aa85-6f1ebc080206" class="cell" data-tags="[]" data-execution_count="2">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>baseline, during_treatment, post_treatment <span class="op">=</span> load_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 <p>Let’s start by investigating the structure of the data.</p>
-<div id="e581a977-88b6-42f8-9dcc-302e78b5cf4c" class="cell" data-tags="[]" data-execution_count="3">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(baseline.shape)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(during_treatment.shape)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(post_treatment.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>(840, 20)
-(30, 20)
-(840, 20)</code></pre>
+<div id="qpyodide-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>All three variables consist of observations from <strong>20 subjects</strong> (the number of columns).</p>
+<p>During baseline: We collect <strong>840 samples</strong> per subject.</p>
+<p>During treatment: We collect <strong>30 samples</strong> per subject.</p>
+<p>After treatment: We collect <strong>840 samples</strong> per subject.</p>
+<p>The number of samples is the number of rows for each variable.</p>
+<p>You might think of these variables as rectangles (or matrices) - each row indicates a sample of spindle activity, and each column indicates a subject:</p>
+<p><img src="IMG_Pvalue/simple_boxes_during_and_post.jpg" class="img-fluid"></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Look at the representations of the data above. What differs about the data during treatment, compared to baseline and post-treatment?
 </div>
 </div>
-<p>All three variables consist of observations from 20 subjects (the number of columns). We collect 30 samples during treatment and 840 samples at baseline (i.e., before treatment) and after treatment; this is the the number of rows for each variable.</p>
-<p>You might think of these variables as rectangles (or matrices), where each row indicates a sample of spindle activity, and each column indicates a subject:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="IMG_Pvalue/simple_boxes_during_and_post.jpg" class="img-fluid figure-img"></p>
-<figcaption>title</figcaption>
-</figure>
+<div class="callout-body-container callout-body">
+<form id="treatment-difference-form">
+<input type="radio" name="treatment-difference" value="wrong"> There are fewer subjects during treatment.<br> <input type="radio" name="treatment-difference" value="correct"> There are fewer samples during treatment.<br><br> <button type="button" onclick="checkTreatmentDifference()">Submit</button>
+</form>
+<p id="treatment-difference-feedback">
+</p>
+<script>
+function checkTreatmentDifference() {
+    const selected = document.querySelector('input[name="treatment-difference"]:checked');
+    const feedback = document.getElementById("treatment-difference-feedback");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct. There are fewer samples during treatment.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. The number of subjects stays the same — it’s the number of samples that’s fewer.";
+        feedback.style.color = "red";
+    }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Look at the representations of the data above. What differs about the data during treatment, compared to baseline and post-treatment?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<p>Wrong answer: There are fewer subjects during treatment.</p>
-<p>Correct answer: There are fewer samples during treatment.</p>
 </div>
 <p>To get a sense for the the data, let’s plot the spindle activity during <code>baseline</code>, <code>treatment</code>, and <code>post-treatment</code> conditions for one subject:</p>
-<div id="1df1308b-4818-46d3-ba3f-6ec9239d842b" class="cell" data-tags="[]" data-execution_count="4">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">25</span>,<span class="dv">10</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(baseline[:,<span class="dv">0</span>])<span class="op">;</span> ax[<span class="dv">0</span>].set_xlim([<span class="dv">0</span>,<span class="dv">850</span>])<span class="op">;</span> ax[<span class="dv">0</span>].set_ylim([<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>])<span class="op">;</span> ax[<span class="dv">0</span>].set_title(<span class="st">'Baseline'</span>)<span class="op">;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(during_treatment[:,<span class="dv">0</span>])<span class="op">;</span> ax[<span class="dv">1</span>].set_xlim([<span class="dv">0</span>,<span class="dv">850</span>])<span class="op">;</span> ax[<span class="dv">1</span>].set_ylim([<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>])<span class="op">;</span> ax[<span class="dv">1</span>].set_title(<span class="st">'During Treatment'</span>)<span class="op">;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].plot(post_treatment[:,<span class="dv">0</span>])<span class="op">;</span> ax[<span class="dv">2</span>].set_xlim([<span class="dv">0</span>,<span class="dv">850</span>])<span class="op">;</span> ax[<span class="dv">2</span>].set_ylim([<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>])<span class="op">;</span> ax[<span class="dv">2</span>].set_title(<span class="st">'Post-Treatment'</span>)<span class="op">;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Samples'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Spindle activity'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="qpyodide-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What values do you observe for the spindle activity?
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<form id="spindle-values-form">
+<input type="radio" name="spindle-values" value="wrong1"> The values are always positive.<br> <input type="radio" name="spindle-values" value="wrong2"> The values are always negative.<br> <input type="radio" name="spindle-values" value="wrong3"> The values stay constant at zero.<br> <input type="radio" name="spindle-values" value="correct"> The values tend to fluctuate around 0 and can be both positive and negative.<br><br> <button type="button" onclick="checkSpindleValues()">Submit</button>
+</form>
+<p id="spindle-values-feedback">
+</p>
+<script>
+function checkSpindleValues() {
+    const selected = document.querySelector('input[name="spindle-values"]:checked');
+    const feedback = document.getElementById("spindle-values-feedback");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct. Spindle activity fluctuates around zero, taking both positive and negative values.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. The spindle activity values actually fluctuate around zero and include both positive and negative values.";
+        feedback.style.color = "red";
+    }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> What values do you observe for the spindle activity?</p>
-<p><strong>A:</strong> The values tend to fluctuate around 0, and can be both positive and negative.</p>
 </div>
-<p>Here, the spindle activity has been z-scored during each recording interval relative to baseline. So, the values we observe indicate changes relative to the mean baseline spindle activity; positive (negative) values indicate increases (decreases) in spindle activity relative to the baseline activity.</p>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> What differences or similarites do you notice in spindle activity durint the <code>baseline</code>, <code>treatment</code>, and <code>post-treatment</code> conditions for this subject?</p>
-<p><strong>A:</strong> Similarities: - All fluctuate around 0. This makes sense because all values are normalized relative to the mean baseline spindle activity.</p>
-<p>Differences: - During treatment there are fewer samples. - During treatment, the fluctuations are bigger (the data are more variable).</p>
+<p>Here, the spindle activity has been <a href="https://en.wikipedia.org/wiki/Standard_score">z-scored</a> during each recording interval relative to baseline.</p>
+<p>So, the values we observe indicate changes relative to the mean baseline spindle activity.</p>
+<p>Positive (negative) values indicate increases (decreases) in spindle activity relative to the baseline activity.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> During <code>treatment</code>, we collect fewer, noiser samples compared to the <code>baseline</code> and <code>post-treatment</code> conditions. How might these factors impact the evidence we have to reject the null hypothesis:</p>
+<div class="callout-title-container flex-fill">
+What differences or similarities do you notice in spindle activity during the baseline, treatment, and post‐treatment conditions for this subject?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="spindle-comparison-form">
+<input type="radio" name="spindle-compare" value="wrong1"> All three conditions have the same number of samples and similar fluctuation sizes.<br> <input type="radio" name="spindle-compare" value="wrong2"> Only baseline and post‐treatment fluctuate around zero; treatment values stay positive.<br> <input type="radio" name="spindle-compare" value="wrong3"> Treatment has more samples than baseline and post‐treatment, with smaller fluctuations.<br> <input type="radio" name="spindle-compare" value="correct"> All conditions fluctuate around zero; during treatment there are fewer samples and larger fluctuations (greater variability).<br><br> <button type="button" onclick="checkSpindleComparison()">Submit</button>
+</form>
+<p id="spindle-comparison-feedback">
+</p>
+<script>
+function checkSpindleComparison() {
+    const selected = document.querySelector('input[name="spindle-compare"]:checked');
+    const feedback = document.getElementById("spindle-comparison-feedback");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct. All series fluctuate around zero; treatment has fewer samples and greater variability.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. Recall that all data hover around zero, but during treatment you see fewer samples and larger fluctuations.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+During treatment, we collect fewer, noisier samples compared to the baseline and post‐treatment conditions. How might these factors impact the evidence we have to reject the null hypothesis?
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p><strong>Null hypothesis:</strong> No difference in average spindle activity between treatment and baseline conditions.</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ul>
-<li>(Incorrect) Fewer spindle samples increases our evidence.</li>
-<li>(Correct) Fewer spindle samples decreases our evidence.</li>
-<li>(Incorrect) Noiser spindle samples increases our evidence.</li>
-<li>(Correct) Noiser spindle samples decreases our evidence.</li>
-</ul>
+<form id="impact-form">
+<input type="checkbox" name="impact" value="fewer_increases"> Fewer spindle samples increases our evidence.<br> <input type="checkbox" name="impact" value="fewer_decreases"> Fewer spindle samples decreases our evidence.<br> <input type="checkbox" name="impact" value="noisier_increases"> Noisier spindle samples increases our evidence.<br> <input type="checkbox" name="impact" value="noisier_decreases"> Noisier spindle samples decreases our evidence.<br><br> <button type="button" onclick="checkImpact()">Submit</button>
+</form>
+<p id="impact-feedback">
+</p>
+<script>
+function checkImpact() {
+  const correct = ["fewer_decreases", "noisier_decreases"];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="impact"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("impact-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one option.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML = "✅ Correct! Fewer and noisier samples both decrease our evidence against the null.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Both fewer samples and higher noise reduce the strength of evidence to reject the null.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 </section>
-<section id="lets-now-compute-the-p-values-during-treatment." class="level3">
-<h3 class="anchored" data-anchor-id="lets-now-compute-the-p-values-during-treatment.">Let’s now compute the p-values during <code>treatment</code>.</h3>
+<section id="is-there-a-significant-effect-treatment-lets-now-compute-some-p-values." class="level3">
+<h3 class="anchored" data-anchor-id="is-there-a-significant-effect-treatment-lets-now-compute-some-p-values.">Is there a significant effect treatment? Let’s now compute some p-values.</h3>
 <p>To do so, we again assume the null hypothesis:</p>
-<p><strong>Null hypothesis:</strong> No difference in average spindle activity between treatment and baseline conditions.</p>
-<p>Because we’ve subtracted the mean baseline spindle rate from each treatment observation, our null hypothesis becomes:</p>
-<p><strong>Null hypothesis</strong>: Mean spindle rate during treatment = 0.</p>
-<div id="ad44f68c-e810-4c95-979e-98525c9a38f8" class="cell" data-execution_count="5">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> stats.ttest_1samp(during_treatment, popmean<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p_value_during <span class="op">=</span> result.pvalue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<p><strong>Null hypothesis:</strong> <em>No difference in average spindle activity between treatment and baseline conditions.</em></p>
+<p>To test this hypothesis, we’ll compute a <a href="https://en.wikipedia.org/wiki/Student%27s_t-test#:~:text=.-,Two%2Dsample%20t%2Dtests,-%5Bedit%5D">two-sample t-test</a>.</p>
+<p>The two-sample t-test is by far the most popular choice when comparing two distribution.</p>
+<p>We use this method method used to determine if there’s a significant difference between the means of two independent groups. It’s commonly applied to compare the average values of (continuous) variables across two different populations or conditions.</p>
+<p>In our case, we’d like to compare the average spindle activity between treatment and baseline conditions. So, the two-sample t-test is (at first glance) a completely reasonable approach.</p>
+<div id="qpyodide-insertion-location-4"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>The list above consists of 20 p-values, one for each subject.</p>
 <p>Each p-value indicates the probability of observing the data, or something more extreme, under the null hypothesis:</p>
-<p><strong>Null hypothesis</strong>: Mean spindle rate during treatment = 0.</p>
+<p><strong>Null hypothesis</strong>: <em>No difference in average spindle activity between treatment and baseline conditions.</em></p>
 <p>Let’s print the p-values for each subject:</p>
-<div id="e43ff967-7db5-4301-b62d-90033fbe57c6" class="cell" data-tags="[]" data-execution_count="6">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Subject '</span>, k, <span class="st">', p='</span>, np.array2string(p_value_during[k], precision<span class="op">=</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Subject  0 , p= 0.52
-Subject  1 , p= 0.89
-Subject  2 , p= 0.63
-Subject  3 , p= 0.22
-Subject  4 , p= 0.01
-Subject  5 , p= 0.31
-Subject  6 , p= 0.01
-Subject  7 , p= 0.99
-Subject  8 , p= 0.09
-Subject  9 , p= 0.26
-Subject  10 , p= 0.07
-Subject  11 , p= 0.14
-Subject  12 , p= 0.02
-Subject  13 , p= 0.12
-Subject  14 , p= 0.19
-Subject  15 , p= 0.73
-Subject  16 , p= 0.3
-Subject  17 , p= 0.46
-Subject  18 , p= 0.05
-Subject  19 , p= 0.29</code></pre>
+<div id="qpyodide-insertion-location-5"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+For Subject 0, we find <em>p</em> = 0.52. What does this mean?
 </div>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> For Subject 0, we find <span class="math inline">\(p=0.52\)</span>. What does this mean?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Incorrect) There is a 52% chance that the mean spindle rate is truly zero.<br>
-</li>
-<li>(Correct) There is a 52% probability of observing these data (or something more extreme) if the mean spindle rate is zero.</li>
-<li>(Incorrect) There is a 48% probability that the alternative hypothesis is correct.<br>
-</li>
-<li>(Incorrect) There is a 52% chance that the result is clinically meaningful.</li>
-</ol>
+<div class="callout-body-container callout-body">
+<form id="subject0-pvalue-form">
+<input type="radio" name="subject0-pvalue" value="wrong1"> There is a 52% chance that the mean spindle rate is truly zero.<br> <input type="radio" name="subject0-pvalue" value="correct"> There is a 52% probability of observing these data (or something more extreme) if the mean spindle rate is zero.<br> <input type="radio" name="subject0-pvalue" value="wrong2"> There is a 48% probability that the alternative hypothesis is correct.<br> <input type="radio" name="subject0-pvalue" value="wrong3"> There is a 52% chance that the result is clinically meaningful.<br><br> <button type="button" onclick="checkSubject0P()">Submit</button>
+</form>
+<p id="subject0-pvalue-feedback">
+</p>
+<script>
+function checkSubject0P() {
+  const selected = document.querySelector('input[name="subject0-pvalue"]:checked');
+  const feedback = document.getElementById("subject0-pvalue-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. A p-value of 0.52 is the probability of observing data this extreme (or more) under the null hypothesis that the mean is zero.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember, the p-value tells us how likely the observed data are under the null, not the chance the null is true.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 <p>Let’s also plot the p-values:</p>
-<div id="5783096b-96d5-4283-8f5b-d26e40cf1681" class="cell" data-tags="[]" data-execution_count="7">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the p-values during treatment</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_during)<span class="op">;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'During Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="qpyodide-insertion-location-6"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpret the print‐out and plots of p‐values. What do you see?
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<form id="pvalue-interpretation-form">
+<input type="radio" name="pvalue-interpret" value="wrong1"> Most p‐values are below 0.05, indicating significant effects across subjects.<br> <input type="radio" name="pvalue-interpret" value="correct"> The p‐values tend to exceed 0.05 (red dashed line), although a few subjects have p &lt; 0.05.<br> <input type="radio" name="pvalue-interpret" value="wrong2"> All p‐values cluster exactly at the threshold, suggesting borderline significance.<br> <input type="radio" name="pvalue-interpret" value="wrong3"> The p‐values form a uniform distribution from 0 to 1, indicating no pattern in the data.<br><br> <button type="button" onclick="checkPvalueInterpret()">Submit</button>
+</form>
+<p id="pvalue-interpret-feedback">
+</p>
+<script>
+function checkPvalueInterpret() {
+  const selected = document.querySelector('input[name="pvalue-interpret"]:checked');
+  const feedback = document.getElementById("pvalue-interpret-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. Most p‐values exceed 0.05, though a few subjects fall below the threshold.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember that most p‐values are above 0.05, with only a few below it.";
+    feedback.style.color = "red";
+  }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Interpert the print-out and plots of p-values. What do you see?</p>
-<p><strong>A:</strong> The p-values tend to exceed 0.05 (red dashed line in the figure), although a few subjects have p&lt;0.05.</p>
 </div>
 </section>
 <section id="do-we-have-evidence-to-reject-the-null-hypothesis" class="level2">
@@ -994,471 +1085,891 @@ Subject  19 , p= 0.29</code></pre>
 <p><code>p &lt; 0.05 / 20</code> or <code>p &lt; 0.0025</code></p>
 <p>Thresholding in this way provides a binary, yes/no answer to the question: do we have evidence that the spindle activity during treatment differs from 0?</p>
 <p>Let’s plot the p-values versus this new threhsold.</p>
-<div id="d4ef734d-b387-49b9-87f4-2a57eedc6873" class="cell" data-tags="[]" data-execution_count="8">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the p-values during treatment</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_during)<span class="op">;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'During Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Significant p-values during treatment = '</span>,np.<span class="bu">sum</span>(p_value_during <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Significant p-values during treatment =  0</code></pre>
+<div id="qpyodide-insertion-location-7"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-9-output-2.png" class="img-fluid figure-img"></p>
-</figure>
+<div class="callout-title-container flex-fill">
+After the Bonferroni correction, can we reject the null hypothesis for any subject?
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<form id="bonferroni-form">
+<input type="radio" name="bonferroni" value="correct"> No.&nbsp;None of the p-values are less than 0.05/20.<br> <input type="radio" name="bonferroni" value="wrong"> Yes. Some of the p-values are small enough.<br><br> <button type="button" onclick="checkBonferroni()">Submit</button>
+</form>
+<p id="bonferroni-feedback">
+</p>
+<script>
+function checkBonferroni() {
+  const selected = document.querySelector('input[name="bonferroni"]:checked');
+  const feedback = document.getElementById("bonferroni-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. After correcting to 0.05/20, none of the p-values remain below the threshold.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. The adjusted threshold is 0.05/20, and no p-value falls below that.";
+    feedback.style.color = "red";
+  }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> After the Bonferroni correction, can we reject the null hypothesis for any subject?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Correct) No.&nbsp;None of the p-values are less than 0.05/20.</li>
-<li>(Incorrect) Yes. Some of the p-values are small enough.</li>
-</ol>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> The PI requested <em>“Give me the p’s!”</em>. Do you have evidence to reject the null hypothesis during treatment?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Correct) No! The p-values are large, so we find no evidence to reject the null hypothesis for any subject.</li>
-<li>(Incorrect) Yes! The p-values are large, so the spindle activity during treatment is large.</li>
-</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> We do not find any p-values that pass our significance threshold during treatment. Does this mean that the spindle activity during treatment does not change relative to baseline?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Correct) No! We never accept the null hypothesis. Remember we have to talk like a statistician. Instead, we say: <em>“We fail to reject the null hypothesis that the spindle activity during treatment differs from baseline.”</em></li>
-<li>(Incorrect) Yes! Because the p-values are large, we can accept the null hypothesis.</li>
-</ol>
+<div class="callout-title-container flex-fill">
+The PI requested “Give me the p’s!”. Do you have evidence to reject the null hypothesis during treatment?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="give-ps-form">
+<input type="radio" name="give-ps" value="correct"> No! The p-values are large, so we find no evidence to reject the null hypothesis for any subject.<br> <input type="radio" name="give-ps" value="wrong"> Yes! The p-values are large, so the spindle activity during treatment is large.<br><br> <button type="button" onclick="checkGivePs()">Submit</button>
+</form>
+<p id="give-ps-feedback">
+</p>
+<script>
+function checkGivePs() {
+  const selected = document.querySelector('input[name="give-ps"]:checked');
+  const feedback = document.getElementById("give-ps-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. The p-values are not small, so there’s no evidence to reject the null during treatment.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Large p-values indicate a lack of evidence against the null, not a large treatment effect.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We do not find any p-values that pass our significance threshold during treatment. Does this mean that the spindle activity during treatment does not change relative to baseline?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="change-null-form">
+<input type="radio" name="change-null" value="correct"> No! We never accept the null hypothesis. Instead, we say: “We fail to reject the null hypothesis that the spindle activity during treatment differs from baseline.”<br> <input type="radio" name="change-null" value="wrong"> Yes! Because the p-values are large, we can accept the null hypothesis.<br><br> <button type="button" onclick="checkChangeNull()">Submit</button>
+</form>
+<p id="change-null-feedback">
+</p>
+<script>
+function checkChangeNull() {
+  const selected = document.querySelector('input[name="change-null"]:checked');
+  const feedback = document.getElementById("change-null-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. We never accept the null hypothesis; we say we fail to reject the null hypothesis that the spindle activity during treatment differs from baseline.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. In statistics we don’t accept the null hypothesis; instead we say we fail to reject it.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 <div class="alert alert-block alert-danger">
 <p><b>Summary:</b></p>
-<p>We’ve done this for each subject. Our intial results suggest provide <strong>no evidence</strong> that we can reject the null hypothesis during treatment.</p>
-</div>
-<section id="mini-summary-review" class="level3">
-<h3 class="anchored" data-anchor-id="mini-summary-review">Mini Summary &amp; Review</h3>
-<p>We sought to answer the scientific question: - Does the spindle activity during <code>treatment</code> differ from the <code>baseline</code> spindle activity?</p>
-<p>To answer this question, we assumed a <strong>Null hypothesis</strong> of no difference in spindle activity during <code>treatment</code> compared to 0.</p>
-<p>We tested this null hypothsis for each subject, computing a p-value for each subject.</p>
-<p>Because we computed 20 p-values (one for each subject), we corrected for multiple comparsions using a Bonferroni correction (see <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb">Multiplicity Unit</a>).</p>
-<p>We found no p-values small enough to reject the null hypothesis.</p>
-<p>In other words, using our initial approach, we found <strong>no evidence</strong> that the spindle activity during <code>treatment</code> differ from <code>baseline</code>.</p>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Our initial results provide we found <strong>no evidence</strong> that the spindle activity during <code>treatment</code> differ from <code>baseline</code>. The spindle activity <em>might</em> differ between the two conditions, but our data and analysis approach don’t provide supporting evidence. What factors might impact our evidence?</p>
-<p><strong>A:</strong> (Multiple choice - all correct)</p>
-<ul>
-<li><strong>Sample Size</strong>: We collect only 30 spindle samples during <code>treatment</code>, which increases random error and provides less precise estimates.</li>
-<li><strong>Effect Size</strong>: Small differences in spindle activity between conditions are difficult to detect.<br>
-</li>
-<li><strong>Variability (or Noise) in Measurements</strong>: High variability in the spindle estimates during treatment can make it harder to detect a real effect.</li>
-<li><strong>Approach to Statistical Testing:</strong> A different approach may provide more insight into difference in spindle activity between the <code>treatment</code> and <code>baseline</code></li>
-<li><strong>Treatment has no Effect:</strong> It may be that the treatment does not impact spindle activity relative to baseline.</li>
-</ul>
+<p>We’ve computed a p-value for each subject. After correcting for multiple comparisons, our intial results suggest <strong>no evidence</strong> that we can reject the null hypothesis (of no difference in spindle activity between baseline and treatment).</p>
 </div>
 </section>
+<section id="mini-summary-review" class="level2">
+<h2 class="anchored" data-anchor-id="mini-summary-review">Mini Summary &amp; Review</h2>
+<p>We sought to answer the scientific question:</p>
+<ul>
+<li>Does the spindle activity during <code>treatment</code> differ from the <code>baseline</code> spindle activity?</li>
+</ul>
+<p>To answer this question, we assumed a null hypothesis:</p>
+<p><strong>Null hypothesis</strong>: <em>No difference in average spindle activity between treatment and baseline conditions.</em></p>
+<p>We tested this null hypothesis for each subject, computing a p-value for each subject.</p>
+<p>Because we computed 20 p-values (one for each subject), we corrected for multiple comparsions using a Bonferroni correction (see <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb">Multiplicity Unit</a>).</p>
+<p>We found no p-values small enough to reject the null hypothesis.</p>
+<p>In other words, using our initial approach, we found <strong>no evidence</strong> that the spindle activity during <code>treatment</code> differs from <code>baseline</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Our initial results show no evidence that spindle activity during treatment differs from baseline. What factors might impact our evidence?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>(Select all that apply)</em></p>
+<form id="evidence-impact-form">
+<input type="checkbox" name="impact" value="sample_size"> <strong>Sample Size:</strong> We collect only 30 spindle samples during treatment, which increases random error and provides less precise estimates.<br> <input type="checkbox" name="impact" value="effect_size"> <strong>Effect Size:</strong> Small differences in spindle activity between conditions are difficult to detect.<br> <input type="checkbox" name="impact" value="variability"> <strong>Variability (or Noise) in Measurements:</strong> High variability in the spindle estimates during treatment can make it harder to detect a real effect.<br> <input type="checkbox" name="impact" value="testing_approach"> <strong>Approach to Statistical Testing:</strong> A different approach may provide more insight into differences in spindle activity between treatment and baseline.<br> <input type="checkbox" name="impact" value="no_effect"> <strong>Treatment has no Effect:</strong> It may be that the treatment does not impact spindle activity relative to baseline.<br><br> <button type="button" onclick="checkEvidenceImpact()">Submit</button>
+</form>
+<p id="evidence-impact-feedback">
+</p>
+<script>
+function checkEvidenceImpact() {
+  const correct = [
+    "sample_size",
+    "effect_size",
+    "variability",
+    "testing_approach",
+    "no_effect"
+  ];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="impact"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("evidence-impact-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one factor.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML = "✅ Correct! All of these factors can influence the strength of evidence against the null hypothesis.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember that sample size, effect size, measurement variability, testing approach, and even a true lack of effect all affect our evidence.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<hr>
 </section>
 </section>
 <section id="maybe-theres-something-else-we-can-publish" class="level1">
 <h1>3- Maybe there’s something else we can publish?</h1>
-<p>The results in Mini 2 are discouraging; we find no evidence of a change in spindle activity from baseline during treatment.</p>
-<p>That’s dissappointing. Rather than abandon our data (which took years to collect), our PI asks us we continue <strong>exploring the data</strong>.</p>
+<p>Our initial results are discouraging; we find no evidence of a change in spindle activity from baseline during treatment.</p>
+<p>That’s dissappointing. Rather than abandon our data (which took years to collect), our PI asks us to continue <strong>exploring the data</strong>.</p>
 <p><strong>Data exploration is common in neuroscience.</strong> In general, as practicing neuroscientists, we explore our data for interesting features.</p>
 <p>However, when undertaking data exploration, we must make it clear (e.g., by reporting what we explored, whether the results are significant or not).</p>
 <p>Our PI recommends that we <strong>examine the change in spindle activity <code>post-treatment</code></strong>.</p>
 <p>Perhaps the treatment produces a longer-term affect that manifests during the <code>post-treatment</code> period.</p>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Given this new analysis, what is the null hypothesis?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Correct) No difference in average spindle activity between <code>post-treatment</code> and <code>baseline</code> conditions.</li>
-<li>(Incorrect) The average spindle activity is higher <code>post-treatment</code> compared to <code>baseline</code>.</li>
-<li>(Incorrect) The average spindle activity is lower <code>post-treatment</code> compared to <code>baseline</code>.</li>
-</ol>
+<div class="alert alert-block alert-danger">
+<p><strong>Exploratory vs Confirmatory Analyses &amp; Guarding Against <em>p</em>-Hacking</strong></p>
+<p>Our initial results are discouraging: we find no evidence of a change in spindle activity from baseline during treatment.</p>
+<p>Instead of discarding years of data, our PI encourages us to <strong>explore the data</strong> for unexpected patterns — this is perfectly legitimate as long as we remain transparent.</p>
+<ul>
+<li><p><strong><em>Data exploration</em></strong> helps generate new hypotheses. We might notice trends, outliers, or condition-specific features that suggest where real effects could lie, to help guide future experiments.</p></li>
+<li><p><strong><em>P-hacking</em></strong> occurs when we repeatedly mine the data—trying different subsets, covariates, or outcomes—until something “significant” emerges. This inflates false positives and misleads follow-up studies.</p></li>
+<li><p>To stay honest, every exploratory analysis must be clearly labeled as such. We should report exactly what we tested (e.g.&nbsp;“we examined spindle rate in the baseline, treatment, and post-treatment intervals), and include both significant and nonsignificant findings.</p></li>
+<li><p><strong><em>Confirmatory analysis</em></strong> comes later: once exploration suggests a specific hypothesis (for example, an increase in post-treatment spindle rates), we pre-register that test or validate it in a fresh dataset. Only then do <em>p</em>-values carry their usual weight.</p></li>
+<li><p>Our next step—examining post-treatment spindle activity—serves as a bridge. We explore here, but plan to follow up with a dedicated, confirmatory protocol before drawing firm conclusions.</p></li>
+</ul>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Given this new analysis, what is the null hypothesis?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="null-hypothesis-post-form">
+<input type="radio" name="null-post" value="correct"> No difference in average spindle activity between post-treatment and baseline conditions.<br> <input type="radio" name="null-post" value="wrong1"> The average spindle activity is higher post-treatment compared to baseline.<br> <input type="radio" name="null-post" value="wrong2"> The average spindle activity is lower post-treatment compared to baseline.<br><br> <button type="button" onclick="checkNullPost()">Submit</button>
+</form>
+<p id="null-hypothesis-post-feedback">
+</p>
+<script>
+function checkNullPost() {
+  const selected = document.querySelector('input[name="null-post"]:checked');
+  const feedback = document.getElementById("null-hypothesis-post-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. The null hypothesis states that there is no difference in average spindle activity between post-treatment and baseline.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Recall that the null hypothesis always assumes no difference or no effect.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 <p>For our new analysis, our null hypothesis now focuses on the <code>post-treatment</code> data:</p>
-<p><strong>Null hypothesis</strong>: Mean spindle activity <code>post-treatment</code> = 0</p>
-<p>Remeber, we’ve subtracted the <code>baseline</code> spindle activity from the <code>post-treatment</code> values.</p>
-<p>So, no change in spindle activity <code>post-treatment</code> (our null hypothesis) would result in values the fluctuate around 0.</p>
-</section></main></div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> How do data in the <code>post-treatment</code> condition differ from the <code>treatment</code> condition?</p>
-<p><strong>A:</strong> (Many Choice)</p>
-<ol type="1">
-<li>(Correct) The number of samples is higher in the <code>post-treatment</code> condition.</li>
-<li>(Incorrect) The number of subjects is higher in the <code>post-treatment</code> condition.</li>
-<li>(Correct) The spindle estimates are less noisy in the <code>post-treatment</code> condition.</li>
-<li>(Incorrect) The spindle estimates are more noisy in the <code>post-treatment</code> condition.</li>
-</ol>
+<p><strong>Null hypothesis</strong>: Mean spindle activity <code>post-treatment</code> differs from the mean spindle activity during <code>baseline</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<p>During the <code>post-treatment</code> condition: - we have many more samples to analyze (N=840) compared to the <code>treatment</code> condition (N=30). - the spindle estimates are less noisy compared to the <code>treatment</code> condition</p>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> How do these two factors impact the evidence we have to reject the null hypothesis?</p>
-<p><strong>A:</strong> (Multiple Choice - all correct) - <strong>Sample Size</strong>: Collecting more spindle samples reduces random error and provides more precise estimates.<br>
-- <strong>Variability (or Noise) in Measurements</strong>: Lower variability in the spindle estimates <code>post-treatment</code> can make it easier to detect an effect.</p>
+<div class="callout-title-container flex-fill">
+How do data in the post-treatment condition differ from the treatment condition?
 </div>
-<p>Let’s repeat the analysis in Mini 2, but now examining the <code>post-treatment</code> spindle activity.</p>
-<div id="a444cd5f-fd71-4c33-abcd-8c16df923934" class="cell" data-execution_count="9">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> stats.ttest_1samp(post_treatment, popmean<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>p_value_post <span class="op">=</span> result.pvalue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
+<div class="callout-body-container callout-body">
+<p><em>(Select all that apply)</em></p>
+<form id="post-vs-treatment-form">
+<input type="checkbox" name="postdiff" value="more_samples"> The number of samples is higher in the post-treatment condition.<br> <input type="checkbox" name="postdiff" value="more_subjects"> The number of subjects is higher in the post-treatment condition.<br> <input type="checkbox" name="postdiff" value="less_noisy"> The spindle estimates are less noisy in the post-treatment condition.<br> <input type="checkbox" name="postdiff" value="more_noisy"> The spindle estimates are more noisy in the post-treatment condition.<br><br> <button type="button" onclick="checkPostVsTreatment()">Submit</button>
+</form>
+<p id="post-vs-treatment-feedback">
+</p>
+<script>
+function checkPostVsTreatment() {
+  const correct = ["more_samples", "less_noisy"];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="postdiff"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("post-vs-treatment-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one option.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML = "✅ Correct! Post-treatment has more samples and less noisy spindle estimates.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember: post-treatment has more samples and the data are less noisy.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<p>During the <code>post-treatment</code> condition:</p>
+<ul>
+<li><p>we have many more samples to analyze (N=840) compared to the <code>treatment</code> condition (N=30).</p></li>
+<li><p>the spindle estimates are less noisy compared to the <code>treatment</code> condition</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How do these two factors impact the evidence we have to reject the null hypothesis?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>(Select all that apply)</em></p>
+<form id="evidence-post-form">
+<input type="checkbox" name="evidence-post" value="sample_size"> Sample Size: Collecting more spindle samples reduces random error and provides more precise estimates.<br> <input type="checkbox" name="evidence-post" value="variability"> Variability (or Noise) in Measurements: Lower variability in the spindle estimates post-treatment can make it easier to detect an effect.<br><br> <button type="button" onclick="checkEvidencePost()">Submit</button>
+</form>
+<p id="evidence-post-feedback">
+</p>
+<script>
+function checkEvidencePost() {
+  const correct = ["sample_size", "variability"];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="evidence-post"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("evidence-post-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one factor.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML = "✅ Correct! More samples and lower variability both strengthen the evidence against the null hypothesis.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember that collecting more samples and reducing variability both increase our ability to reject the null.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<p>Let’s repeat our previous analysis, but now examine the <code>post-treatment</code> spindle activity.</p>
+<div id="qpyodide-insertion-location-8"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Let’s print and plot the p-values for each subject:</p>
-<div id="d621da51-5ef8-47a0-8ce8-d2cdac948fce" class="cell" data-tags="[]" data-execution_count="10">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Subject '</span>, k, <span class="st">', p='</span>, np.array2string(p_value_post[k], precision<span class="op">=</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Subject  0 , p= 7.1e-05
-Subject  1 , p= 6.84e-07
-Subject  2 , p= 0.02
-Subject  3 , p= 7.58e-05
-Subject  4 , p= 4.28e-05
-Subject  5 , p= 0.17
-Subject  6 , p= 0.02
-Subject  7 , p= 0.01
-Subject  8 , p= 0.01
-Subject  9 , p= 0.24
-Subject  10 , p= 0.03
-Subject  11 , p= 0.
-Subject  12 , p= 0.
-Subject  13 , p= 0.42
-Subject  14 , p= 1.95e-06
-Subject  15 , p= 0.69
-Subject  16 , p= 0.
-Subject  17 , p= 0.03
-Subject  18 , p= 0.
-Subject  19 , p= 0.01</code></pre>
+<div id="qpyodide-insertion-location-9"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+For Subject 0, we find <em>p</em> is small. What does this mean?
 </div>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> For Subject 0, we find <span class="math inline">\(p=7.1e-05\)</span>. What does this mean?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Incorrect) There is a small chance that the mean spindle rate is truly zero.</li>
-<li>(Incorrect) There is a small chance that the mean spindle rate is truly nonzero.<br>
-</li>
-<li>(Correct) There is a small probability of observing these data (or something more extreme) if the mean spindle rate is zero.</li>
-<li>(Incorrect) There is a small chance that the result is clinically meaningful.</li>
-</ol>
+<div class="callout-body-container callout-body">
+<form id="subject0-small-p-form">
+<input type="radio" name="subject0-small-p" value="wrong1"> There is a small chance that the mean spindle rate is truly zero.<br> <input type="radio" name="subject0-small-p" value="wrong2"> There is a small chance that the mean spindle rate is truly nonzero.<br> <input type="radio" name="subject0-small-p" value="correct"> There is a small probability of observing these data (or something more extreme) if the difference in mean spindle rates is zero.<br> <input type="radio" name="subject0-small-p" value="wrong3"> There is a small chance that the result is clinically meaningful.<br><br> <button type="button" onclick="checkSubject0SmallP()">Submit</button>
+</form>
+<p id="subject0-small-p-feedback">
+</p>
+<script>
+function checkSubject0SmallP() {
+  const selected = document.querySelector('input[name="subject0-small-p"]:checked');
+  const feedback = document.getElementById("subject0-small-p-feedback");
+  
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. A small p-value is the probability of observing data this extreme (or more) under the null hypothesis that the mean is zero.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Recall that the p-value reflects how likely the observed data are under the null, not the chance the mean itself is zero or nonzero.";
+    feedback.style.color = "red";
+  }
+}
+</script>
 </div>
-<div id="ace419aa-59f6-4bf4-b41e-57209899c307" class="cell" data-tags="[]" data-execution_count="11">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the p-values post-treatment</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_post)<span class="op">;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'Post-Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
-</figure>
 </div>
-</div>
-</div>
+<div id="qpyodide-insertion-location-10"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Because we’ve computed 20 p-values (one from each subject), let’s again correct for multiple compariosns using a Bonferroni correction (see <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb">Multiplicity Unit</a>).</p>
-<div id="62223ffb-098d-4eb2-a959-125ecb2aac4f" class="cell" data-tags="[]" data-execution_count="12">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_post)<span class="op">;</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'Post-Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Significant p-values post-treatment = '</span>,np.<span class="bu">sum</span>(p_value_post <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Significant p-values post-treatment =  9</code></pre>
+<div id="qpyodide-insertion-location-11"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
-</figure>
+<div class="callout-title-container flex-fill">
+Compare these two sets of p‐values, calculated during treatment (previous section) and post‐treatment. What does it mean?
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<form id="compare-pvalues-form">
+<input type="radio" name="compare-p" value="correct"> No.&nbsp;None of the p‐values are small enough (less than 0.05/20).<br> <input type="radio" name="compare-p" value="wrong"> Yes. Some of the p‐values are small enough (less than 0.05/20).<br><br> <button type="button" onclick="checkCompareP()">Submit</button>
+</form>
+<p id="compare-p-feedback">
+</p>
+<script>
+function checkCompareP() {
+  const selected = document.querySelector('input[name="compare-p"]:checked');
+  const feedback = document.getElementById("compare-p-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. After correction (0.05/20), none of the p‐values from either treatment or post‐treatment fall below the threshold.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember that with a Bonferroni adjustment to 0.05/20, no p‐value meets the significance cutoff in either set.";
+    feedback.style.color = "red";
+  }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Compare these two sets of p-values, calculated during treatment (Mini 2) and post-treatment. What does it mean?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Correct) No.&nbsp;None of the p-values are small enough (less than 0.05/20).</li>
-<li>(Incorrect) Yes. Some of the p-values are small enough (less than 0.05/20).</li>
-</ol>
+</div>
 <p>Look at how small the p-values are <code>post-treatment</code>!</p>
 <ul>
-<li>9 p-values post-treatment are less than 0.05/20, the Bonferroni corrected p-value threshold.</li>
+<li>All 20 p-values post-treatment are less than 0.05/20, the Bonferroni corrected p-value threshold.</li>
 </ul>
 <p>Remembe that, during <code>treatment</code>, the p-values are much larger, and we find no p-values less than 0.05/20.</p>
-<p>We find many more significant p-values <code>post-treatment</code> (9 out of 20, after Bonferroni correction).</p>
-</div>
-<section id="our-results-seem-to-reveal-a-new-conclusion" class="level3">
-<h3 data-anchor-id="our-results-seem-to-reveal-a-new-conclusion">Our results <strong>seem</strong> to reveal a new conclusion:</h3>
+<p>We find many more significant p-values <code>post-treatment</code> (20 out of 20, after Bonferroni correction).</p>
+<section id="our-results-seem-to-reveal-a-new-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="our-results-seem-to-reveal-a-new-conclusion">Our results seem to reveal a new conclusion:</h2>
 <ul>
-<li>In Mini 2, we found no evidence of a change in spindle activity <code>during treatment</code>.</li>
-<li>In this Mini, we find many very small p-values (less than 0.05/20) <code>post-treatment</code>.</li>
+<li><p>In Mini 2, we found no evidence of a change in spindle activity <code>during treatment</code>.</p></li>
+<li><p>In this Mini, we find many very small p-values (less than 0.05/20) <code>post-treatment</code>.</p></li>
 </ul>
 <p>More specifically, we find evidence of a significant change in spindle activity post-treatment in 9/20 subjects.</p>
 <p>The PI is very excited with our new results, which appear to upend the literature.</p>
 <p>The PI drafts the title for a high-impact paper:</p>
-<ul>
-<li>Draft paper title: <em>Post-Treatment Paradox: Clear Human Responses, Despite Absence of Treatment Effect</em></li>
-</ul>
+<p>Draft paper title: <em>Post-Treatment Paradox: Clear Human Responses, Despite Absence of Treatment Effect</em></p>
 </section>
 <section id="but-are-we-sure" class="level2">
-<h2 data-anchor-id="but-are-we-sure">But are we sure?</h2>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Review the characteristics of data during <code>treatment</code> and <code>post-treatment</code>. How might these characteristics impact the p-values we observe?</p>
-<p><strong>A:</strong> (Multiple Choice - all correct)</p>
-<ol type="1">
-<li>We collect more samples <code>post-treatment</code>, which can provide more precise estimates.</li>
-<li>We collect fewer samples during <code>treatment</code>, which can provide less precise estimates.</li>
-<li>The measures are less noisy <code>post-treatment</code>, which can make it easier to detect an effect.<br>
-</li>
-<li>The measures are more noisy during <code>treatment</code>, which can make it harder to detect an effect.<br>
-</li>
-</ol>
+<h2 class="anchored" data-anchor-id="but-are-we-sure">But are we sure?</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Review the characteristics of data during treatment and post‐treatment. How might these characteristics impact the p‐values we observe?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>(Select all that apply)</em></p>
+<form id="data-characteristics-form">
+<input type="checkbox" name="char" value="more_samples_post"> We collect more samples post‐treatment, which can provide more precise estimates.<br> <input type="checkbox" name="char" value="fewer_samples_treatment"> We collect fewer samples during treatment, which can provide less precise estimates.<br> <input type="checkbox" name="char" value="less_noisy_post"> The measures are less noisy post‐treatment, which can make it easier to detect an effect.<br> <input type="checkbox" name="char" value="more_noisy_treatment"> The measures are more noisy during treatment, which can make it harder to detect an effect.<br><br> <button type="button" onclick="checkDataCharacteristics()">Submit</button>
+</form>
+<p id="data-characteristics-feedback">
+</p>
+<script>
+function checkDataCharacteristics() {
+  const correct = [
+    "more_samples_post",
+    "fewer_samples_treatment",
+    "less_noisy_post",
+    "more_noisy_treatment"
+  ];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="char"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("data-characteristics-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one option.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML = "✅ Correct! More post‐treatment samples and lower noise strengthen evidence (lower p), while fewer treatment samples and higher noise weaken it (higher p).";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. All listed factors (more post‐treatment samples, fewer treatment samples, less post‐treatment noise, more treatment noise) influence the p‐values in the described ways.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 <p>This is a very important question … and we haven’t fully answered it yet.</p>
-<p>We collect many more samples <code>post-treatment</code>, and our measurements are more accurate <code>post-treatment</code> compared to during <code>treatment</code>. Both of these features impact the evidence we collect to reject the null hypothesis.</p>
+<p>We collect many more samples <code>post-treatment</code>, and our measurements are more accurate <code>post-treatment</code> compared to during <code>treatment</code>.</p>
+<p>Both of these features impact the evidence we collect to reject the null hypothesis.</p>
 </section>
 <section id="so-are-you-sure-about-the-post-treatment-results" class="level2">
-<h2 data-anchor-id="so-are-you-sure-about-the-post-treatment-results">So, are you sure about the <code>post-treatment</code> results?</h2>
+<h2 class="anchored" data-anchor-id="so-are-you-sure-about-the-post-treatment-results">So, are you sure about the <code>post-treatment</code> results?</h2>
 <div class="alert alert-block alert-danger">
-<p><b>Alert: Wait, I’m not so sure … </b></p>
-<p></p>
+<p><b>Alert:</b></p>
 <ul>
+<li>Wait, I’m not so sure …
+<p></p></li>
 <li>Why did you ask me to review the characteristics of the data, and think about how this might impact the data?</li>
 </ul>
 </div>
-<div class="alert alert-block alert-info">
-<p><em>Moment of tension</em>:</p>
+</section>
+<section id="mini-summary-review-1" class="level2">
+<h2 class="anchored" data-anchor-id="mini-summary-review-1">Mini Summary &amp; Review</h2>
+<p>We sought to answer the scientific question:</p>
 <ul>
-<li>Hook the learner - “something isn’t right and I want to know why.”</li>
+<li>Does the spindle activity <code>post-treatment</code> differ from the <code>baseline</code> spindle activity?</li>
 </ul>
-</div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> EXTENSION PROGRAMMING EXERCISE: We’ve examined the spindle activity during <code>treatment</code> and <code>post-treatment</code>. How would you test the null hypothesis of spindle activity = 0 during the <code>baseline</code> condition?</p>
-</div>
-<section id="mini-summary-review-1" class="level3">
-<h3 data-anchor-id="mini-summary-review-1">Mini Summary &amp; Review</h3>
-<p>We sought to answer the scientific question: - Does the spindle activity <code>post-treatment</code> differ from the <code>baseline</code> spindle activity?</p>
-<p>To answer this question, we assumed a <strong>Null hypothesis</strong> of no difference in spindle activity <code>post-treatment</code> compared to 0.</p>
+<p>To answer this question, we assumed a null hypothesis:</p>
+<p><strong>Null hypothesis</strong>: <em>No difference in average spindle activity between post-treatment and baseline conditions.</em></p>
 <p>We tested this null hypothsis for each subject, computing a p-value for each subject.</p>
 <p>Because we computed 20 p-values (one for each subject), we corrected for multiple comparsions using a Bonferroni correction (see <a href="https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb">Multiplicity Unit</a>).</p>
-<p>We found many p-values small enough to reject the null hypothesis.</p>
+<p>We found all of the p-values were small enough to reject the null hypothesis.</p>
 <p>In other words, in this exploratory analysis, we found <strong>evidence</strong> that the spindle activity during <code>post-treatment</code> differs from <code>baseline</code>.</p>
 <p>This differs from our results during <code>treatment</code>, in which we found <strong>no evidence</strong> that the spindle activity during <code>treatment</code> differs from <code>baseline</code>.</p>
+<hr>
 </section>
 </section>
-
 <section id="not-so-fast-visualize-the-measured-data-always." class="level1">
 <h1>4- Not so fast: visualize the measured data, always.</h1>
-<p>In Mini 3, we <em>may</em> have found an interesting result: spindle activity <code>post-treatment</code>, but not during <code>treatment</code>, differs from <code>baseline</code>.</p>
+<p>In our previous analysis, we <em>may</em> have found an interesting result: spindle activity <code>post-treatment</code>, but not during <code>treatment</code>, differs from <code>baseline</code>.</p>
 <p>Scientifically, we might conlcude that our treatment has a long-lasting effect, impacting spindle activity <code>post-treatment</code>.</p>
 <p>To infer these results, we computed and compared p-values, testing specific null hypotheses for each subject.</p>
 <p>We’ve hinted above that <strong>something isn’t right</strong> … let’s now dive in and identify what we could have done differently.</p>
 <p><strong>Our initial approach has focused exclusively on p-values.</strong></p>
 <p>P-values indicate how much evidence we have to reject a null hypothesis given the data we observe.</p>
 <p>Let’s again plot the p-values during <code>treatment</code> and <code>post-treatment</code> for each subject:</p>
-<div id="7499ccc0-b925-4f97-bb69-8e236112523b" class="cell" data-tags="[]" data-execution_count="13">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>l1 <span class="op">=</span> plt.stem(p_value_during, <span class="st">'or'</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>l2 <span class="op">=</span> plt.stem(p_value_post, <span class="st">'ob'</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>,<span class="dv">20</span>))<span class="op">;</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'During Treatment (red), Post-treatment (blue)'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="qpyodide-insertion-location-12"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+For each subject, compare the p-values during treatment (red) versus post-treatment (blue). What do you observe?
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<form id="compare-post-treatment-form">
+<input type="radio" name="compare-pt" value="correct"> P-values tend to be smaller post-treatment compared to during treatment.<br> <input type="radio" name="compare-pt" value="wrong"> P-values tend to be larger post-treatment compared to during treatment.<br><br> <button type="button" onclick="checkComparePT()">Submit</button>
+</form>
+<p id="compare-pt-feedback">
+</p>
+<script>
+function checkComparePT() {
+  const selected = document.querySelector('input[name="compare-pt"]:checked');
+  const feedback = document.getElementById("compare-pt-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. The blue post-treatment p-values are generally smaller than the red during-treatment values.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. In fact, the blue post-treatment p-values are typically smaller than the red during-treatment ones.";
+    feedback.style.color = "red";
+  }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> For each subject, compare the p-values during <code>treatment</code> (red) versus <code>post-treatment</code> (blue). What do you observe?</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Correct) P-values tend to be smaller <code>post-treatment</code> compared to during <code>treatment</code>.</li>
-<li>(Incorrect) P-values tend to be larger <code>post-treatment</code> compared to during <code>treatment</code>.</li>
-</ol>
 </div>
 <p>We’ve focused on p-values to draw our scientific conclusions.</p>
 <p><strong>However, we’ve almost completely ignored the spindle measurements themselves!</strong></p>
 <p>Let’s return to the spindle activity measurements themselves, and see how these measurements relate to the p-values.</p>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Consider Subject 4. We find during <code>treatment</code> p=0.01, and <code>post-treatment</code> p=4.28e-05. So, the p-value is much smaller <code>post-treatment</code>. How do you think the <strong>spindle activity</strong> differs during <code>treatment</code> versus <code>post-treatment</code>.</p>
-<p><strong>A:</strong> (Multiple Choice)</p>
-<ol type="1">
-<li>(Incorrect) The p-value is smaller <code>post-treatment</code>, so I expect a big effect - I expect spindle activity that differs from 0.</li>
-<li>(Incorrect) The p-value is bigger during <code>treatment</code>, so I expect a small effect - I expect spindle activity near 0.</li>
-<li>(Correct) It’s dangerous to deduce effect size from the p-value.</li>
-</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Consider the p-values computed for all subjects. How do you expect the <strong>spindle activity</strong> behaves during <code>treatment</code> and <code>post-treatment</code>?</p>
-<p><strong>A:</strong> (Multiple Choice) 1. Because we <strong>do not</strong> find significnat p-values during <code>treatment</code>, I expect these values to appear near 0. 2. Because we <strong>do</strong> find significnt p-values <code>post-treatment</code>, I expect these values to differ from 0. 3. (Correct) It’s dangerous to deduce effect size from the p-value.</p>
+<div class="callout-title-container flex-fill">
+Consider Subject 6. We find during treatment (p = 0.033), and post-treatment (p = 0.0021). The p-value is much smaller post-treatment. How do you think the spindle activity differs during treatment versus post-treatment?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="subject4-effectsize-form">
+<input type="radio" name="subject4-effectsize" value="wrong1"> The p-value is smaller post-treatment, so I expect a big effect – I expect spindle activity that differs from 0.<br> <input type="radio" name="subject4-effectsize" value="wrong2"> The p-value is bigger during treatment, so I expect a small effect – I expect spindle activity near 0.<br> <input type="radio" name="subject4-effectsize" value="correct"> It’s dangerous to deduce effect size from the p-value.<br><br> <button type="button" onclick="checkSubject4Effect()">Submit</button>
+</form>
+<p id="subject4-effectsize-feedback">
+</p>
+<script>
+function checkSubject4Effect() {
+  const selected = document.querySelector('input[name="subject4-effectsize"]:checked');
+  const feedback = document.getElementById("subject4-effectsize-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. A p-value speaks only to evidence against the null, not the magnitude of the effect.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember, p-values do not convey effect size—they only quantify evidence against the null hypothesis.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Consider the p-values computed for all subjects. How do you expect spindle activity to behave during treatment and post-treatment?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="expectation-form">
+<input type="radio" name="expectation" value="wrong1"> Because we do not find significant p-values during treatment, I expect spindle activity values to appear near 0.<br> <input type="radio" name="expectation" value="wrong2"> Because we do find significant p-values post-treatment, I expect spindle activity values to differ from 0.<br> <input type="radio" name="expectation" value="correct"> It’s dangerous to deduce effect size from the p-value.<br><br> <button type="button" onclick="checkExpectation()">Submit</button>
+</form>
+<p id="expectation-feedback">
+</p>
+<script>
+function checkExpectation() {
+  const selected = document.querySelector('input[name="expectation"]:checked');
+  const feedback = document.getElementById("expectation-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. P-values indicate evidence against the null, not the magnitude or direction of an effect.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. Remember, p-values do not tell you how large or near-zero the underlying values are.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 <p>Now, let’s return to the spindle activity and look at those values directly.</p>
-<p>Let’s begin with an example from Subject 4.</p>
-<div id="68b366be-8767-4eae-8edb-91fc65898507" class="cell" data-tags="[]" data-execution_count="14">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>plt.plot(np.tile(<span class="dv">0</span>,(<span class="dv">840</span>,<span class="dv">1</span>))<span class="op">-</span><span class="fl">0.25</span>, baseline[:,<span class="dv">4</span>], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>plt.plot(np.tile(<span class="dv">0</span>,(<span class="dv">30</span>,<span class="dv">1</span>)), during_treatment[:,<span class="dv">4</span>], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'r'</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>plt.plot(np.tile(<span class="dv">0</span>,(<span class="dv">840</span>,<span class="dv">1</span>))<span class="op">+</span><span class="fl">0.25</span>, post_treatment[:,<span class="dv">4</span>], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'b'</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject 4'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Spindle activity'</span>)<span class="op">;</span> plt.title(<span class="st">'Baseline (black), During Treatment (red), Post-Treatment (blue)'</span>)<span class="op">;</span> <span class="co">#plt.ylim([0,1]);</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>plt.xticks([])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>For Subject 4, we found:</p>
+<p>Let’s begin with an example from Subject 6.</p>
+<div id="qpyodide-insertion-location-13"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>For Subject 6, we found:</p>
 <ul>
-<li><code>treatment</code> p=0.01</li>
-<li><code>post-treatment</code> p=4.28e-05</li>
+<li><p><code>treatment</code> p=0.033</p></li>
+<li><p><code>post-treatment</code> p=0.0021</p></li>
 </ul>
 <p>From these p-values, we might expect:</p>
 <ul>
-<li>Spindle activity during <code>treatment</code> near 0 (i.e., similar to <code>baseline</code>).</li>
-<li>Spindle activity <code>post-treatment</code> far from 0 (i.e., different from <code>baseline</code>).</li>
+<li><p>Spindle activity during <code>treatment</code> near 0 (i.e., similar to <code>baseline</code>).</p></li>
+<li><p>Spindle activity <code>post-treatment</code> far from 0 (i.e., different from <code>baseline</code>).</p></li>
 </ul>
 <p>But, we <strong>find the opposite</strong>.</p>
 <ul>
-<li>Spindle activity during <code>treatment</code> far from 0 (i.e., different from <code>baseline</code>).</li>
-<li>Spindle activity <code>post-treatment</code> near 0 (i.e., similar to <code>baseline</code>).</li>
+<li><p>Spindle activity during <code>treatment</code> far from 0 (i.e., different from <code>baseline</code>).</p></li>
+<li><p>Spindle activity <code>post-treatment</code> near 0 (i.e., similar to <code>baseline</code>).</p></li>
 </ul>
 <p>Let’s make similar plots for all 20 subjects.</p>
-<div id="f406e509-d2aa-4268-b2c5-e12b1b701078" class="cell" data-tags="[]" data-execution_count="15">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    plt.plot(np.tile(k,(<span class="dv">840</span>,<span class="dv">1</span>))<span class="op">-</span><span class="fl">0.25</span>, baseline[:,k], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    plt.plot(np.tile(k,(<span class="dv">30</span>,<span class="dv">1</span>)), during_treatment[:,k], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'r'</span>)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(np.tile(k,(<span class="dv">840</span>,<span class="dv">1</span>))<span class="op">+</span><span class="fl">0.25</span>, post_treatment[:,k], <span class="st">'.'</span>, color<span class="op">=</span><span class="st">'b'</span>)</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Spindle activity'</span>)<span class="op">;</span> plt.title(<span class="st">'Baseline (black), During Treatment (red), Post-Treatment (blue)'</span>)<span class="op">;</span> <span class="co">#plt.ylim([0,1]);</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>,<span class="dv">20</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="qpyodide-insertion-location-14"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Looking at the plots of spindle measurements, do you observe an effect during treatment (red) compared to baseline (black)?
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<form id="treatment-effect-plot-form">
+<input type="radio" name="treatment-effect-plot" value="wrong1"> No, the red and black measurements look about the same.<br> <input type="radio" name="treatment-effect-plot" value="wrong2"> No, the red measurements appear lower than baseline.<br> <input type="radio" name="treatment-effect-plot" value="correct"> Yes, the spindle measurements during treatment (red) appear larger than baseline (black).<br> <input type="radio" name="treatment-effect-plot" value="wrong3"> It’s impossible to tell any difference from the plot.<br><br> <button type="button" onclick="checkTreatmentEffectPlot()">Submit</button>
+</form>
+<p id="treatment-effect-plot-feedback">
+</p>
+<script>
+function checkTreatmentEffectPlot() {
+  const selected = document.querySelector('input[name="treatment-effect-plot"]:checked');
+  const feedback = document.getElementById("treatment-effect-plot-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. The red (treatment) measurements generally sit above the black (baseline), suggesting an increase—even though the p-values remain large.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. In fact, the red markers during treatment tend to be higher than the black baseline markers.";
+    feedback.style.color = "red";
+  }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Looking at the plots of spindle measurements, do you observe an effect during <code>treatment</code> (red) compared to <code>baseline</code> (black)?</p>
-<p><strong>A:</strong> (Short answer)</p>
-<ul>
-<li>(Correct) Yes, sort of … the spindle measurements during treatment appear larger than than baseline. How can that be if the p-values are big?</li>
-</ul>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Looking at the plots of spindle measurements, do you observe an effect <code>post-treatment</code> (red) compared to <code>baseline</code> (black)?</p>
-<p><strong>A:</strong> (Short answer)</p>
-<ul>
-<li>(Correct) Not really … because we find significant p-values <code>post-treatment</code>, I expected these values to differ from 0 and from the distribution of <code>baseline</code> values. But I don’t see that here …</li>
-</ul>
-<ol start="3" type="1">
-<li>Not really … we concluded that there’s an effect post-treamtnet, but not during treatment. However, these plots of spindle measurements aren’t consistent with our conclusions.</li>
-</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Looking at the plots of spindle measurements, are these plots consistent with your p-value results?</p>
-<p><strong>A:</strong> (Short answer)</p>
-<ul>
-<li>(Correct) Not really … we found many significant p-values <code>post-treatment</code> and concluded that there’s an effect <code>post-treatment</code>, but not during <code>treatment</code>. However, these plots of spindle activity aren’t consistent with our conclusions.</li>
-</ul>
+<div class="callout-title-container flex-fill">
+Looking at the plots of spindle measurements, do you observe an effect post-treatment (blue) compared to baseline (black)?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="post-treatment-effect-vis-form">
+<input type="radio" name="post-effect-vis" value="wrong1"> Yes – the blue post-treatment values clearly exceed the black baseline values.<br> <input type="radio" name="post-effect-vis" value="wrong2"> No – the blue and black measurements look identical with no visible difference.<br> <input type="radio" name="post-effect-vis" value="correct"> No.&nbsp;Although we find significant p-values post-treatment, it’s difficult to see whether the values differ from the distribution of baseline values.<br> <input type="radio" name="post-effect-vis" value="wrong3"> Yes – the blue values appear much more variable than the baseline black, indicating an effect.<br><br> <button type="button" onclick="checkPostEffectVis()">Submit</button>
+</form>
+<p id="post-effect-vis-feedback">
+</p>
+<script>
+function checkPostEffectVis() {
+  const selected = document.querySelector('input[name="post-effect-vis"]:checked');
+  const feedback = document.getElementById("post-effect-vis-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. Despite significant p-values post-treatment, the raw plots don’t clearly show a shift from baseline.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. The key insight is that even with significant p-values, the visual plots may not reveal a clear difference.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Looking at the plots of spindle measurements, are these plots consistent with your p-value results?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="plots-consistency-form">
+<input type="radio" name="plots-consistency" value="correct"> No — We found many significant p-values post-treatment and concluded there’s an effect, but these plots of spindle activity aren’t consistent with that conclusion.<br> <input type="radio" name="plots-consistency" value="wrong"> Yes — The raw spindle plots clearly match our statistical conclusions.<br><br> <button type="button" onclick="checkPlotsConsistency()">Submit</button>
+</form>
+<p id="plots-consistency-feedback">
+</p>
+<script>
+function checkPlotsConsistency() {
+  const selected = document.querySelector('input[name="plots-consistency"]:checked');
+  const feedback = document.getElementById("plots-consistency-feedback");
+
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. Despite significant p-values post-treatment, the spindle‐activity plots don’t visually support that effect.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. The plots don’t align with our statistical findings—so they’re not consistent.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 <p>It’s nice to visualize all of the data, but doing so can also be overwhelming.</p>
 <p>Let’s summarize the spindle activity in for each subject by ploting the <a href="https://mark-kramer.github.io/Case-Studies-Python/02.html#cis-m1">mean and the standard error of the mean</a>.</p>
-<div id="d38c27e8-6e14-4e4e-80f6-d39cb4248cff" class="cell" data-tags="[]" data-execution_count="16">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    mn <span class="op">=</span> np.mean(baseline[:,k])<span class="op">;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    sd <span class="op">=</span> np.std( baseline[:,k])<span class="op">;</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    K  <span class="op">=</span> np.shape(baseline)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(k<span class="op">-</span><span class="fl">0.2</span>, mn, <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    plt.plot([k<span class="op">-</span><span class="fl">0.2</span>,k<span class="op">-</span><span class="fl">0.2</span>], [mn<span class="op">-</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K), mn<span class="op">+</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K)], color<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    mn <span class="op">=</span> np.mean(during_treatment[:,k])<span class="op">;</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    sd <span class="op">=</span> np.std( during_treatment[:,k])<span class="op">;</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    K  <span class="op">=</span> np.shape(during_treatment)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    plt.plot(k, mn, <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'r'</span>)</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    plt.plot([k,k], [mn<span class="op">-</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K), mn<span class="op">+</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K)], color<span class="op">=</span><span class="st">'r'</span>)</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    mn <span class="op">=</span> np.mean(post_treatment[:,k])<span class="op">;</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    sd <span class="op">=</span> np.std( post_treatment[:,k])<span class="op">;</span></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    K  <span class="op">=</span> np.shape(post_treatment)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    plt.plot(k<span class="op">+</span><span class="fl">0.2</span>, mn, <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'b'</span>)</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    plt.plot([k<span class="op">+</span><span class="fl">0.2</span>,k<span class="op">+</span><span class="fl">0.2</span>], [mn<span class="op">-</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K), mn<span class="op">+</span><span class="dv">2</span><span class="op">*</span>sd<span class="op">/</span>np.sqrt(K)], color<span class="op">=</span><span class="st">'b'</span>)</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Spindle activity'</span>)<span class="op">;</span> plt.title(<span class="st">'Baseline (black), During Treatment (red), Post-Treatment (blue)'</span>)<span class="op">;</span></span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>,<span class="dv">20</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="qpyodide-insertion-location-15"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Looking at the summary plots of the spindle activity for each subject, do you observe an effect during treatment (red)?
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<form id="summary-effect-form">
+<input type="radio" name="summary-effect" value="wrong1"> No — the mean spindle activity during treatment is similar to baseline.<br> <input type="radio" name="summary-effect" value="wrong2"> Yes — the mean is larger and the standard error is small.<br> <input type="radio" name="summary-effect" value="wrong3"> No — the mean spindle activity during treatment is smaller than baseline.<br> <input type="radio" name="summary-effect" value="correct"> Yes — the mean spindle activity during treatment appears larger than baseline, but the large standard error explains why p-values aren’t significant.<br><br> <button type="button" onclick="checkSummaryEffect()">Submit</button>
+</form>
+<p id="summary-effect-feedback">
+</p>
+<script>
+function checkSummaryEffect() {
+  const selected = document.querySelector('input[name="summary-effect"]:checked');
+  const feedback = document.getElementById("summary-effect-feedback");
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. The mean is higher during treatment, but the large standard error means the p-values aren’t significant.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. In reality, the mean treatment effect looks larger but high SE leads to nonsignificant p-values.";
+    feedback.style.color = "red";
+  }
+}
+</script>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Looking at the summary plots of the spindle activty for each subject, do you observe an effect during <code>treatment</code> (red)?</p>
-<p><strong>A:</strong> (Short answer)</p>
-<ul>
-<li>Yes … the mean spindle activity during <code>treatment</code> appears larger than <code>baseline</code>. The standard error is also large. Why are the p-values during <code>treatement</code> not significant?</li>
-</ul>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Looking at the summary plots of the spindle activty for each subject, do you observe an effect <code>post-treatment</code> (blue)?</p>
-<p><strong>A:</strong> (Short answer)</p>
-<ul>
-<li>Not really … because we find significnt p-values <code>post-treatment</code>, I expect these values to differ from 0. But I don’t see that here, the black and blue dots appear to overlap near 0.</li>
-</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Looking at the summary plots of the spindle activty for each subject, are these plots consistent with your p-value results?</p>
-<p><strong>A:</strong> (Short answer)</p>
-<ul>
-<li>Not really … we concluded that there’s an effect <code>post-treatment</code>, but not during <code>treatment</code>. However, these plots of spindle activity aren’t consistent with our conclusions.</li>
-</ul>
+<div class="callout-title-container flex-fill">
+Looking at the summary plots of the spindle activity for each subject, do you observe an effect post-treatment (blue)?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="summary-post-effect-form">
+<input type="radio" name="summary-post-effect" value="wrong1"> Yes — the blue post-treatment means are clearly above the black baseline means.<br> <input type="radio" name="summary-post-effect" value="wrong2"> Yes — the blue dots appear less variable and shifted from zero.<br> <input type="radio" name="summary-post-effect" value="wrong3"> No — the blue means overlap with baseline, but only because the sample size is too small.<br> <input type="radio" name="summary-post-effect" value="correct"> No — although we found significant p-values post-treatment, the black and blue dots overlap near zero, so we don’t clearly see an effect.<br><br> <button type="button" onclick="checkSummaryPostEffect()">Submit</button>
+</form>
+<p id="summary-post-effect-feedback">
+</p>
+<script>
+function checkSummaryPostEffect() {
+  const selected = document.querySelector('input[name="summary-post-effect"]:checked');
+  const feedback = document.getElementById("summary-post-effect-feedback");
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. Despite significant p-values post-treatment, the mean dots (black vs. blue) overlap near zero, so the plot doesn’t show a clear effect.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. The key point is that the blue and black dots overlap near zero, so you can’t visually confirm an effect even with significant p-values.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Looking at the summary plots of the spindle activity for each subject, are these plots consistent with your p-value results?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="summary-plots-consistency-form">
+<input type="radio" name="summary-consistency" value="correct"> No — we concluded from p-values that there’s an effect post-treatment but not during treatment, yet these summary plots don’t support that conclusion.<br> <input type="radio" name="summary-consistency" value="wrong"> Yes — the summary plots clearly align with our p-value conclusions.<br><br> <button type="button" onclick="checkSummaryPlotsConsistency()">Submit</button>
+</form>
+<p id="summary-plots-consistency-feedback">
+</p>
+<script>
+function checkSummaryPlotsConsistency() {
+  const selected = document.querySelector('input[name="summary-consistency"]:checked');
+  const feedback = document.getElementById("summary-plots-consistency-feedback");
+  if (!selected) {
+    feedback.innerHTML = "Please select an answer.";
+    feedback.style.color = "blue";
+    return;
+  }
+  if (selected.value === "correct") {
+    feedback.innerHTML = "✅ Correct. The summary plots don’t visually support our statistical conclusion of an effect post-treatment but not during treatment.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = "❌ Incorrect. In fact, the summary plots aren’t consistent with our p-value-based conclusions.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 <p>Let’s summarize what we’ve found so far:</p>
 <table class="caption-top table">
@@ -1490,12 +2001,11 @@ Subject  19 , p= 0.01</code></pre>
 <p>Something’s not adding up here …</p>
 <ul>
 <li><p>During <code>treatment</code>, we find <strong>no</strong> evidence of a signficant change in spindle activity from baseline (i.e., the p-values are big). However, looking at the mean spindle activity, we find spindle activities that often exceed 0.</p></li>
-<li><p><code>Post-treatment</code>, we find evidence in 9/20 subject of a signficant change in spindle activity from baseline (i.e., the p-values are small). However, looking at the mean spindle activity, we find those values tend to appear near 0.</p></li>
+<li><p><code>Post-treatment</code>, we find evidence of a signficant change in spindle activity from baseline (i.e., the p-values are small) in each subject. However, looking at the mean spindle activity, we find those values tend to appear near 0.</p></li>
 </ul>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Why do the spindle activities during <code>treatment</code> often exceed 0 (i.e., exceed baseline) spindle activity, but p&gt;0.05? And, why are the <code>post-treatment</code> spindle activities so near 0 (i.e., so near the baseline) spindle activity, but p&lt;&lt;0.05?</p>
-<p><strong>A:</strong> I’m confused!</p>
-</div>
+<p>So, why do the spindle activities during <code>treatment</code> often exceed 0 (i.e., exceed baseline) spindle activity, but p&gt;0.05?</p>
+<p>And, why are the <code>post-treatment</code> spindle activities so near 0 (i.e., so near the baseline) spindle activity, but p&lt;&lt;0.05?</p>
+<p><strong>I’m confused!</strong></p>
 <div class="alert alert-block alert-danger">
 <p><b>Alert:</b></p>
 <p>These confusing conclusions occur because <strong>we’ve made two common errors</strong>:</p>
@@ -1506,33 +2016,162 @@ Subject  19 , p= 0.01</code></pre>
 <p></p>
 </div>
 <section id="to-resolve-these-confusing-conclusions-lets-think-more-carefully-about-what-the-p-value-represents." class="level2">
-<h2 data-anchor-id="to-resolve-these-confusing-conclusions-lets-think-more-carefully-about-what-the-p-value-represents.">To resolve these confusing conclusions, let’s think more carefully about what the p-value represents.</h2>
+<h2 class="anchored" data-anchor-id="to-resolve-these-confusing-conclusions-lets-think-more-carefully-about-what-the-p-value-represents.">To resolve these confusing conclusions, let’s think more carefully about what the p-value represents.</h2>
 <p>The p-value measures the strength of evidence against the null hypothesis.</p>
 <p>Three factors can impact the strength of evidence:</p>
 <ul>
-<li><strong>Sample Size</strong> (i.e., the number of observations).</li>
-<li><strong>Effect Size</strong> (i.e., bigger differences in spindle activity between conditions are easier to detect.)</li>
-<li><strong>Variability (or Noise) in Measurements</strong>: (i.e., how reliably we measure spindle activity).</li>
+<li><p><strong>Sample Size</strong> (i.e., the number of observations).</p></li>
+<li><p><strong>Effect Size</strong> (i.e., bigger differences in spindle activity between conditions are easier to detect.)</p></li>
+<li><p><strong>Variability (or Noise) in Measurements</strong>: (i.e., how reliably we measure spindle activity).</p></li>
 </ul>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> How does the <strong>sample size</strong> differ during <code>treatment</code> versus <code>post-treatment</code>? How might this impact the results?</p>
-<p><strong>A:</strong> - We have many more observations <code>post-treatment</code> (N=840). Therefore, we can accumulate enough evidence to detect a weak effect post-treatment. - We have few observations during <code>treatment</code> (N=30). Therefore, even though the effect may be strong, we don’t have enough evidence to reject the null hypothesis of no difference from 0 (i.e., no difference from <code>baseline</code>) during treatment.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> How does the <strong>effect size</strong> differ during <code>treatment</code> versus <code>post-treatment</code>? How might this impact the results?</p>
-<p><strong>A:</strong> - The effect size appears small <code>post-treatment</code> (the mean values are near zero). Therefore, although we detect a change <code>post-treatment</code>, this change is small. - The effect size appears large during <code>treatment</code> (the mean values exceed zero). However, due to the limited number of samples and variability in the estimates, we do not have enough evidence to reject the null hypothesis of no difference from 0 (i.e., no difference from <code>baseline</code>) during treatment.</p>
+<div class="callout-title-container flex-fill">
+How does the [sample size] differ during <code>treatment</code> versus <code>post‐treatment</code>? How might this impact the results?
 </div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> How does the <strong>measurement variability</strong> differ during <code>treatment</code> versus <code>post-treatment</code>? How might this impact the results?</p>
-<p><strong>A:</strong></p>
-<ul>
-<li><p>We have less measurement variability <code>post-treatment</code>. Lower variability makes it easier to detect a difference from 0 (i.e., difference from <code>baseline</code>).</p></li>
-<li><p>We have more measurement variability during <code>treatment</code> . Higher variability makes it harder to detect a difference from 0 (i.e., difference from <code>baseline</code>) and harder to reject the null hypothesis.</p></li>
-</ul>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>(Select all that apply)</em></p>
+<form id="sample-size-impact-form">
+<input type="checkbox" name="size_impact" value="post_many"> We have many more observations post‐treatment (N=840).<br> <input type="checkbox" name="size_impact" value="during_few"> We have few observations during treatment (N=30).<br> <input type="checkbox" name="size_impact" value="wrong1"> We have many more observations during treatment (N=840).<br> <input type="checkbox" name="size_impact" value="wrong2"> We have few observations post‐treatment (N=30).<br><br> <button type="button" onclick="checkSampleSizeImpact()">Submit</button>
+</form>
+<p id="sample-size-impact-feedback">
+</p>
+<script>
+function checkSampleSizeImpact() {
+  const correct = ["post_many", "during_few"];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="size_impact"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("sample-size-impact-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one option.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML = 
+      "✅ Correct! We have many more observations post-treatment (N=840), " +
+      "so we can accumulate enough evidence to detect a weak effect post-treatment. " +
+      "We have few observations during treatment (N=30), so even if the effect is strong, " +
+      "we lack enough evidence to reject the null hypothesis during treatment.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = 
+      "❌ Incorrect. Remember that post-treatment has N=840 (high power for weak effects), " +
+      "while treatment has only N=30 (low power even if effects exist).";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How does the [effect size] differ during <code>treatment</code> versus <code>post-treatment</code>? How might this impact the results?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>(Select all that apply)</em></p>
+<form id="effect-size-impact-form">
+<input type="checkbox" name="effect_impact" value="post_small"> The effect size appears small post-treatment (mean values near zero).<br> <input type="checkbox" name="effect_impact" value="treatment_large"> The effect size appears large during treatment (mean values exceed zero).<br> <input type="checkbox" name="effect_impact" value="wrong1"> The effect size is equally small in both treatment and post-treatment.<br> <input type="checkbox" name="effect_impact" value="wrong2"> A larger effect size during treatment guarantees statistical significance.<br><br> <button type="button" onclick="checkEffectSizeImpact()">Submit</button>
+</form>
+<p id="effect-size-impact-feedback">
+</p>
+<script>
+function checkEffectSizeImpact() {
+  const correct = ["post_small", "treatment_large"];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="effect_impact"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("effect-size-impact-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one option.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML =
+      "✅ Correct! The effect size appears small post-treatment (means near zero), so even though we detect a change it’s small. " +
+      "The effect size appears large during treatment (means exceed zero), but with few samples and high variability, " +
+      "we lack sufficient evidence to reject the null hypothesis during treatment.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML =
+      "❌ Incorrect. Remember: small post-treatment effect size means the detected change is small, " +
+      "and a large treatment effect size can still fail to reach significance when sample size is low and variability is high.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How does the [measurement variability] differ during <code>treatment</code> versus <code>post-treatment</code>? How might this impact the results?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>(Select all that apply)</em></p>
+<form id="measurement-variability-form">
+<input type="checkbox" name="measurement_impact" value="post_less"> We have less measurement variability post-treatment. Lower variability makes it easier to detect a difference from 0 (i.e., difference from baseline).<br> <input type="checkbox" name="measurement_impact" value="treatment_more"> We have more measurement variability during treatment. Higher variability makes it harder to detect a difference from 0 (i.e., difference from baseline) and harder to reject the null hypothesis.<br> <input type="checkbox" name="measurement_impact" value="wrong1"> Measurement variability is roughly the same in both conditions, so it has no impact on detection.<br> <input type="checkbox" name="measurement_impact" value="wrong2"> Higher variability post-treatment makes it harder to detect a difference, improving our evidence.<br><br> <button type="button" onclick="checkMeasurementVariability()">Submit</button>
+</form>
+<p id="measurement-variability-feedback">
+</p>
+<script>
+function checkMeasurementVariability() {
+  const correct = ["post_less", "treatment_more"];
+  const selected = Array.from(
+    document.querySelectorAll('input[name="measurement_impact"]:checked')
+  ).map(cb => cb.value);
+  const feedback = document.getElementById("measurement-variability-feedback");
+
+  if (selected.length === 0) {
+    feedback.innerHTML = "Please select at least one option.";
+    feedback.style.color = "blue";
+    return;
+  }
+
+  const missed = correct.filter(x => !selected.includes(x));
+  const extras = selected.filter(x => !correct.includes(x));
+
+  if (missed.length === 0 && extras.length === 0) {
+    feedback.innerHTML =
+      "✅ Correct! Post-treatment variability is lower, which increases our power to detect differences, while treatment variability is higher, which reduces our ability to reject the null.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML =
+      "❌ Incorrect. Remember that lower variability post-treatment helps detect an effect, and higher variability during treatment hinders it.";
+    feedback.style.color = "red";
+  }
+}
+</script>
+</div>
 </div>
 </section>
 <section id="conclusion-summary-morale" class="level2">
-<h2 data-anchor-id="conclusion-summary-morale">Conclusion / Summary / Morale:</h2>
+<h2 class="anchored" data-anchor-id="conclusion-summary-morale">Conclusion / Summary / Morale:</h2>
 <p>We began with the scientific statement:</p>
 <p><em>“I expect during treatment that spindle activity exceeds the baseline spindle activity.”</em></p>
 <p>Our initial approach focused on computing and comparing p-values.</p>
@@ -1540,109 +2179,33 @@ Subject  19 , p= 0.01</code></pre>
 <p>We’re not interested in comparing the <strong>evidence</strong> we have for each null-hypothesis (the p-value); the evidence depends on the sample size, effect size, and measurement variability.</p>
 <p>Instead, we’re more interested in comparing the spindle activity between condidtions.</p>
 <p>In other words, <strong>we’re intested in the effect size</strong>, not the p-value.</p>
-<p>This suggests a different analysis path forward for an improved approach.</p>
+<p>This observation suggests a different analysis path for an improved approach.</p>
 <p>We can answer the same scienfitic question by <strong>comparing the spindle activities between conditions</strong>, not the p-values.</p>
 <p>We’ve started to see this in the plots of spindle activity at <code>baseline</code>, during <code>treatment</code>, and <code>post-treatment</code>.</p>
-<p>For more analysis (e.g., different statistical test and effect size) continue on to the other Minis.</p>
-</section>
-</section>
-<section id="refine-your-hypothesis-test-to-match-your-scientific-question." class="level1">
-<h1>5- Refine your hypothesis test to match your scientific question.</h1>
-<p>Originally (in Mini 2), we considered the null hypothesis:</p>
-<ul>
-<li><strong>Null hypothesis</strong> (Mini 2): Mean spindle rate during treatment = 0.</li>
-</ul>
-<p>That was a fine initial approach.</p>
-<p>However, it limited us to the small number (N=30) of noisy samples recorded during <code>treatment</code> for each subject.</p>
-<p>We focused our analysis on whether these values differed from 0 (the <code>baseline</code> spindle activity).</p>
-<p>And we found no evidence to reject the null hypothesis.</p>
+<p>For more analysis (e.g., different statistical test and effect size) continue on to the next sections.</p>
 <hr>
-<p>While this initial appraoch does test our scientific question, there’s a more powerful appraoch.</p>
-<p>Instead of testing whether spindle activity during <code>treatment</code> differs from 0, let’s directly compare the spindle activity during <code>baseline</code> and <code>treatment</code>.</p>
-<p>In particular, let’s now consider <strong>a different null hypothesis</strong>:</p>
-<ul>
-<li><strong>Null hypothesis</strong> (Mini 5): No difference in mean spindle activity during treatment <strong>versus baseline</strong>.</li>
-</ul>
-<p>This null hypothesis is consistent with our original scientific question (does the spindle activity during <code>treatment</code> differ from <code>baseline</code>).</p>
-<p>In our original analysis, we compared the spindle activity during <code>treatment</code> to a fixed value of 0.</p>
-<p>In doing so, we ignored the many samples (N=840) collected during <code>baseline</code>.</p>
-<p>Now, in our new appraoch, we’ll use all of the samples collected during the <code>baseline</code> spindle activity, and incorportae these many <code>baseline</code> samples into our analysis.</p>
-<p>To test our new null hypothesis, we’ll apply a different test:</p>
-<ul>
-<li>a subject specific two-sample t-test.</li>
-</ul>
-<div id="a50f0566-35f6-4fda-965d-852a35714276" class="cell" data-execution_count="17">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> stats.ttest_ind(baseline, during_treatment, alternative<span class="op">=</span><span class="st">'less'</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>p_value_baseline_vs_during <span class="op">=</span> result.pvalue</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> np.arange(<span class="dv">0</span>,<span class="dv">20</span>):</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Subject '</span>, k, <span class="st">', p='</span>, np.array2string(p_value_baseline_vs_during[k], precision<span class="op">=</span><span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Subject  0 , p= 0.0364
-Subject  1 , p= 0.3733
-Subject  2 , p= 0.0704
-Subject  3 , p= 7.712e-05
-Subject  4 , p= 1.7514e-15
-Subject  5 , p= 0.0008
-Subject  6 , p= 1.0667e-12
-Subject  7 , p= 0.3702
-Subject  8 , p= 2.5241e-09
-Subject  9 , p= 0.0001
-Subject  10 , p= 1.6325e-10
-Subject  11 , p= 2.7851e-05
-Subject  12 , p= 3.2021e-16
-Subject  13 , p= 1.5163e-05
-Subject  14 , p= 4.2159e-06
-Subject  15 , p= 0.1733
-Subject  16 , p= 0.0024
-Subject  17 , p= 0.0152
-Subject  18 , p= 7.0189e-10
-Subject  19 , p= 0.0004</code></pre>
-</div>
-</div>
-<div id="1effa9e7-5c15-434e-800b-5fe5cc56a50d" class="cell" data-tags="[]" data-execution_count="18">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.stem(p_value_baseline_vs_during)<span class="op">;</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Subject'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'p value'</span>)<span class="op">;</span> plt.title(<span class="st">'Baseline versus During Treatment'</span>)<span class="op">;</span> plt.yscale(<span class="st">'log'</span>)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Significant p-values during treatment = '</span>,np.<span class="bu">sum</span>(p_value_baseline_vs_during <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Significant p-values during treatment =  14</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_P_Values-Quarto_files/figure-html/cell-19-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Interpret these p-value results in terms of the null hypothesis.</p>
-<p><strong>A:</strong> We conclude that, in most cases, we reject the null hypothesis of no difference in spindle activity between baseline versus during treatment. We conclude that the spindle activity is higher during treatment compared to baseline in most subjects (14/20).</p>
-</div>
-<div class="alert alert-block alert-success">
-<p><strong>Q:</strong> Compare the results of these tests for each human to the results in Mini 2.</p>
-<p><strong>A:</strong> In Mini 2, we computed p-values during treatment versus 0. Now, we compute p-values during treatment versus baseline. These are different tests. The latter tests more directly our scientific question.</p>
-</div>
 </section>
-<section id="now-4-discussion---so-what-went-wrong" class="level1">
-<h1>6 (now 4 Discussion )- So, what went wrong?</h1>
-<p>What is the scientifc question we’re actually trying to answer?</p>
-<p>CI are big - why?</p>
-<ol type="1">
-<li>Impact of Sample Size on Evidence</li>
-<li>Impact of Measurement Variability on Evidence</li>
-</ol>
-<p>Effect size (meaningful?)</p>
+</section>
+<section id="so-what-went-wrong" class="level1">
+<h1>5- So, what went wrong?</h1>
+<p>In our initial analysis, we’ve made a couple of common mistakes.</p>
+<p><strong>Mistake #1: Confusing p-values with effect size.</strong></p>
+<ul>
+<li>A p-value indicates the amount of statistical evidence, not the effect size. In our analysis, we found small p-values when comparing the spindle rates at baseline versus post-treatment. However, the effect size was very small; the large number of observations increased our statistical evidence, allowing us to detect a small effect size.</li>
+</ul>
+<p><strong>Mistatke #2: Comparing p-values instead of data.</strong></p>
+<ul>
+<li>We found much smaller p-values post-treatment compared to during treatment (both computed versus the same baseline). Therefore, the effect is “stronger” post-treatment, right? WRONG! The p-values indicate that we have more statistical evidence of a difference post-treatment, but not that the effect size is strong.</li>
+</ul>
+<p><strong>Mistake #3: Separate staistical tests for each subject.</strong></p>
+<ul>
+<li>Our scientific question was, initially, focused on the impact of treatment on spindle rate. We’re not necessarily interested in this for each individual subject [URI HELP!]</li>
+</ul>
+<hr>
 </section>
 <section id="one-test-to-rule-them-all-an-omnibus-test." class="level1">
-<h1>7- One test to rule them all: an omnibus test.</h1>
+<h1>6- One test to rule them all: an omnibus test.</h1>
+<p>(PENDING)</p>
 <p>Do there exist subjects for which there is a significant effect? NO</p>
 <ol type="1">
 <li>Concatenate data from all subjects (works if you beleive everyone has an effect).
@@ -1652,14 +2215,14 @@ Subject  19 , p= 0.0004</code></pre>
 <li>If not everyone has an effect, dilute effect size / less power.</li>
 <li>Alternartive, if you believe not everyone has an effect, mixed-effect model.</li>
 </ol>
-<section id="optional-section-lme" class="level2">
-<h2 data-anchor-id="optional-section-lme">7.5 - Optional Section: LME</h2>
+</section>
+<section id="optional-section-lme" class="level1">
+<h1>7 - Optional Section: LME</h1>
 <p>Estimate effect size and responders</p>
 <p>In Intro: initial H is some people respond and some don’t</p>
 </section>
-</section>
 <section id="omit-8--beyond-p-values-estimate-what-you-care-about." class="level1">
-<h1>OMIT 8- Beyond p-values: estimate what you care about.</h1>
+<h1>OMIT? 8- Beyond p-values: estimate what you care about.</h1>
 <p>(PENDING): estimate effect size during &amp; post, and compare.</p>
 </section>
 <section id="summary" class="level1">
@@ -1669,7 +2232,7 @@ Subject  19 , p= 0.0004</code></pre>
 
 </section>
 
- <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -2141,7 +2704,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
- <!-- /content -->
+</div> <!-- /content -->
 <script type="module">
 /**
  * Factory function to create different types of cells based on options.
