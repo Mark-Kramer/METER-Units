@@ -97,7 +97,7 @@ def fdr(p):
 
 import ipywidgets as widgets
 from IPython.display import display, clear_output, Code
-import scipy.stats as stats
+#import scipy.stats as stats
 
 def create_dropdown_compute_pvalues(during_treatment):
     # Dictionary to store results
