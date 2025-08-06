@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 #from scipy.stats import pearsonr
 import statsmodels.api as sm
-import plotly.graph_objects as go
-from IPython.lib.display import YouTubeVideo
-import ipywidgets as widgets
-from IPython.display import display, clear_output, Javascript, Code
-from tqdm import tqdm
+#import plotly.graph_objects as go
+#from IPython.lib.display import YouTubeVideo
+#import ipywidgets as widgets
+#from IPython.display import display, clear_output, Javascript, Code
+#from tqdm import tqdm
 
 def load_data():
     import pandas as pd
