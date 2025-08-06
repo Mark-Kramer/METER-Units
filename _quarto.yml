@@ -13,6 +13,10 @@ website:
         text: Home
       - href: METER_Sample_Size-SHORT-Quarto.html
         text: Sample Size
+      - href: METER_Inference-SHORT-Quarto.html
+        text: Inference
+      - href: METER_P_Values-Quarto.html
+        text: P-values
 
 format:
   html:
