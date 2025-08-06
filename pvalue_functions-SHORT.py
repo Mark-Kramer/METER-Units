@@ -1,7 +1,3 @@
-#import scipy.io as sio
-#import numpy as np
-#import matplotlib.pyplot as plt
-
 def load_data():
     import pandas as pd
     df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/spindle_data_baseline.csv", header=None)
