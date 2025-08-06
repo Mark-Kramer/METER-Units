@@ -13,6 +13,7 @@ def load_data():
     import pandas as pd
     df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/master/spindle_data_baseline.csv", header=None)
     baseline = df.to_numpy()
+    baseline = baseline[0]
     return baseline
 
 def load_data(using_colab=0):
