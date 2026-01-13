@@ -210,6 +210,13 @@
     "text": "Building a model to simulate your data is a universal way to calculate power and sample size, but only works if the model you build accurately represents your data.\nSometimes you do not have preliminary data, but you do have knowledge about your system. In that case, using this knowledge to build a model and simulate your data is a powerful and universal appraoch to calculate power and sample size.\nIn this case, we ignored our preliminary data (perhaps we don’t trust it as representative). Instead, we used our knowledge of the system (e.g., average lifespan and the approximate impact of substance X on lifespan) to build a model. Here, our model was a linear regression. We could then simulate from this model with different sample sizes, and determine a sample size that gives us enough power to detect our expected effect.\nHowever, you might imagine an alternative scenario. What if our knowledge of the system is limited or wrong? That could happen, for example, if our understanding of how substance X impacts lifespan is inaccurate. In that case, the modeled data will not accurately capture the effect of interest; simulating from this model to calculate power and sample size is a poor choice. Instead, you might pursue alterantive approaches, such as performing a preliminary experiemnt to fill your knowledge gaps."
   },
   {
+    "objectID": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.-1",
+    "href": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.-1",
+    "title": "Sample Size - How much data is enough for your experiment?",
+    "section": "Turn to Page 4 Summary.",
+    "text": "Turn to Page 4 Summary."
+  },
+  {
     "objectID": "METER_Exploratory.html",
     "href": "METER_Exploratory.html",
     "title": "Reproducible exploratory analysis: Mitigating multiplicity when mining data",
