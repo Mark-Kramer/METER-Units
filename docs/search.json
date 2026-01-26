@@ -196,6 +196,13 @@
     "text": "Turn to Page 4 Summary"
   },
   {
+    "objectID": "METER_Sample_Size-SHORT-Quarto.html#modeling-preliminary-data-is-a-universal-way-to-calculate-power-and-sample-size-but-only-works-if-the-modeled-data-captures-the-effect-of-interest.",
+    "href": "METER_Sample_Size-SHORT-Quarto.html#modeling-preliminary-data-is-a-universal-way-to-calculate-power-and-sample-size-but-only-works-if-the-modeled-data-captures-the-effect-of-interest.",
+    "title": "Sample Size - How much data is enough for your experiment?",
+    "section": "Modeling preliminary data is a universal way to calculate power and sample size, but only works if the modeled data captures the effect of interest.",
+    "text": "Modeling preliminary data is a universal way to calculate power and sample size, but only works if the modeled data captures the effect of interest.\nWhen preliminary data exist and these data accurately represent the effect of interest, then modeling these data is a powerful and universal appraoch to calculate power and sample size.\nIn this case, our preliminary data (see Mini 2) do capture the expected effect of interest - a weak positive relationship between biomarker x and longevity, although when the sample size N is too small, we fail to detect a significant relationship between these features.\nHowever, you might imagine an alternative scenario. What if our preliminary data revealed a negative relationship between biomarker x and longevity? That could happen, for example, if the observations were noisy or the initial sample size N was small. In that case, the modeled data will not capture the effect of interest; modeling these data to calculate power and sample size is a poor choice. Instead, you might pursue alterantive appraoches, including such as Building models without the data.\n\nWarning:\n\nIn this example, we were lucky that the initial draw of a small sample size produced the expected effect. An unlucky sample may have produced (by chance) an opposite effect. In that case, modeling these data will not produce meaningful power/sample size results. Preliminary data is often important for future experimental design, but it’s important to consider how variability in a small, preliminary dataset can influence power and sample size estimates."
+  },
+  {
     "objectID": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.",
     "href": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.",
     "title": "Sample Size - How much data is enough for your experiment?",
@@ -212,6 +219,20 @@
   {
     "objectID": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.-1",
     "href": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.-1",
+    "title": "Sample Size - How much data is enough for your experiment?",
+    "section": "Turn to Page 4 Summary.",
+    "text": "Turn to Page 4 Summary."
+  },
+  {
+    "objectID": "METER_Sample_Size-SHORT-Quarto.html#but-what-if-we-dont-know-the-desired-level-of-precision",
+    "href": "METER_Sample_Size-SHORT-Quarto.html#but-what-if-we-dont-know-the-desired-level-of-precision",
+    "title": "Sample Size - How much data is enough for your experiment?",
+    "section": "But what if we don’t know the desired level of precision?",
+    "text": "But what if we don’t know the desired level of precision?\nSometimes we’re not sure about the level of precision; i.e., we do not have a good idea for the extent of the 95% CI in our estimate of slope.\nIn that case, we can ask a different question:\n\nWhat sample size do I need to detect whether the 95% CI in the slope estimate excludes 0?\n\nTo answer this, we’ll again resample our pilot data, here focused on estimating the lower bound of the 95% CI in the slope estimate, and determining how often this lower bound exceeds 0 for different sample sizes.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nWe’d like to design our next experiement with a large enough sample size to have 80% power to detect whether the 95% CI in the slope estimate excludes 0. We see that, choosing a sample size of approximately 1000 does the trick.\nNotice again that, in this case, we perform no hypothesis test (no p-values were computed in the code above). Instead, we’re focused on the relatioship of interest (the slope) between lifespan and x and determining the sample size required to detect this relationship, if it exists, based on our preliminary data."
+  },
+  {
+    "objectID": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.-2",
+    "href": "METER_Sample_Size-SHORT-Quarto.html#turn-to-page-4-summary.-2",
     "title": "Sample Size - How much data is enough for your experiment?",
     "section": "Turn to Page 4 Summary.",
     "text": "Turn to Page 4 Summary."
