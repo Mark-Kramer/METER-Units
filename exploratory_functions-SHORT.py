@@ -1,6 +1,7 @@
 import scipy.io as sio
 import numpy as np
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 
 def load_data():
     import pandas as pd
