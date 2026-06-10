@@ -9,3 +9,7 @@ def load_data():
     signals = df.iloc[:, 200:300].to_numpy()
     t       = df.iloc[:, 300].to_numpy()
     return spikes, signals, t
+
+def plot_spike_train(t, spikes):
+    indices = [i for i, value in enumerate(spikes) if value == 1]; values  = [1] * len(indices)
+    plt.plot(t[indices], values, 'ko');
