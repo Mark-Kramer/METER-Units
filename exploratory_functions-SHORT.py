@@ -32,3 +32,37 @@ def compute_p_values(spikes, signals):
             p[i, j] = glm_results.pvalues[1]  # Storing the p-value of the predictor
 
     return p
+
+def fdr(p):
+    # List of p-values
+    p_values = p.flatten()
+    
+    # Desired false discovery rate level
+    q = 0.05
+    
+    # Sort p-values and get the sorted indices
+    sorted_indices  = np.argsort(p_values)
+    sorted_p_values = p_values[sorted_indices]
+    
+    # Number of multiple tests
+    m = len(p_values)
+    
+    # Calculate the Benjamini-Hochberg critical values
+    critical_values = (np.arange(1, m+1) / m) * q
+    
+    # Find the largest p-value that is smaller than the critical value
+    max_significant = np.max(np.where(sorted_p_values <= critical_values))
+    
+    # Initialize a boolean array for significance
+    is_significant = np.zeros(m, dtype=bool)
+
+    # If any p-values are significant, set them as True
+    if max_significant >= 0:
+        is_significant[sorted_indices[:max_significant+1]] = True
+    
+    # Make matrix to indicate significant p-value after FDR.
+    p_values_signficant_after_FDR = np.zeros(np.shape(p))
+    np.shape(p_values_signficant_after_FDR)
+    p_values_signficant_after_FDR[np.unravel_index(np.where(is_significant==True), np.shape(p))] = 1
+
+    return p_values_signficant_after_FDR
