@@ -100,6 +100,358 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+<style type="text/css">
+.monaco-editor pre {
+  background-color: unset !important;
+}
+
+.qpyodide-editor-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.qpyodide-editor-toolbar-left-buttons, .qpyodide-editor-toolbar-right-buttons {
+  display: flex;
+}
+
+.qpyodide-non-interactive-loading-container.qpyodide-cell-needs-evaluation, .qpyodide-non-interactive-loading-container.qpyodide-cell-evaluated {
+  justify-content: center;
+  display: flex;
+  background-color: rgba(250, 250, 250, 0.65);
+  border: 1px solid rgba(233, 236, 239, 0.65);
+  border-radius: 0.5rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.qpyodide-r-project-logo {
+  color: #2767B0; /* R Project's blue color */
+}
+
+.qpyodide-icon-status-spinner {
+  color: #7894c4;
+}
+
+.qpyodide-icon-run-code {
+  color: #0d9c29
+}
+
+.qpyodide-output-code-stdout {
+  color: #111;
+}
+
+.qpyodide-output-code-stderr {
+  color: #db4133;
+}
+
+.qpyodide-editor {
+  border: 1px solid #EEEEEE;
+}
+
+.qpyodide-editor-toolbar {
+  background-color: #EEEEEE;
+  padding: 0.2rem 0.5rem;
+}
+
+.qpyodide-button {
+  background-color: #EEEEEE;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  text-align: center;
+  color: #000;
+  border-color: #dee2e6;
+  border: 1px solid rgba(0,0,0,0);
+  padding: 0.375rem 0.75rem;
+  font-size: .9rem;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.qpyodide-button:hover {
+  color: #000;
+  background-color: #d9dce0;
+  border-color: #c8ccd0;
+}
+
+.qpyodide-button:disabled,.qpyodide-button.disabled,fieldset:disabled .qpyodide-button {
+  pointer-events: none;
+  opacity: .65
+}
+
+.qpyodide-button-reset {
+  color: #696969; /*#4682b4;*/
+}
+
+.qpyodide-button-copy {
+  color: #696969;
+}
+
+
+/* Custom styling for RevealJS Presentations*/
+
+/* Reset the style of the interactive area */
+.reveal div.qpyodide-interactive-area {
+  display: block;
+  box-shadow: none;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+} 
+
+/* Provide space to entries */
+.reveal div.qpyodide-output-code-area pre div {
+  margin: 1px 2px 1px 10px;
+}
+
+/* Collapse the inside code tags to avoid extra space between line outputs */
+.reveal pre div code.qpyodide-output-code-stdout, .reveal pre div code.qpyodide-output-code-stderr {
+  padding: 0;
+  display: contents;
+}
+
+.reveal pre div code.qpyodide-output-code-stdout {
+  color: #111;
+}
+
+.reveal pre div code.qpyodide-output-code-stderr {
+  color: #db4133;
+}
+
+
+/* Create a border around console and output (does not effect graphs) */
+.reveal div.qpyodide-console-area {
+  border: 1px solid #EEEEEE;
+  box-shadow: 2px 2px 10px #EEEEEE;
+}
+
+/* Cap output height and allow text to scroll */
+/* TODO: Is there a better way to fit contents/max it parallel to the monaco editor size? */
+.reveal div.qpyodide-output-code-area pre {
+  max-height: 400px;
+  overflow: scroll;
+}
+</style>
+<script type="module">
+// Document level settings ----
+
+// Determine if we need to install python packages
+globalThis.qpyodideInstallPythonPackagesList = [''];
+
+// Check to see if we have an empty array, if we do set to skip the installation.
+globalThis.qpyodideSetupPythonPackages = !(qpyodideInstallPythonPackagesList.indexOf("") !== -1);
+
+// Display a startup message?
+globalThis.qpyodideShowStartupMessage = true;
+
+// Describe the webR settings that should be used
+globalThis.qpyodideCustomizedPyodideOptions = {
+  "indexURL": "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/",
+  "env": {
+    "HOME": "/home/pyodide",
+  }, 
+  stdout: (text) => {qpyodideAddToOutputArray(text, "out");},
+  stderr: (text) => {qpyodideAddToOutputArray(text, "error");}
+}
+
+// Store cell data
+globalThis.qpyodideCellDetails = [{"code":"import numpy as np\nimport matplotlib.pyplot as plt\nimport statsmodels.api as sm\nimport requests\n# Load custom functions\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/exploratory_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\nspikes, signals, t = load_data()\n\nprint(response.text)","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":1},{"code":"print(spikes.shape)\nprint(signals.shape)","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":2},{"code":"# Plot the spiking from an example neuron.\nplt.figure(figsize=(12, 2))\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":3},{"code":"# Plot an example signal.\nplt.figure(figsize=(12, 2))\nplt.plot(t, signals[:,0]);","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":4},{"code":"plt.figure(figsize=(12, 2))\nplt.plot(t, signals[:,0]);        # Plot the first signal.\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":5},{"code":"p = compute_p_values(spikes, signals)","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":6},{"code":"plt.figure(figsize=(20, 8))\nplt.imshow(p); cbar = plt.colorbar(); cbar.set_label('p-value', fontsize=12)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":7},{"code":"np.sum(p < 0.05)","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":8},{"code":"np.sum(p < 0.05/20000)","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":9},{"code":"p_values_significant_after_FDR = fdr(p)","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":10},{"code":"plt.figure(figsize=(20, 8))\nplt.imshow(p_values_significant_after_FDR)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');","options":{"results":"markup","message":"true","context":"interactive","output":"true","read-only":"false","label":"","warning":"true","fig-width":7,"out-height":"","fig-height":5,"comment":"","classes":"","dpi":72,"autorun":"","out-width":"700px","fig-cap":""},"id":11}];
+
+
+</script>
+<script type="module">
+// Declare startupMessageqpyodide globally
+globalThis.qpyodideStartupMessage = document.createElement("p");
+
+// Function to set the button text
+globalThis.qpyodideSetInteractiveButtonState = function(buttonText, enableCodeButton = true) {
+  document.querySelectorAll(".qpyodide-button-run").forEach((btn) => {
+    btn.innerHTML = buttonText;
+    btn.disabled = !enableCodeButton;
+  });
+}
+
+// Function to update the status message in non-interactive cells
+globalThis.qpyodideUpdateStatusMessage = function(message) {
+  document.querySelectorAll(".qpyodide-status-text.qpyodide-cell-needs-evaluation").forEach((elem) => {
+    elem.innerText = message;
+  });
+}
+
+// Function to update the status message
+globalThis.qpyodideUpdateStatusHeader = function(message) {
+
+  if (!qpyodideShowStartupMessage) return;
+
+  qpyodideStartupMessage.innerHTML = message;
+}
+
+// Status header update with customized spinner message
+globalThis.qpyodideUpdateStatusHeaderSpinner = function(message) {
+
+  qpyodideUpdateStatusHeader(`
+    <i class="fa-solid fa-spinner fa-spin qpyodide-icon-status-spinner"></i>
+    <span>${message}</span>
+  `);
+}
+
+
+// Function that attaches the document status message
+function qpyodideDisplayStartupMessage(showStartupMessage) {
+  if (!showStartupMessage) {
+    return;
+  }
+
+  // Get references to header elements
+  const headerHTML = document.getElementById("title-block-header");
+  const headerRevealJS = document.getElementById("title-slide");
+
+  // Create the outermost div element for metadata
+  const quartoTitleMeta = document.createElement("div");
+  quartoTitleMeta.classList.add("quarto-title-meta");
+
+  // Create the first inner div element
+  const firstInnerDiv = document.createElement("div");
+  firstInnerDiv.setAttribute("id", "qpyodide-status-message-area");
+
+  // Create the second inner div element for "Pyodide Status" heading and contents
+  const secondInnerDiv = document.createElement("div");
+  secondInnerDiv.setAttribute("id", "qpyodide-status-message-title");
+  secondInnerDiv.classList.add("quarto-title-meta-heading");
+  secondInnerDiv.innerText = "Pyodide Status";
+
+  // Create another inner div for contents
+  const secondInnerDivContents = document.createElement("div");
+  secondInnerDivContents.setAttribute("id", "qpyodide-status-message-body");
+  secondInnerDivContents.classList.add("quarto-title-meta-contents");
+
+  // Describe the Pyodide state
+  qpyodideStartupMessage.innerText = "🟡 Loading...";
+  qpyodideStartupMessage.setAttribute("id", "qpyodide-status-message-text");
+  // Add `aria-live` to auto-announce the startup status to screen readers
+  qpyodideStartupMessage.setAttribute("aria-live", "assertive");
+
+  // Append the startup message to the contents
+  secondInnerDivContents.appendChild(qpyodideStartupMessage);
+
+  // Combine the inner divs and contents
+  firstInnerDiv.appendChild(secondInnerDiv);
+  firstInnerDiv.appendChild(secondInnerDivContents);
+  quartoTitleMeta.appendChild(firstInnerDiv);
+
+  // Determine where to insert the quartoTitleMeta element
+  if (headerHTML || headerRevealJS) {
+    // Append to the existing "title-block-header" element or "title-slide" div
+    (headerHTML || headerRevealJS).appendChild(quartoTitleMeta);
+  } else {
+    // If neither headerHTML nor headerRevealJS is found, insert after "Pyodide-monaco-editor-init" script
+    const monacoScript = document.getElementById("qpyodide-monaco-editor-init");
+    const header = document.createElement("header");
+    header.setAttribute("id", "title-block-header");
+    header.appendChild(quartoTitleMeta);
+    monacoScript.after(header);
+  }
+}
+
+qpyodideDisplayStartupMessage(qpyodideShowStartupMessage);
+</script>
+<script type="module">
+// Create a logging setup
+globalThis.qpyodideMessageArray = []
+
+// Add messages to array
+globalThis.qpyodideAddToOutputArray = function(message, type) {
+  qpyodideMessageArray.push({ message, type });
+}
+
+// Function to reset the output array
+globalThis.qpyodideResetOutputArray = function() {
+  qpyodideMessageArray = [];
+}
+
+globalThis.qpyodideRetrieveOutput = function() {
+  return qpyodideMessageArray.map(entry => entry.message).join('\n');
+}
+
+// Start a timer
+const initializePyodideTimerStart = performance.now();
+
+// Encase with a dynamic import statement
+globalThis.qpyodideInstance = await import(
+  qpyodideCustomizedPyodideOptions.indexURL + "pyodide.mjs").then(
+   async({ loadPyodide }) => {
+
+    console.log("Start loading Pyodide");
+    
+    // Populate Pyodide options with defaults or new values based on `pyodide`` meta
+    let mainPyodide = await loadPyodide(
+      qpyodideCustomizedPyodideOptions
+    );
+    
+    // Setup a namespace for global scoping
+    // await loadedPyodide.runPythonAsync("globalScope = {}"); 
+    
+    // Update status to reflect the next stage of the procedure
+    qpyodideUpdateStatusHeaderSpinner("Initializing Python Packages");
+
+    // Load the `micropip` package to allow installation of packages.
+    await mainPyodide.loadPackage("micropip");
+    await mainPyodide.runPythonAsync(`import micropip`);
+
+    // Load the `pyodide_http` package to shim uses of `requests` and `urllib3`.
+    // This allows for `pd.read_csv(url)` to work flawlessly.
+    // Details: https://github.com/coatless-quarto/pyodide/issues/9
+    await mainPyodide.loadPackage("pyodide_http");
+    await mainPyodide.runPythonAsync(`
+    import pyodide_http
+    pyodide_http.patch_all()  # Patch all libraries
+    `);
+
+    // Load the `matplotlib` package with necessary environment hook
+    await mainPyodide.loadPackage("matplotlib");
+
+    // Set the backend for matplotlib to be interactive.
+    await mainPyodide.runPythonAsync(`
+    import matplotlib
+    matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")
+    from matplotlib import pyplot as plt
+    `);
+
+    // Unlock interactive buttons
+    qpyodideSetInteractiveButtonState(
+      `<i class="fa-solid fa-play qpyodide-icon-run-code"></i> <span>Run Code</span>`, 
+      true
+    );
+
+    // Set document status to viable
+    qpyodideUpdateStatusHeader(
+      "🟢 Ready!"
+    );
+
+    // Assign Pyodide into the global environment
+    globalThis.mainPyodide = mainPyodide;
+
+    console.log("Completed loading Pyodide");
+    return mainPyodide;
+  }
+);
+
+// Stop timer
+const initializePyodideTimerEnd = performance.now();
+
+// Create a function to retrieve the promise object.
+globalThis._qpyodideGetInstance = function() {
+    return qpyodideInstance;
+}
+
+</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -208,6 +560,16 @@ window.Quarto = {
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/loader.js"></script>
+<script type="module" id="qpyodide-monaco-editor-init">
+
+  // Configure the Monaco Editor's loader
+  require.config({
+    paths: {
+      'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs'
+    }
+  });
+</script>
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -451,31 +813,12 @@ function checkAnswerStockCombos() {
 <li><p><code>signals</code> - the rodent position (one of the signals) and the price of 99 stocks.</p></li>
 </ul>
 <p>Both the <code>spikes</code> and <code>signals</code> are recorded simultaneously, every 1 ms for 0.5 s, resulting in a total of 500 data points.</p>
-<div id="64f0c7be-88bc-474c-9577-074635e90e11" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load custom functions</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/exploratory_functions-SHORT.py"</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span>(response.text)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>spikes, signals, t <span class="op">=</span> load_data()</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>We’re interested in understanding the relationship (if any) between <code>spikes</code> and <code>signals</code>.</p>
 <p>Let’s start by investigating the structure of the data.</p>
-<div id="e581a977-88b6-42f8-9dcc-302e78b5cf4c" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(spikes.shape)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(signals.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Both <code>spikes</code> and <code>signals</code> consist of 500 time points (the number of rows). We collect data from 200 neurons and 100 signals (the number of columns).</p>
 <p>You might think of these variables as rectangles (or matrices), where each row indicates a time point, and each column indicates a neuron or signal:</p>
 <div class="quarto-figure quarto-figure-center">
@@ -485,14 +828,8 @@ function checkAnswerStockCombos() {
 </figure>
 </div>
 <p>Let’s plot the data from one neuron in <code>spikes</code>:</p>
-<div id="10ec16f4-2003-421e-9077-0dabde8cc17f" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -537,14 +874,8 @@ function checkAnswerSpikeRepresentation() {
 </div>
 </div>
 <p>Let’s also plot the data from one signal in <code>signals</code>:</p>
-<div id="5783096b-96d5-4283-8f5b-d26e40cf1681" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot an example signal.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-4"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -589,14 +920,8 @@ function checkAnswerSignalFeatures() {
 </div>
 </div>
 <p>To more directly compare the <code>spikes</code> and <code>signals</code>, let’s plot one atop the other:</p>
-<div id="36e8774b-3148-408c-ba01-d39181c11021" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span>        <span class="co"># Plot the first signal.</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-5"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -743,23 +1068,13 @@ function checkAnswer200100Combos() {
 <p>Again, for our purposes, the details of the test are not important.</p>
 <p>What is important is that <strong>each test produces a p-value</strong> and we interpret small p-values to indicate statistically significant associations (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
 <p>Let’s compute those p-values now. This step is slow, because there are many p-values to compute!</p>
-<div id="7e3923ab-7914-4cab-b56b-53373e2ca723" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> compute_p_values(spikes, signals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-6"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>For each neuron-signal pair, we estimate the association with an associated p-value.</p>
 <p>We now have 20,000 p-values to investigate.</p>
 <p>To start, let’s visualize those p-values.</p>
-<div id="1fbee484-9a1a-4c45-8ab0-9d8850b8ce09" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p)<span class="op">;</span> cbar <span class="op">=</span> plt.colorbar()<span class="op">;</span> cbar.set_label(<span class="st">'p-value'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-7"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -804,12 +1119,8 @@ function checkAnswerMeaningfulRelationships() {
 </div>
 </div>
 <p>To isolate meaningful relationships, let’s count the number of associations in which p&lt;0.05, the standard threshold for significance applied in practice (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
-<div id="5b5c6ba9-a696-4e96-bd1d-57d6dfd1b53e" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-8"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1066,12 +1377,8 @@ function checkAnswerBonferroniCorrection() {
 </div>
 </div>
 <p>Let’s apply the Bonferroni correction to our matrix of p-values (<code>p</code>) and determine the number of significant associations, after correcting for multiplicity.</p>
-<div id="b49e0d46-2484-45a2-850c-8db55fd577c9" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-9"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1387,22 +1694,12 @@ function checkAnswerBonferroniVsFdr() {
 </div>
 <p>Now, having built some intuition for computing the FDR using the Benjamini-Hochberg (BH) procedure, let’s apply it to our data of interest.</p>
 <p>It’s the same idea, but instead of considering 5 p-values, we must consider the 20,000 p-values.</p>
-<div id="5b69b131-76b4-4e45-a470-53645b08535a" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p_values_significant_after_FDR <span class="op">=</span> fdr(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-10"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>The function <code>fdr</code> returns whether each p-value in <code>p</code> remains significant after correcting for multiplicity using FDR.</p>
 <p>Let’s display the p-values that remain significant after correcting for multiplicity using FDR:</p>
-<div id="a6df5236-c13a-4208-b360-bc55fbced814" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p_values_significant_after_FDR)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<div id="qpyodide-insertion-location-11"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1472,39 +1769,39 @@ function checkAnswerFdrDotsPattern() {
 <div id="db00d1b5-562b-4560-8ba9-8ae1a45c4e90" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> np.shape(spikes)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>p_split <span class="op">=</span> compute_p_values(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:], signals[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> np.shape(spikes)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>p_split <span class="op">=</span> compute_p_values(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:], signals[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>(Find candidate significant associations)</p>
 <div id="e7611a7f-6a39-46b5-91d1-ecc5bd06c17c" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>candidate_significant_pairs <span class="op">=</span> (p_split<span class="op">&lt;</span><span class="fl">0.05</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(candidate_significant_pairs.flatten()))</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>[i_signals,i_spikes] <span class="op">=</span> np.where(candidate_significant_pairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>candidate_significant_pairs <span class="op">=</span> (p_split<span class="op">&lt;</span><span class="fl">0.05</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(candidate_significant_pairs.flatten()))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>[i_signals,i_spikes] <span class="op">=</span> np.where(candidate_significant_pairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>(Test these predicted associations in the second half of data)</p>
 <div id="c2d65bc1-7ca9-4485-b63e-cb854edd5e98" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p_test <span class="op">=</span> np.zeros(np.shape(i_signals))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, element <span class="kw">in</span> <span class="bu">enumerate</span>(i_signals):</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> signals[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_signals[index]]       <span class="co"># Predictor variable</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> spikes[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_spikes[index]]        <span class="co"># Response variable</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(X)  <span class="co"># Adding a constant column for the intercept</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    glm_model <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    glm_results <span class="op">=</span> glm_model.fit()</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    p_test[index] <span class="op">=</span> glm_results.pvalues[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p_test <span class="op">=</span> np.zeros(np.shape(i_signals))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, element <span class="kw">in</span> <span class="bu">enumerate</span>(i_signals):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> signals[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_signals[index]]       <span class="co"># Predictor variable</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> spikes[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_spikes[index]]        <span class="co"># Response variable</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(X)  <span class="co"># Adding a constant column for the intercept</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    glm_model <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    glm_results <span class="op">=</span> glm_model.fit()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    p_test[index] <span class="op">=</span> glm_results.pvalues[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>(Identify significant associations)</p>
 <div id="07ee72b6-8928-43e7-9f87-75426fd1c4a2" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>i0 <span class="op">=</span> np.where(p_test<span class="op">&lt;</span><span class="fl">0.05</span><span class="op">/</span>np.size(i_signals))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Signal'</span>, i_signals[i0], <span class="st">', Spike'</span>, i_spikes[i0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>i0 <span class="op">=</span> np.where(p_test<span class="op">&lt;</span><span class="fl">0.05</span><span class="op">/</span>np.size(i_signals))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Signal'</span>, i_signals[i0], <span class="st">', Spike'</span>, i_spikes[i0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -1984,6 +2281,542 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script type="module">
+/**
+ * Factory function to create different types of cells based on options.
+ * @param {Object} cellData - JSON object containing code, id, and options.
+ * @returns {BaseCell} Instance of the appropriate cell class.
+ */
+globalThis.qpyodideCreateCell = function(cellData) {
+    switch (cellData.options.context) {
+        case 'interactive':
+            return new InteractiveCell(cellData);
+        case 'output':
+            return new OutputCell(cellData);
+        case 'setup':
+            return new SetupCell(cellData);
+        default:
+            return new InteractiveCell(cellData);
+            // throw new Error('Invalid cell type specified in options.');
+    }
+}  
+
+/**
+ * CellContainer class for managing a collection of cells.
+ * @class
+ */
+class CellContainer {
+    /**
+     * Constructor for CellContainer.
+     * Initializes an empty array to store cells.
+     * @constructor
+     */
+    constructor() {
+        this.cells = [];
+    }
+
+    /**
+     * Add a cell to the container.
+     * @param {BaseCell} cell - Instance of a cell (BaseCell or its subclasses).
+     */
+    addCell(cell) {
+        this.cells.push(cell);
+    }
+
+    /**
+     * Execute all cells in the container.
+     */
+    async executeAllCells() {
+        for (const cell of this.cells) {
+            await cell.executeCode();
+        }
+    }
+
+    /**
+     * Execute all cells in the container.
+     */
+    async autoRunExecuteAllCells() {
+        for (const cell of this.cells) {
+            await cell.autoRunExecuteCode();
+        }
+    }
+}
+  
+
+/**
+ * BaseCell class for handling code execution using Pyodide.
+ * @class
+ */
+class BaseCell {
+    /**
+     * Constructor for BaseCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+        this.code = cellData.code;
+        this.id = cellData.id;
+        this.options = cellData.options;
+        this.insertionLocation = document.getElementById(`qpyodide-insertion-location-${this.id}`);
+        this.executionLock = false;
+    }
+
+    cellOptions() {
+        // Subclass this? 
+        console.log(this.options);
+        return this.options;
+    }
+
+    /**
+     * Execute the Python code using Pyodide.
+     * @returns {*} Result of the code execution.
+     */
+    async executeCode() {
+        // Execute code using Pyodide
+        const result = getPyodide().runPython(this.code);
+        return result;
+    }
+};
+
+/**
+ * InteractiveCell class for creating editable code editor with Monaco Editor.
+ * @class
+ * @extends BaseCell
+ */
+class InteractiveCell extends BaseCell {
+
+    /**
+     * Constructor for InteractiveCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+        super(cellData);
+        this.editor = null;
+        this.setupElement();
+        this.setupMonacoEditor();
+    }
+
+    /**
+     * Set up the interactive cell elements
+     */
+    setupElement() {
+
+        // Create main div element
+        var mainDiv = document.createElement('div');
+        mainDiv.id = `qpyodide-interactive-area-${this.id}`;
+        mainDiv.className = `qpyodide-interactive-area`;
+        if (this.options.classes) {
+            mainDiv.className += " " + this.options.classes
+        }
+
+        // Add a unique cell identifier that users can customize
+        if (this.options.label) {
+            mainDiv.setAttribute('data-id', this.options.label);
+        }
+
+        // Create toolbar div
+        var toolbarDiv = document.createElement('div');
+        toolbarDiv.className = 'qpyodide-editor-toolbar';
+        toolbarDiv.id = `qpyodide-editor-toolbar-${this.id}`;
+
+        // Create a div to hold the left buttons
+        var leftButtonsDiv = document.createElement('div');
+        leftButtonsDiv.className = 'qpyodide-editor-toolbar-left-buttons';
+
+        // Create a div to hold the right buttons
+        var rightButtonsDiv = document.createElement('div');
+        rightButtonsDiv.className = 'qpyodide-editor-toolbar-right-buttons';
+
+        // Create Run Code button
+        var runCodeButton = document.createElement('button');
+        runCodeButton.className = 'btn btn-default qpyodide-button qpyodide-button-run';
+        runCodeButton.disabled = true;
+        runCodeButton.type = 'button';
+        runCodeButton.id = `qpyodide-button-run-${this.id}`;
+        runCodeButton.textContent = '🟡 Loading Pyodide...';
+        runCodeButton.title = `Run code (Shift + Enter)`;
+
+        // Append buttons to the leftButtonsDiv
+        leftButtonsDiv.appendChild(runCodeButton);
+
+        // Create Reset button
+        var resetButton = document.createElement('button');
+        resetButton.className = 'btn btn-light btn-xs qpyodide-button qpyodide-button-reset';
+        resetButton.type = 'button';
+        resetButton.id = `qpyodide-button-reset-${this.id}`;
+        resetButton.title = 'Start over';
+        resetButton.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
+
+        // Create Copy button
+        var copyButton = document.createElement('button');
+        copyButton.className = 'btn btn-light btn-xs qpyodide-button qpyodide-button-copy';
+        copyButton.type = 'button';
+        copyButton.id = `qpyodide-button-copy-${this.id}`;
+        copyButton.title = 'Copy code';
+        copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+
+        // Append buttons to the rightButtonsDiv
+        rightButtonsDiv.appendChild(resetButton);
+        rightButtonsDiv.appendChild(copyButton);
+
+        // Create console area div
+        var consoleAreaDiv = document.createElement('div');
+        consoleAreaDiv.id = `qpyodide-console-area-${this.id}`;
+        consoleAreaDiv.className = 'qpyodide-console-area';
+
+        // Create editor div
+        var editorDiv = document.createElement('div');
+        editorDiv.id = `qpyodide-editor-${this.id}`;
+        editorDiv.className = 'qpyodide-editor';
+
+        // Create output code area div
+        var outputCodeAreaDiv = document.createElement('div');
+        outputCodeAreaDiv.id = `qpyodide-output-code-area-${this.id}`;
+        outputCodeAreaDiv.className = 'qpyodide-output-code-area';
+        outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+        // Create pre element inside output code area
+        var preElement = document.createElement('pre');
+        preElement.style.visibility = 'hidden';
+        outputCodeAreaDiv.appendChild(preElement);
+
+        // Create output graph area div
+        var outputGraphAreaDiv = document.createElement('div');
+        outputGraphAreaDiv.id = `qpyodide-output-graph-area-${this.id}`;
+        outputGraphAreaDiv.className = 'qpyodide-output-graph-area';
+
+        // Append buttons to the toolbar
+        toolbarDiv.appendChild(leftButtonsDiv);
+        toolbarDiv.appendChild(rightButtonsDiv);
+
+        // Append all elements to the main div
+        mainDiv.appendChild(toolbarDiv);
+        consoleAreaDiv.appendChild(editorDiv);
+        consoleAreaDiv.appendChild(outputCodeAreaDiv);
+        mainDiv.appendChild(consoleAreaDiv);
+        mainDiv.appendChild(outputGraphAreaDiv);
+
+        // Insert the dynamically generated object at the document location.
+        this.insertionLocation.appendChild(mainDiv);
+    }
+
+    /**
+     * Set up Monaco Editor for code editing.
+     */
+    setupMonacoEditor() {
+
+        // Retrieve the previously created document elements
+        this.runButton = document.getElementById(`qpyodide-button-run-${this.id}`);
+        this.resetButton = document.getElementById(`qpyodide-button-reset-${this.id}`);
+        this.copyButton = document.getElementById(`qpyodide-button-copy-${this.id}`);
+        this.editorDiv = document.getElementById(`qpyodide-editor-${this.id}`);
+        this.outputCodeDiv = document.getElementById(`qpyodide-output-code-area-${this.id}`);
+        this.outputGraphDiv = document.getElementById(`qpyodide-output-graph-area-${this.id}`);
+        
+        // Store reference to the object
+        var thiz = this;
+
+        // Load the Monaco Editor and create an instance
+        require(['vs/editor/editor.main'], function () {
+            thiz.editor = monaco.editor.create(
+                thiz.editorDiv, {
+                    value: thiz.code,
+                    language: 'python',
+                    theme: 'vs-light',
+                    automaticLayout: true,           // Works wonderfully with RevealJS
+                    scrollBeyondLastLine: false,
+                    minimap: {
+                        enabled: false
+                    },
+                    fontSize: '17.5pt',              // Bootstrap is 1 rem
+                    renderLineHighlight: "none",     // Disable current line highlighting
+                    hideCursorInOverviewRuler: true,  // Remove cursor indictor in right hand side scroll bar
+                    readOnly: thiz.options['read-only'] ?? false
+                }
+            );
+        
+            // Store the official counter ID to be used in keyboard shortcuts
+            thiz.editor.__qpyodideCounter = thiz.id;
+        
+            // Store the official div container ID
+            thiz.editor.__qpyodideEditorId = `qpyodide-editor-${thiz.id}`;
+        
+            // Store the initial code value and options
+            thiz.editor.__qpyodideinitialCode = thiz.code;
+            thiz.editor.__qpyodideOptions = thiz.options;
+        
+            // Set at the model level the preferred end of line (EOL) character to LF.
+            // This prevent `\r\n` from being given to the Pyodide engine if the user is on Windows.
+            // See details in: https://github.com/coatless/quarto-Pyodide/issues/94
+            // Associated error text: 
+            // Error: <text>:1:7 unexpected input
+        
+            // Retrieve the underlying model
+            const model = thiz.editor.getModel();
+            // Set EOL for the model
+            model.setEOL(monaco.editor.EndOfLineSequence.LF);
+        
+            // Dynamically modify the height of the editor window if new lines are added.
+            let ignoreEvent = false;
+            const updateHeight = () => {
+            const contentHeight = thiz.editor.getContentHeight();
+            // We're avoiding a width change
+            //editorDiv.style.width = `${width}px`;
+            thiz.editorDiv.style.height = `${contentHeight}px`;
+                try {
+                    ignoreEvent = true;
+            
+                    // The key to resizing is this call
+                    thiz.editor.layout();
+                } finally {
+                    ignoreEvent = false;
+                }
+            };
+        
+            // Helper function to check if selected text is empty
+            function isEmptyCodeText(selectedCodeText) {
+                return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+            }
+        
+            // Registry of keyboard shortcuts that should be re-added to each editor window
+            // when focus changes.
+            const addPyodideKeyboardShortCutCommands = () => {
+            // Add a keydown event listener for Shift+Enter to run all code in cell
+            thiz.editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+                // Retrieve all text inside the editor
+                thiz.runCode(thiz.editor.getValue());
+            });
+        
+            // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+            thiz.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+                    // Get the selected text from the editor
+                    const selectedText = thiz.editor.getModel().getValueInRange(thiz.editor.getSelection());
+                    // Check if no code is selected
+                    if (isEmptyCodeText(selectedText)) {
+                        // Obtain the current cursor position
+                        let currentPosition = thiz.editor.getPosition();
+                        // Retrieve the current line content
+                        let currentLine = thiz.editor.getModel().getLineContent(currentPosition.lineNumber);
+                
+                        // Propose a new position to move the cursor to
+                        let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+                
+                        // Check if the new position is beyond the last line of the editor
+                        if (newPosition.lineNumber > thiz.editor.getModel().getLineCount()) {
+                            // Add a new line at the end of the editor
+                            thiz.editor.executeEdits("addNewLine", [{
+                            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+                            text: "\n", 
+                            forceMoveMarkers: true,
+                            }]);
+                        }
+                        
+                        // Run the entire line of code.
+                        thiz.runCode(currentLine);
+                
+                        // Move cursor to new position
+                        thiz.editor.setPosition(newPosition);
+                    } else {
+                        // Code to run when Ctrl+Enter is pressed with selected code
+                        thiz.runCode(selectedText);
+                    }
+                });
+            }
+        
+            // Register an on focus event handler for when a code cell is selected to update
+            // what keyboard shortcut commands should work.
+            // This is a workaround to fix a regression that happened with multiple
+            // editor windows since Monaco 0.32.0 
+            // https://github.com/microsoft/monaco-editor/issues/2947
+            thiz.editor.onDidFocusEditorText(addPyodideKeyboardShortCutCommands);
+        
+            // Register an on change event for when new code is added to the editor window
+            thiz.editor.onDidContentSizeChange(updateHeight);
+        
+            // Manually re-update height to account for the content we inserted into the call
+            updateHeight();
+                
+        });
+
+        
+        // Add a click event listener to the run button
+        thiz.runButton.onclick = function () {
+            thiz.runCode(
+                thiz.editor.getValue()
+            );
+        };
+        
+        // Add a click event listener to the reset button
+        thiz.copyButton.onclick = function () {
+            // Retrieve current code data
+            const data = thiz.editor.getValue();
+            
+            // Write code data onto the clipboard.
+            navigator.clipboard.writeText(data || "");
+        };
+        
+        // Add a click event listener to the copy button
+        thiz.resetButton.onclick = function () {
+            thiz.editor.setValue(thiz.editor.__qpyodideinitialCode);
+        };
+    }
+
+    disableInteractiveCells() {
+        // Enable locking of execution for the cell
+        this.executionLock = true;
+
+        // Disallowing execution of other code cells
+        document.querySelectorAll(".qpyodide-button-run").forEach((btn) => {
+            btn.disabled = true;
+        });
+    }
+
+    enableInteractiveCells() {
+        // Remove locking of execution for the cell
+        this.executionLock = false;
+
+        // All execution of other code cells
+        document.querySelectorAll(".qpyodide-button-run").forEach((btn) => {
+            btn.disabled = false;
+        });
+    }
+
+    /**
+     * Execute the Python code inside the editor.
+     */
+    async runCode(code) {
+        
+        // Check if we have an execution lock
+        if (this.executeLock) return; 
+        
+        this.disableInteractiveCells();
+
+        // Force wait procedure
+        await mainPyodide;
+
+        // Clear the output stock
+        qpyodideResetOutputArray();
+
+        // Generate a new canvas element, avoid attaching until the end
+        let graphFigure = document.createElement("figure");
+        document.pyodideMplTarget = graphFigure;
+
+        console.log("Running code!");
+        // Obtain results from the base class
+        try {
+            // Always check to see if the user adds new packages
+            await mainPyodide.loadPackagesFromImports(code);
+
+            // Process result
+            const output = await mainPyodide.runPythonAsync(code);
+
+            // Add output
+            qpyodideAddToOutputArray(output, "stdout");
+        } catch (err) {
+            // Add error message
+            qpyodideAddToOutputArray(err, "stderr");
+            // TODO: There has to be a way to remove the Pyodide portion of the errors... 
+        }
+
+        const result = qpyodideRetrieveOutput();
+
+        // Nullify the output area of content
+        this.outputCodeDiv.innerHTML = "";
+        this.outputGraphDiv.innerHTML = "";        
+
+        // Design an output object for messages
+        const pre = document.createElement("pre");
+        if (/\S/.test(result)) {
+            // Display results as HTML elements to retain output styling
+            const div = document.createElement("div");
+            div.innerHTML = result;
+            pre.appendChild(div);
+        } else {
+            // If nothing is present, hide the element.
+            pre.style.visibility = "hidden";
+        }
+
+        // Add output under interactive div
+        this.outputCodeDiv.appendChild(pre);
+
+        // Place the graphics onto the page
+        if (graphFigure) {
+
+            if (this.options['fig-cap']) {
+                // Create figcaption element
+                const figcaptionElement = document.createElement('figcaption');
+                figcaptionElement.innerText = this.options['fig-cap'];
+                // Append figcaption to figure
+                graphFigure.appendChild(figcaptionElement);    
+            }
+
+            this.outputGraphDiv.appendChild(graphFigure);
+        }
+
+        // Re-enable execution
+        this.enableInteractiveCells();
+    }
+};
+
+/**
+ * OutputCell class for customizing and displaying output.
+ * @class
+ * @extends BaseCell
+ */
+class OutputCell extends BaseCell {
+    /**
+     * Constructor for OutputCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+      super(cellData);
+    }
+  
+    /**
+     * Display customized output on the page.
+     * @param {*} output - Result to be displayed.
+     */
+    displayOutput(output) {
+        const results = this.executeCode();
+        return results;
+    }
+  }
+
+/**
+ * SetupCell class for suppressed output.
+ * @class
+ * @extends BaseCell
+ */
+class SetupCell extends BaseCell {
+    /**
+     * Constructor for SetupCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+        super(cellData);
+    }
+
+    /**
+     * Execute the Python code without displaying the results.
+     */
+    runSetupCode() {
+        // Execute code without displaying output
+        this.executeCode();
+    }
+};
+</script>
+<script type="module">
+// Handle cell initialization initialization
+qpyodideCellDetails.map(
+    (entry) => {
+      // Handle the creation of the element
+      qpyodideCreateCell(entry);
+    }
+  );
+</script>
 
 
 
