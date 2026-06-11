@@ -9,14 +9,14 @@ website:
   title: "BU METER"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
       - href: METER_Sample_Size-SHORT-Quarto.html
         text: Sample Size
       - href: METER_Inference-SHORT-Quarto.html
         text: Inference
       - href: METER_P_Values-Quarto.html
         text: P-values
+      - href: METER_Exploratory-Quarto.html
+        text: Multiplicity
 
 format:
   html:

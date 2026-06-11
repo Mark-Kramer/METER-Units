@@ -152,10 +152,6 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./METER_Sample_Size-SHORT-Quarto.html"> 
 <span class="menu-text">Sample Size</span></a>
   </li>  
@@ -166,6 +162,10 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link" href="./METER_P_Values-Quarto.html"> 
 <span class="menu-text">P-values</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./METER_Exploratory-Quarto.html" aria-current="page"> 
+<span class="menu-text">Multiplicity</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -183,8 +183,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-mitigate-multiplicity" id="toc-why-mitigate-multiplicity" class="nav-link active" data-scroll-target="#why-mitigate-multiplicity">1 - Why mitigate multiplicity?</a></li>
-  <li><a href="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" id="toc-rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="nav-link" data-scroll-target="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity">2 - Rat brains, position, and profit: an introduction to mitigating multiplicity</a>
+  <li><a href="#why-mitigate-multiplicity" id="toc-why-mitigate-multiplicity" class="nav-link active" data-scroll-target="#why-mitigate-multiplicity">0 - Why mitigate multiplicity?</a></li>
+  <li><a href="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" id="toc-rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="nav-link" data-scroll-target="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity">1 - Rat brains, position, and profit: an introduction to mitigating multiplicity</a>
   <ul class="collapse">
   <li><a href="#the-first-suspicious-scenario" id="toc-the-first-suspicious-scenario" class="nav-link" data-scroll-target="#the-first-suspicious-scenario">The first suspicious scenario</a></li>
   <li><a href="#a-second-suspicious-scenario" id="toc-a-second-suspicious-scenario" class="nav-link" data-scroll-target="#a-second-suspicious-scenario">A second suspicious scenario</a></li>
@@ -230,8 +230,8 @@ window.Quarto = {
 
 <p>Identifying meaningful patterns and relationships within noisy data is a fundamental component of neuroscience research; however, multiplicity - the practice of conducting multiple simultaneous comparisons - can result in spurious and misleading conclusions. Alternatively, strict approaches to correct for multiplicity can result in missed scientific conclusions. In this unit, learners will understand how multiplicity occurs, its impacts, and strategies to address it.</p>
 <section id="why-mitigate-multiplicity" class="level1">
-<h1>1 - Why mitigate multiplicity?</h1>
-<p>In science, it’s common to test data in multiple way. We might use our data to test multiple theories or we might test multiple features of data collected from a novel device.</p>
+<h1>0 - Why mitigate multiplicity?</h1>
+<p>In science, it’s common to test data in multiple ways. We might use our data to test multiple theories or we might test multiple features of data collected from a novel device.</p>
 <p>After doing so, we often want to make confident statements about these test results. It’s then important to deal with the challenges of <strong>multiplicity</strong>.</p>
 <p>There are (at least) two common mistakes when confronting multiplicity:</p>
 <ol type="1">
@@ -242,13 +242,13 @@ window.Quarto = {
 <p>Our goal in this unit is to practice making these decisions to address multiplicity, and explore the impact of being too lenient or too strict.</p>
 </section>
 <section id="rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="level1">
-<h1>2 - Rat brains, position, and profit: an introduction to mitigating multiplicity</h1>
+<h1>1 - Rat brains, position, and profit: an introduction to mitigating multiplicity</h1>
 <section id="the-first-suspicious-scenario" class="level2">
 <h2 class="anchored" data-anchor-id="the-first-suspicious-scenario">The first suspicious scenario</h2>
 <p>Consider the following data mining scenario:</p>
 <ul>
 <li><p>A research group inserts tiny electrodes into a rodent brain and records the activity of individual neurons while the rat walks, eats, drinks, grooms, and sleeps.</p></li>
-<li><p>The researchers collect data from 76 neurons and then, from these 76 neurons, chooses 8 to analyze.</p></li>
+<li><p>The researchers collect data from 76 neurons and then, from these 76 neurons, choose 8 to analyze.</p></li>
 <li><p>The researchers report a handful of observations from the selected 8 neurons, such as how different neurons respond (i.e., generate action potentials) during some of the rat’s different behaviors (e.g., during walking, during grooming).</p></li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -450,8 +450,8 @@ function checkAnswerStockCombos() {
 <li><p><code>spikes</code> - the action potentials (or “spikes”) generated by 200 neurons,</p></li>
 <li><p><code>signals</code> - the rodent position (one of the signals) and the price of 99 stocks.</p></li>
 </ul>
-<p>Both the <code>spikes</code> and <code>signals</code> are recorded simultaneously, every 10 ms for 0.5 s, resulting in a total of 500 time points.</p>
-<div id="64f0c7be-88bc-474c-9577-074635e90e11" class="cell" data-execution_count="13">
+<p>Both the <code>spikes</code> and <code>signals</code> are recorded simultaneously, every 1 ms for 0.5 s, resulting in a total of 500 data points.</p>
+<div id="64f0c7be-88bc-474c-9577-074635e90e11" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -466,84 +466,14 @@ function checkAnswerStockCombos() {
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>import scipy.io as sio
-import numpy as np
-import matplotlib.pyplot as plt
-import statsmodels.api as sm
-from tqdm import tqdm
-
-def load_data():
-    import pandas as pd
-    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/rodent_data.csv")
-    spikes  = df.iloc[:, 0:200].to_numpy()
-    signals = df.iloc[:, 200:300].to_numpy()
-    t       = df.iloc[:, 300].to_numpy()
-    return spikes, signals, t
-
-def plot_spike_train(t, spikes):
-    indices = [i for i, value in enumerate(spikes) if value == 1]; values  = [1] * len(indices)
-    plt.plot(t[indices], values, 'ko');
-
-def compute_p_values(spikes, signals):
-    n1 = signals.shape[1]
-    n2 = spikes.shape[1]
-    p = np.zeros((n1, n2))
-
-    for i in tqdm(range(n1)):       # tqdm shows the progress bar
-        for j in range(n2):
-                                    # GLM fitting with a Poisson family
-            X = signals[:, i]       # Predictor variable
-            y = spikes[:, j]        # Response variable
-            X = sm.add_constant(X)  # Adding a constant column for the intercept
-            glm_model = sm.GLM(y, X, family=sm.families.Poisson())
-            glm_results = glm_model.fit()
-            p[i, j] = glm_results.pvalues[1]  # Storing the p-value of the predictor
-
-    return p
-
-def fdr(p):
-    # List of p-values
-    p_values = p.flatten()
-    
-    # Desired false discovery rate level
-    q = 0.05
-    
-    # Sort p-values and get the sorted indices
-    sorted_indices  = np.argsort(p_values)
-    sorted_p_values = p_values[sorted_indices]
-    
-    # Number of multiple tests
-    m = len(p_values)
-    
-    # Calculate the Benjamini-Hochberg critical values
-    critical_values = (np.arange(1, m+1) / m) * q
-    
-    # Find the largest p-value that is smaller than the critical value
-    max_significant = np.max(np.where(sorted_p_values &lt;= critical_values))
-    
-    # Initialize a boolean array for significance
-    is_significant = np.zeros(m, dtype=bool)
-
-    # If any p-values are significant, set them as True
-    if max_significant &gt;= 0:
-        is_significant[sorted_indices[:max_significant+1]] = True
-    
-    # Make matrix to indicate significant p-value after FDR.
-    p_values_signficant_after_FDR = np.zeros(np.shape(p))
-    np.shape(p_values_signficant_after_FDR)
-    p_values_signficant_after_FDR[np.unravel_index(np.where(is_significant==True), np.shape(p))] = 1
-
-    return p_values_signficant_after_FDR</code></pre>
-</div>
 </div>
 <p>We’re interested in understanding the relationship (if any) between <code>spikes</code> and <code>signals</code>.</p>
 <p>Let’s start by investigating the structure of the data.</p>
 <div id="e581a977-88b6-42f8-9dcc-302e78b5cf4c" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(spikes.shape)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(signals.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(spikes.shape)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(signals.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Both <code>spikes</code> and <code>signals</code> consist of 500 time points (the number of rows). We collect data from 200 neurons and 100 signals (the number of columns).</p>
@@ -558,9 +488,9 @@ def fdr(p):
 <div id="10ec16f4-2003-421e-9077-0dabde8cc17f" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -610,9 +540,9 @@ function checkAnswerSpikeRepresentation() {
 <div id="5783096b-96d5-4283-8f5b-d26e40cf1681" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot an example signal.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -662,9 +592,9 @@ function checkAnswerSignalFeatures() {
 <div id="36e8774b-3148-408c-ba01-d39181c11021" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span>        <span class="co"># Plot the first signal.</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span>        <span class="co"># Plot the first signal.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -809,36 +739,26 @@ function checkAnswer200100Combos() {
 </script>
 </div>
 </div>
-<p>To compare the <code>spikes</code> and <code>signals</code>, we perform a statisitcal test of the association between each pair of data. There are many choices you could make to assess the associations and perform the statistical tests. We will not investigate those choices here. Instead, we will perform a sophisticated - yet standard - approach to assess the relationship between the <code>spikes</code> and <code>signals</code>; if you’re interested in (many) more analysis details, check out <a href="https://mark-kramer.github.io/Case-Studies-Python/09.html">this link</a>.</p>
+<p>To compare the <code>spikes</code> and <code>signals</code>, we perform a statistical test of the association between each pair of data. There are many choices you could make to assess the associations and perform the statistical tests. We will not investigate those choices here. Instead, we will perform a sophisticated - yet standard - approach to assess the relationship between the <code>spikes</code> and <code>signals</code>; if you’re interested in (many) more analysis details, check out <a href="https://mark-kramer.github.io/Case-Studies-Python/09.html">this link</a>.</p>
 <p>Again, for our purposes, the details of the test are not important.</p>
 <p>What is important is that <strong>each test produces a p-value</strong> and we interpret small p-values to indicate statistically significant associations (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
 <p>Let’s compute those p-values now. This step is slow, because there are many p-values to compute!</p>
-<div id="7e3923ab-7914-4cab-b56b-53373e2ca723" class="cell" data-execution_count="5">
+<div id="7e3923ab-7914-4cab-b56b-53373e2ca723" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> compute_p_values(spikes, signals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> compute_p_values(spikes, signals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>100%|██████████| 100/100 [00:29&lt;00:00,  3.37it/s]</code></pre>
-</div>
 </div>
 <p>For each neuron-signal pair, we estimate the association with an associated p-value.</p>
 <p>We now have 20,000 p-values to investigate.</p>
 <p>To start, let’s visualize those p-values.</p>
-<div id="1fbee484-9a1a-4c45-8ab0-9d8850b8ce09" class="cell" data-execution_count="6">
+<div id="1fbee484-9a1a-4c45-8ab0-9d8850b8ce09" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p)<span class="op">;</span> cbar <span class="op">=</span> plt.colorbar()<span class="op">;</span> cbar.set_label(<span class="st">'p-value'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p)<span class="op">;</span> cbar <span class="op">=</span> plt.colorbar()<span class="op">;</span> cbar.set_label(<span class="st">'p-value'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_Exploratory-Quarto_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -883,15 +803,12 @@ function checkAnswerMeaningfulRelationships() {
 </script>
 </div>
 </div>
-<p>To isolate meaningful relationships, let’s count the number of associations in which p&lt;0.05, the standard threshold for signficance applied in practice (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
-<div id="5b5c6ba9-a696-4e96-bd1d-57d6dfd1b53e" class="cell" data-execution_count="8">
+<p>To isolate meaningful relationships, let’s count the number of associations in which p&lt;0.05, the standard threshold for significance applied in practice (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
+<div id="5b5c6ba9-a696-4e96-bd1d-57d6dfd1b53e" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>1104</code></pre>
-</div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1149,14 +1066,11 @@ function checkAnswerBonferroniCorrection() {
 </div>
 </div>
 <p>Let’s apply the Bonferroni correction to our matrix of p-values (<code>p</code>) and determine the number of significant associations, after correcting for multiplicity.</p>
-<div id="b49e0d46-2484-45a2-850c-8db55fd577c9" class="cell" data-execution_count="11">
+<div id="b49e0d46-2484-45a2-850c-8db55fd577c9" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>0</code></pre>
-</div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1205,7 +1119,7 @@ function checkAnswerBonferroniResult() {
 <p><b>Alert: Wait, this doesn’t make sense!</b></p>
 <p></p>
 <ul>
-<li><p>Much work (including <a href="https://www.nature.com/articles/514153a">Noble Prize work</a>) has established a relationship between rat neuron spiking and rodent position.</p></li>
+<li><p>Much work (including <a href="https://www.nature.com/articles/514153a">Nobel Prize work</a>) has established a relationship between rat neuron spiking and rodent position.</p></li>
 <li><p>We’ve identified all associations with p&lt;0.05 after Bonferroni correction … and there aren’t any.</p></li>
 <li><p>Is that the right choice?</p></li>
 </ul>
@@ -1222,7 +1136,7 @@ function checkAnswerBonferroniResult() {
 <p>The two strategies give completely different results. Either neurons in the rat brain spike with many associations to observed signals (Unit 3) or no associations (Unit 4). And, neither result makes sense when compared to the <a href="https://www.nature.com/articles/514153a">existing</a> <a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">literature</a>. <strong>So, now what?</strong></p>
 <p>Again, many strategies exist to correct for multiplicity. There’s no single “right” approach.</p>
 <ul>
-<li><p>Our first approach (do nothing) is too lenient - we allow two many false positives. And, in doing so, we draw a ridiculous scientific conclusion: action potentials in the rat brain predict prices on the stock market.</p></li>
+<li><p>Our first approach (do nothing) is too lenient - we allow too many false positives. And, in doing so, we draw a ridiculous scientific conclusion: action potentials in the rat brain predict prices on the stock market.</p></li>
 <li><p>Our second approach (Bonferroni correction) is too strict - we allow too few false positives. And, in doing so, we find no evidence for a well-established scientific conclusion: action potentials in the rat brain encode the rodent’s position.</p></li>
 </ul>
 <p>Perhaps we can find an intermediate approach, that allows neither too many nor too few false positives …</p>
@@ -1238,7 +1152,7 @@ function checkAnswerBonferroniResult() {
 <section id="fdr-a-less-conservative-approach-to-multiplicity." class="level1">
 <h1>6- FDR: a less conservative approach to multiplicity.</h1>
 <p>You’ve chosen one approach to mitigate the impact of performing multiple statistical tests: calculate the False Discovery Rate (FDR).</p>
-<p>To do so, we’ll use the <a href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x">Benjamini-Hochberg (BH) procedure</a>. The BH procedure is a statistical method to control the false discovery rate (FDR) in multiple hypothesis testing. It ranks the p-values from smallest to largest and compares each to a threshold that increases with rank, defined as <span class="math inline">\((r/m) \cdot q\)</span>, where <span class="math inline">\(r\)</span> is the rank of the p-value (i.e., the p-values position when ordered from smallest to largest), <span class="math inline">\(m\)</span> is the total number of tests, and <span class="math inline">\(q\)</span> is the desired FDR level, which is the expected proportion of false positives among all rejected hypotheses. For example, if <span class="math inline">\(q = 0.05\)</span>, it means that, on average, no more than 5% of the rejected hypotheses are expected to be false positives. This allows for a controlled balance between identifying true effects and limiting false discoveries in multiple hypothesis testing.</p>
+<p>To do so, we’ll use the <a href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x">Benjamini-Hochberg (BH) procedure</a>. The BH procedure is a statistical method to control the false discovery rate (FDR) in multiple hypothesis testing. It ranks the p-values from smallest to largest and compares each to a threshold that increases with rank, defined as <span class="math inline">\((r/m) \cdot q\)</span>, where <span class="math inline">\(r\)</span> is the rank of the p-value (i.e., the p-value’s position when ordered from smallest to largest), <span class="math inline">\(m\)</span> is the total number of tests, and <span class="math inline">\(q\)</span> is the desired FDR level, which is the expected proportion of false positives among all rejected hypotheses. For example, if <span class="math inline">\(q = 0.05\)</span>, it means that, on average, no more than 5% of the rejected hypotheses are expected to be false positives. This allows for a controlled balance between identifying true effects and limiting false discoveries in multiple hypothesis testing.</p>
 <p>The BH procedure is less conservative than methods like Bonferroni correction, offering more power while maintaining control over the expected proportion of false positives.</p>
 <p>The BH procedure is implemented in three steps:</p>
 <ol type="1">
@@ -1248,12 +1162,12 @@ function checkAnswerBonferroniResult() {
 <p><span class="math inline">\(CriticalValue =(r/m) \cdot q\)</span></p>
 <p>where <span class="math inline">\(m\)</span> is the total number of tests, and <span class="math inline">\(q\)</span> is the desired overall significance level (typically 0.05 for 5% FDR).</p>
 <ol start="3" type="1">
-<li><strong>Compare each p-value to its corresponding critical value.</strong> The largest rank, <span class="math inline">\(r\)</span>, for which the p-value is less than or equal to the critical value is considered significant, and all p-values with ranks less than or equal to this <span class="math inline">\(r\)</span> are considered significant. In other words, we reject the null hypothesis for all p-valyes with ranks less than or equal to <span class="math inline">\(r\)</span>.</li>
+<li><strong>Compare each p-value to its corresponding critical value.</strong> The largest rank, <span class="math inline">\(r\)</span>, for which the p-value is less than or equal to the critical value is considered significant, and all p-values with ranks less than or equal to this <span class="math inline">\(r\)</span> are considered significant. In other words, we reject the null hypothesis for all p-values with ranks less than or equal to <span class="math inline">\(r\)</span>.</li>
 </ol>
 <section id="to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." class="level2">
 <h2 class="anchored" data-anchor-id="to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example.">To build some intuition for these steps, let’s start with a simple example.</h2>
 <p>Consider an experiment in which you perform 5 hypothesis tests (<span class="math inline">\(m=5\)</span>) and collect 5 p-values:</p>
-<p><code>p-value: [0.1, 0.12, 0.001, 0.03, 0.045]</code></p>
+<p><code>p-value: [0.1, 0.12, 0.001, 0.015, 0.045]</code></p>
 <p>We conducted 5 tests, and decide to correct for multiplicity.</p>
 <p>Let’s use the p-values to perform each step of the Benjamini-Hochberg procedure.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1473,28 +1387,21 @@ function checkAnswerBonferroniVsFdr() {
 </div>
 <p>Now, having built some intuition for computing the FDR using the Benjamini-Hochberg (BH) procedure, let’s apply it to our data of interest.</p>
 <p>It’s the same idea, but instead of considering 5 p-values, we must consider the 20,000 p-values.</p>
-<div id="5b69b131-76b4-4e45-a470-53645b08535a" class="cell" data-execution_count="18">
+<div id="5b69b131-76b4-4e45-a470-53645b08535a" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p_values_signficant_after_FDR <span class="op">=</span> fdr(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p_values_significant_after_FDR <span class="op">=</span> fdr(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The function <code>fdr</code> returns whether each p-value in <code>p</code> remains signficant after correcting for multiplicity using FDR.</p>
+<p>The function <code>fdr</code> returns whether each p-value in <code>p</code> remains significant after correcting for multiplicity using FDR.</p>
 <p>Let’s display the p-values that remain significant after correcting for multiplicity using FDR:</p>
-<div id="a6df5236-c13a-4208-b360-bc55fbced814" class="cell" data-execution_count="19">
+<div id="a6df5236-c13a-4208-b360-bc55fbced814" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p_values_signficant_after_FDR)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p_values_significant_after_FDR)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="METER_Exploratory-Quarto_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1542,16 +1449,16 @@ function checkAnswerFdrDotsPattern() {
 <div class="alert alert-block alert-info">
 <p><em>Interpretation</em>:</p>
 <ul>
-<li><p>We originally corrected for multiplicity using the Bonferroni correction. Following this strict correction, we found no evidence of significanet associations <code>spikes</code> and <code>signals</code>.</p></li>
-<li><p>After correcting for multiplicity using FDR, we now find some neurons in the rat brain are associated with the some signals.</p></li>
-<li><p>We return to our collaborators and they confirm that Signals 0-10 corresponds to different measures of the rodent’s position and direction.</p></li>
+<li><p>We originally corrected for multiplicity using the Bonferroni correction. Following this strict correction, we found no evidence of significant associations between <code>spikes</code> and <code>signals</code>.</p></li>
+<li><p>After correcting for multiplicity using FDR, we now find some neurons in the rat brain are associated with some signals.</p></li>
+<li><p>We return to our collaborators and they confirm that Signals 0-10 correspond to different measures of the rodent’s position and direction.</p></li>
 </ul>
 </div>
 <div class="alert alert-block alert-info">
 <p><em>Relief</em></p>
 <ul>
 <li><p>We’ve corrected for multiple comparisons using FDR and find a sensible result.</p></li>
-<li><p>The results are consistent with the existing theory that neuron’s in the brain encode rodent position.</p></li>
+<li><p>The results are consistent with the existing theory that neurons in the brain encode rodent position.</p></li>
 <li><p>We find no evidence that neurons in the rodent brain predict stock market prices.</p></li>
 <li><p>Using a less strict correction (FDR instead of Bonferroni) we identify significant associations in the data.</p></li>
 </ul>
@@ -1560,102 +1467,45 @@ function checkAnswerFdrDotsPattern() {
 </section>
 <section id="split-your-data-to-test-your-conclusions." class="level1">
 <h1>7- Split your data to test your conclusions.</h1>
-<p>(Pending: describe how you can split your data in half to test your conclusions. You take the first half of your data and epxlore. Find the significant relationships. Then test those relationships in the second half.</p>
+<p>(Pending: describe how you can split your data in half to test your conclusions. You take the first half of your data and explore. Find the significant relationships. Then test those relationships in the second half.</p>
 <p>(Use first half of data, in time)</p>
-<div id="db00d1b5-562b-4560-8ba9-8ae1a45c4e90" class="cell" data-execution_count="25">
+<div id="db00d1b5-562b-4560-8ba9-8ae1a45c4e90" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> np.shape(spikes)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>p_split <span class="op">=</span> compute_p_values(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:], signals[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> np.shape(spikes)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>p_split <span class="op">=</span> compute_p_values(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:], signals[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>100%|██████████| 100/100 [00:24&lt;00:00,  4.15it/s]</code></pre>
-</div>
 </div>
 <p>(Find candidate significant associations)</p>
-<div id="50dde2d1-ceb5-4fb8-94d0-b726ed5e2e1a" class="cell" data-execution_count="27">
+<div id="e7611a7f-6a39-46b5-91d1-ecc5bd06c17c" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>np.shape(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>)<span class="op">-</span><span class="dv">1</span>,:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>candidate_significant_pairs <span class="op">=</span> (p_split<span class="op">&lt;</span><span class="fl">0.05</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(candidate_significant_pairs.flatten()))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>[i_signals,i_spikes] <span class="op">=</span> np.where(candidate_significant_pairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="27">
-<pre><code>(249, 200)</code></pre>
-</div>
-</div>
-<div id="bfd58ec8-fa9a-4ffb-b878-b376e7b635f4" class="cell" data-execution_count="38">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="38">
-<pre><code>array([[2.76298342e-01, 1.93779483e-01, 3.21559511e-01, ...,
-        5.83579451e-01, 4.55213251e-01, 9.67559263e-01],
-       [7.13627427e-01, 1.96871382e-01, 1.37859754e-01, ...,
-        2.29391494e-01, 4.87550873e-01, 2.44911587e-01],
-       [9.20386735e-01, 3.49294902e-01, 5.57160646e-01, ...,
-        1.25762463e-04, 1.62009782e-03, 5.99855458e-01],
-       ...,
-       [2.06981589e-02, 1.48315904e-01, 6.60448601e-01, ...,
-        4.58320683e-01, 6.51190811e-01, 9.48354359e-02],
-       [4.33764831e-01, 3.73249555e-01, 6.59935926e-01, ...,
-        1.64988870e-01, 7.00656464e-01, 1.22953709e-01],
-       [7.46086224e-01, 7.70883112e-02, 4.26626802e-01, ...,
-        1.86698612e-01, 8.32739797e-01, 9.30276589e-01]])</code></pre>
-</div>
-</div>
-<div id="e7611a7f-6a39-46b5-91d1-ecc5bd06c17c" class="cell" data-execution_count="41">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>candidate_significant_pairs <span class="op">=</span> (p_split<span class="op">&lt;</span><span class="fl">0.05</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(candidate_significant_pairs.flatten()))</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>[i_signals,i_spikes] <span class="op">=</span> np.where(candidate_significant_pairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>981</code></pre>
-</div>
 </div>
 <p>(Test these predicted associations in the second half of data)</p>
-<div id="c2d65bc1-7ca9-4485-b63e-cb854edd5e98" class="cell" data-execution_count="42">
+<div id="c2d65bc1-7ca9-4485-b63e-cb854edd5e98" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p_test <span class="op">=</span> np.zeros(np.shape(i_signals))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, element <span class="kw">in</span> <span class="bu">enumerate</span>(i_signals):</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> signals[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_signals[index]]       <span class="co"># Predictor variable</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> spikes[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_spikes[index]]        <span class="co"># Response variable</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(X)  <span class="co"># Adding a constant column for the intercept</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    glm_model <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    glm_results <span class="op">=</span> glm_model.fit()</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    p_test[index] <span class="op">=</span> glm_results.pvalues[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p_test <span class="op">=</span> np.zeros(np.shape(i_signals))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, element <span class="kw">in</span> <span class="bu">enumerate</span>(i_signals):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> signals[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_signals[index]]       <span class="co"># Predictor variable</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> spikes[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_spikes[index]]        <span class="co"># Response variable</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(X)  <span class="co"># Adding a constant column for the intercept</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    glm_model <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    glm_results <span class="op">=</span> glm_model.fit()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    p_test[index] <span class="op">=</span> glm_results.pvalues[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>(Identify significant associations)</p>
-<div id="07ee72b6-8928-43e7-9f87-75426fd1c4a2" class="cell" data-execution_count="37">
+<div id="07ee72b6-8928-43e7-9f87-75426fd1c4a2" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>i0 <span class="op">=</span> np.where(p_test<span class="op">&lt;</span><span class="fl">0.05</span><span class="op">/</span>np.size(i_signals))</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Signal'</span>, i_signals[i0], <span class="st">', Spike'</span>, i_spikes[i0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>i0 <span class="op">=</span> np.where(p_test<span class="op">&lt;</span><span class="fl">0.05</span><span class="op">/</span>np.size(i_signals))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Signal'</span>, i_signals[i0], <span class="st">', Spike'</span>, i_spikes[i0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Signal [] , Spike []</code></pre>
-</div>
-</div>
-<div id="8374bb32-367f-4894-a4a0-ff2ad6c0dfe4" class="cell" data-execution_count="31">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>np.size(i_signals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="31">
-<pre><code>981</code></pre>
-</div>
-</div>
-<div id="8b4327e1-2afc-4d5d-8d2b-17c31de53312" class="cell" data-execution_count="35">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>i_spikes[index]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="35">
-<pre><code>189</code></pre>
-</div>
 </div>
 
 
