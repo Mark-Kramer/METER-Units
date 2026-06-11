@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Reproducible exploratory analysis - Mitigating multiplicity when mining data – BU METER</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">BU METER</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./METER_Sample_Size-SHORT-Quarto.html"> 
+<span class="menu-text">Sample Size</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./METER_Inference-SHORT-Quarto.html"> 
+<span class="menu-text">Inference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./METER_P_Values-Quarto.html"> 
+<span class="menu-text">P-values</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-mitigate-multiplicity" id="toc-why-mitigate-multiplicity" class="nav-link active" data-scroll-target="#why-mitigate-multiplicity">1 - Why mitigate multiplicity?</a></li>
+  <li><a href="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" id="toc-rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="nav-link" data-scroll-target="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity">2 - Rat brains, position, and profit: an introduction to mitigating multiplicity</a>
+  <ul class="collapse">
+  <li><a href="#the-first-suspicious-scenario" id="toc-the-first-suspicious-scenario" class="nav-link" data-scroll-target="#the-first-suspicious-scenario">The first suspicious scenario</a></li>
+  <li><a href="#a-second-suspicious-scenario" id="toc-a-second-suspicious-scenario" class="nav-link" data-scroll-target="#a-second-suspicious-scenario">A second suspicious scenario</a></li>
+  <li><a href="#so-what-do-we-believe" id="toc-so-what-do-we-believe" class="nav-link" data-scroll-target="#so-what-do-we-believe">So, what do we believe?</a></li>
+  </ul></li>
+  <li><a href="#visualization-our-first-analysis-step" id="toc-visualization-our-first-analysis-step" class="nav-link" data-scroll-target="#visualization-our-first-analysis-step">2 - Visualization, our first analysis step</a></li>
+  <li><a href="#profit-rat-brains-for-high-frequency-trading-in-the-nyse" id="toc-profit-rat-brains-for-high-frequency-trading-in-the-nyse" class="nav-link" data-scroll-target="#profit-rat-brains-for-high-frequency-trading-in-the-nyse">3- Profit! Rat brains for high-frequency trading in the NYSE</a></li>
+  <li><a href="#not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." id="toc-not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." class="nav-link" data-scroll-target="#not-so-fast-finding-meaningful-relationships-after-youve-tested-everything.">4- Not so fast … finding meaningful relationships after you’ve tested everything.</a>
+  <ul class="collapse">
+  <li><a href="#intuition-building-aside" id="toc-intuition-building-aside" class="nav-link" data-scroll-target="#intuition-building-aside">Intuition building aside</a></li>
+  </ul></li>
+  <li><a href="#rat-brains-either-predict-many-things-or-no-things" id="toc-rat-brains-either-predict-many-things-or-no-things" class="nav-link" data-scroll-target="#rat-brains-either-predict-many-things-or-no-things">5- Rat brains either predict many things or no things?</a></li>
+  <li><a href="#choose-your-own-adventure" id="toc-choose-your-own-adventure" class="nav-link" data-scroll-target="#choose-your-own-adventure">Choose your own adventure!</a></li>
+  <li><a href="#fdr-a-less-conservative-approach-to-multiplicity." id="toc-fdr-a-less-conservative-approach-to-multiplicity." class="nav-link" data-scroll-target="#fdr-a-less-conservative-approach-to-multiplicity.">6- FDR: a less conservative approach to multiplicity.</a>
+  <ul class="collapse">
+  <li><a href="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." id="toc-to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." class="nav-link" data-scroll-target="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example.">To build some intuition for these steps, let’s start with a simple example.</a></li>
+  </ul></li>
+  <li><a href="#split-your-data-to-test-your-conclusions." id="toc-split-your-data-to-test-your-conclusions." class="nav-link" data-scroll-target="#split-your-data-to-test-your-conclusions.">7- Split your data to test your conclusions.</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Reproducible exploratory analysis - Mitigating multiplicity when mining data</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Identifying meaningful patterns and relationships within noisy data is a fundamental component of neuroscience research; however, multiplicity - the practice of conducting multiple simultaneous comparisons - can result in spurious and misleading conclusions. Alternatively, strict approaches to correct for multiplicity can result in missed scientific conclusions. In this unit, learners will understand how multiplicity occurs, its impacts, and strategies to address it.</p>
+<section id="why-mitigate-multiplicity" class="level1">
+<h1>1 - Why mitigate multiplicity?</h1>
+<p>In science, it’s common to test data in multiple way. We might use our data to test multiple theories or we might test multiple features of data collected from a novel device.</p>
+<p>After doing so, we often want to make confident statements about these test results. It’s then important to deal with the challenges of <strong>multiplicity</strong>.</p>
+<p>There are (at least) two common mistakes when confronting multiplicity:</p>
+<ol type="1">
+<li><p><strong>Too lenient</strong>. If we do nothing about multiplicity in our results, then we might confuse spurious results occurring by chance with meaningful scientific conclusions.</p></li>
+<li><p><strong>Too strict</strong>. If we strictly address multiplicity, then - in our quest to avoid false positive results - we might disregard meaningful scientific conclusions.</p></li>
+</ol>
+<p>Unfortunately, no one-size-fits-all solution exists to address multiplicity. For your data and your results, you’ll need to make an informed decision.</p>
+<p>Our goal in this unit is to practice making these decisions to address multiplicity, and explore the impact of being too lenient or too strict.</p>
+</section>
+<section id="rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="level1">
+<h1>2 - Rat brains, position, and profit: an introduction to mitigating multiplicity</h1>
+<section id="the-first-suspicious-scenario" class="level2">
+<h2 class="anchored" data-anchor-id="the-first-suspicious-scenario">The first suspicious scenario</h2>
+<p>Consider the following data mining scenario:</p>
+<ul>
+<li><p>A research group inserts tiny electrodes into a rodent brain and records the activity of individual neurons while the rat walks, eats, drinks, grooms, and sleeps.</p></li>
+<li><p>The researchers collect data from 76 neurons and then, from these 76 neurons, chooses 8 to analyze.</p></li>
+<li><p>The researchers report a handful of observations from the selected 8 neurons, such as how different neurons respond (i.e., generate action potentials) during some of the rat’s different behaviors (e.g., during walking, during grooming).</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Approximately how many tests did these researchers perform?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-tests">
+<input type="radio" name="answer_tests" value="incorrect1"> 76 tests<br> <input type="radio" name="answer_tests" value="incorrect2"> 81 tests<br> <input type="radio" name="answer_tests" value="correct"> 380 tests<br> <input type="radio" name="answer_tests" value="incorrect3"> 760 tests<br><br> <button type="button" onclick="checkAnswerTests()">Submit</button>
+</form>
+<p id="feedback_tests">
+</p>
+<script>
+function checkAnswerTests() {
+    var selected = document.querySelector('input[name="answer_tests"]:checked');
+    var feedback = document.getElementById("feedback_tests");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The researchers performed approximately 380 tests, because 76 neurons × 5 behaviors = 380.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Not quite. That counts only the neurons, but each neuron was tested across 5 behaviors.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. This looks like adding 76 and 5, but the number of tests comes from multiplying neurons by behaviors.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. That is too high. Multiply 76 neurons by 5 behaviors: 76 × 5 = 380.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Is this “good” scientific practice? Does anything concern you?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-practice">
+<input type="radio" name="answer_practice" value="incorrect1"> Yes, this is definitely good scientific practice. Nothing concerns me.<br> <input type="radio" name="answer_practice" value="correct"> I do have a concern. I wonder why the researcher chose those 8 neurons to analyze during some of the rat’s behaviors.<br> <input type="radio" name="answer_practice" value="incorrect2"> No, because 8 neurons is always too small a sample to study.<br> <input type="radio" name="answer_practice" value="incorrect3"> No, because rats should not be studied during different behaviors.<br><br> <button type="button" onclick="checkAnswerPractice()">Submit</button>
+</form>
+<p id="feedback_practice">
+</p>
+<script>
+function checkAnswerPractice() {
+    var selected = document.querySelector('input[name="answer_practice"]:checked');
+    var feedback = document.getElementById("feedback_practice");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! A reasonable concern is whether the 8 neurons were selected in a principled way. If the researcher chose them selectively, that could bias the analysis.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Not quite. One concern is that the researcher analyzed only 8 neurons during some behaviors, and we should ask how those neurons were chosen.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Not necessarily. The main issue is not simply that 8 is a small number, but whether those 8 neurons were chosen fairly and without bias.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. Studying rats during different behaviors can be scientifically appropriate. The concern here is about the selection of the neurons analyzed.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+</section>
+<section id="a-second-suspicious-scenario" class="level2">
+<h2 class="anchored" data-anchor-id="a-second-suspicious-scenario">A second suspicious scenario</h2>
+<p>Consider this press release from another data mining scenario:</p>
+<p><strong>EXTRA! EXTRA! RAT BRAINS CRACK THE STOCK MARKET CODE!</strong></p>
+<p><em>In a dazzling demonstration of rodent ingenuity—or perhaps sheer luck—<a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">researchers have harnessed the firing neurons of rat motor cortices to predict movements in the U.S. stock market</a>. That’s right, folks! A team from Michigan and Georgia linked rat brain activity to Wall Street ticker tapes, proving that whiskers may rival Wall Street wits. By monitoring the firing rates of 94 neurons across three rats, these scientists uncovered correlations between neural activity and the daily closing prices of stocks on NASDAQ, the NYSE, and the American Stock Exchange. The Coca-Cola stock price, for instance, danced in sync with the neurons like Fred and Ginger at the Ziegfeld Follies.</em></p>
+<p><em>But wait, there’s more! The researchers didn’t stop at finding patterns — they dove headfirst into the trading floor with a predictive model based on neural firing rates. Rats’ neural spikes gave the orders: buy, sell, or hold. And the results? An impressive 43% increase in a simulated portfolio value, turning an initial $1,000 investment into a snappy $1,435 over just 20 trading days. Forget the contrarian strategies of hedge fund honchos—our furry friends seem to have cracked the code.</em></p>
+<p><em>And here’s the kicker, folks: this isn’t just about making a buck. The findings suggest a mysterious connection between rat neural activity and human economic behavior. The researchers propose a grand theory linking the creatures of Earth to the ebbs and flows of societal urges, tying their work to theories like Gaia’s interconnected organism hypothesis. So, the next time someone says, “it’s a rat race out there,” remember—they might just be running the show!</em></p>
+</section>
+<section id="so-what-do-we-believe" class="level2">
+<h2 class="anchored" data-anchor-id="so-what-do-we-believe">So, what do we believe?</h2>
+<p>Using noisy data recorded from rodent brains, the two scenarios above report relationships between:</p>
+<ol type="1">
+<li><p>the brain’s neural activity and rodent behavior, and</p></li>
+<li><p>the brain’s neural activity and the stock market.</p></li>
+</ol>
+<p><strong>You might be (reasonably) skeptical.</strong> How could neural activity from a rat brain possibly predict so many different things?</p>
+<p>In what follows, we’ll investigate this question with the goal of confronting the challenge of multiplicity.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+When data mining, the number of relationships between the things you observe increases quickly with the number of observed items. To get a sense for this, consider observations from <code>N</code> neurons (e.g., spiking activity) and <code>M</code> signals (e.g., stock prices). How many possible combinations of relationships exist between the neurons and signals?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-combinations">
+<input type="radio" name="answer_combinations" value="incorrect1"> <code>N + M</code><br> <input type="radio" name="answer_combinations" value="correct"> <code>N * M</code><br> <input type="radio" name="answer_combinations" value="incorrect2"> <code>N^M</code><br> <input type="radio" name="answer_combinations" value="incorrect3"> <code>M / N</code><br><br> <button type="button" onclick="checkAnswerCombinations()">Submit</button>
+</form>
+<p id="feedback_combinations">
+</p>
+<script>
+function checkAnswerCombinations() {
+    var selected = document.querySelector('input[name="answer_combinations"]:checked');
+    var feedback = document.getElementById("feedback_combinations");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! There are `N * M` possible neuron-signal relationships, because each of the `N` neurons can be paired with each of the `M` signals. This number can become very large very quickly.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Adding `N` and `M` counts the total number of items, not the number of possible neuron-signal pairings.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Not quite. `N^M` grows much faster, but here we are simply counting all possible pairings between `N` neurons and `M` signals, which is `N * M`.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. Dividing `M` by `N` does not count combinations. The number of possible relationships is found by pairing each neuron with each signal: `N * M`.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+In the second suspicious scenario discussed above, activity from 94 neurons was compared with activity from 4195 stocks. How many possible combinations of relationships exist between the neurons and stock signals?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-stock-combos">
+<input type="radio" name="answer_stock_combos" value="incorrect1"> 4,289<br> <input type="radio" name="answer_stock_combos" value="incorrect2"> 39,433<br> <input type="radio" name="answer_stock_combos" value="correct"> 394,330<br> <input type="radio" name="answer_stock_combos" value="incorrect3"> 381,745<br><br> <button type="button" onclick="checkAnswerStockCombos()">Submit</button>
+</form>
+<p id="feedback_stock_combos">
+</p>
+<script>
+function checkAnswerStockCombos() {
+    var selected = document.querySelector('input[name="answer_stock_combos"]:checked');
+    var feedback = document.getElementById("feedback_stock_combos");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The number of possible neuron-stock relationships is 94 × 4195 = 394,330. That is a very large number of comparisons to examine.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. That is much too small. Each of the 94 neurons can be paired with each of the 4195 stocks, so you need to multiply.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. That is still far too small. The number of relationships is found by multiplying 94 by 4195.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Close, but not correct. Check the multiplication carefully: 94 × 4195 = 394,330, not 381,745.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+</section>
+</section>
+<section id="visualization-our-first-analysis-step" class="level1">
+<h1>2 - Visualization, our first analysis step</h1>
+<p>Motivated by these previous scenarios, you receive data from a collaborator interested in understanding the relationship between neural activity in the rodent brain, a measure of rodent behaviors (e.g., measures of the rodent’s position, movement speed, head angle, etc.), and stock prices on the NYSE. The data consist of the following information:</p>
+<ul>
+<li><p><code>spikes</code> - the action potentials (or “spikes”) generated by 200 neurons,</p></li>
+<li><p><code>signals</code> - the rodent position (one of the signals) and the price of 99 stocks.</p></li>
+</ul>
+<p>Both the <code>spikes</code> and <code>signals</code> are recorded simultaneously, every 10 ms for 0.5 s, resulting in a total of 500 time points.</p>
+<div id="64f0c7be-88bc-474c-9577-074635e90e11" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load custom functions</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/exploratory_functions-SHORT.py"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span>(response.text)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>spikes, signals, t <span class="op">=</span> load_data()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>import scipy.io as sio
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from tqdm import tqdm
+
+def load_data():
+    import pandas as pd
+    df = pd.read_csv("https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/rodent_data.csv")
+    spikes  = df.iloc[:, 0:200].to_numpy()
+    signals = df.iloc[:, 200:300].to_numpy()
+    t       = df.iloc[:, 300].to_numpy()
+    return spikes, signals, t
+
+def plot_spike_train(t, spikes):
+    indices = [i for i, value in enumerate(spikes) if value == 1]; values  = [1] * len(indices)
+    plt.plot(t[indices], values, 'ko');
+
+def compute_p_values(spikes, signals):
+    n1 = signals.shape[1]
+    n2 = spikes.shape[1]
+    p = np.zeros((n1, n2))
+
+    for i in tqdm(range(n1)):       # tqdm shows the progress bar
+        for j in range(n2):
+                                    # GLM fitting with a Poisson family
+            X = signals[:, i]       # Predictor variable
+            y = spikes[:, j]        # Response variable
+            X = sm.add_constant(X)  # Adding a constant column for the intercept
+            glm_model = sm.GLM(y, X, family=sm.families.Poisson())
+            glm_results = glm_model.fit()
+            p[i, j] = glm_results.pvalues[1]  # Storing the p-value of the predictor
+
+    return p
+
+def fdr(p):
+    # List of p-values
+    p_values = p.flatten()
+    
+    # Desired false discovery rate level
+    q = 0.05
+    
+    # Sort p-values and get the sorted indices
+    sorted_indices  = np.argsort(p_values)
+    sorted_p_values = p_values[sorted_indices]
+    
+    # Number of multiple tests
+    m = len(p_values)
+    
+    # Calculate the Benjamini-Hochberg critical values
+    critical_values = (np.arange(1, m+1) / m) * q
+    
+    # Find the largest p-value that is smaller than the critical value
+    max_significant = np.max(np.where(sorted_p_values &lt;= critical_values))
+    
+    # Initialize a boolean array for significance
+    is_significant = np.zeros(m, dtype=bool)
+
+    # If any p-values are significant, set them as True
+    if max_significant &gt;= 0:
+        is_significant[sorted_indices[:max_significant+1]] = True
+    
+    # Make matrix to indicate significant p-value after FDR.
+    p_values_signficant_after_FDR = np.zeros(np.shape(p))
+    np.shape(p_values_signficant_after_FDR)
+    p_values_signficant_after_FDR[np.unravel_index(np.where(is_significant==True), np.shape(p))] = 1
+
+    return p_values_signficant_after_FDR</code></pre>
+</div>
+</div>
+<p>We’re interested in understanding the relationship (if any) between <code>spikes</code> and <code>signals</code>.</p>
+<p>Let’s start by investigating the structure of the data.</p>
+<div id="e581a977-88b6-42f8-9dcc-302e78b5cf4c" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(spikes.shape)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(signals.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Both <code>spikes</code> and <code>signals</code> consist of 500 time points (the number of rows). We collect data from 200 neurons and 100 signals (the number of columns).</p>
+<p>You might think of these variables as rectangles (or matrices), where each row indicates a time point, and each column indicates a neuron or signal:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="IMG_Exploratory/simple_boxes_neuron_and_signals.jpg" class="img-fluid figure-img"></p>
+<figcaption>title</figcaption>
+</figure>
+</div>
+<p>Let’s plot the data from one neuron in <code>spikes</code>:</p>
+<div id="10ec16f4-2003-421e-9077-0dabde8cc17f" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How do these data represent “spikes”?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-spike-representation">
+<input type="radio" name="answer_spike_representation" value="correct"> In this signal, the value 1 means a spike occurs at time <code>t</code>, and the value 0 means no spike occurs at time <code>t</code>. The black circles indicate the times of spikes.<br> <input type="radio" name="answer_spike_representation" value="incorrect1"> In this signal, the value 1 means no spike occurs at time <code>t</code>, and the value 0 means a spike occurs at time <code>t</code>.<br> <input type="radio" name="answer_spike_representation" value="incorrect2"> The signal uses large values to show strong spikes and small values to show weak spikes.<br> <input type="radio" name="answer_spike_representation" value="incorrect3"> The black circles indicate missing data points rather than spikes.<br><br> <button type="button" onclick="checkAnswerSpikeRepresentation()">Submit</button>
+</form>
+<p id="feedback_spike_representation">
+</p>
+<script>
+function checkAnswerSpikeRepresentation() {
+    var selected = document.querySelector('input[name="answer_spike_representation"]:checked');
+    var feedback = document.getElementById("feedback_spike_representation");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! In these data, 1 means a spike occurs at time `t`, 0 means no spike occurs at time `t`, and the black circles mark the spike times.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. The coding is the other way around: 1 indicates that a spike occurs, and 0 indicates that no spike occurs.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. These data are represented in a binary way: 1 for a spike and 0 for no spike, rather than using larger values for stronger spikes.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. The black circles are used to show the times when spikes occur, not missing data.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>Let’s also plot the data from one signal in <code>signals</code>:</p>
+<div id="5783096b-96d5-4283-8f5b-d26e40cf1681" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the spiking from an example neuron.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What features do you notice in the signal?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-signal-features">
+<input type="radio" name="answer_signal_features" value="incorrect1"> The signal is perfectly smooth and has no noise.<br> <input type="radio" name="answer_signal_features" value="correct"> The signal is “wiggly” and may contain rhythmic oscillations, but it is noisy and hard to interpret clearly.<br> <input type="radio" name="answer_signal_features" value="incorrect2"> The signal is completely flat, so there is nothing to analyze.<br> <input type="radio" name="answer_signal_features" value="incorrect3"> The signal shows a perfectly regular rhythm with no uncertainty.<br><br> <button type="button" onclick="checkAnswerSignalFeatures()">Submit</button>
+</form>
+<p id="feedback_signal_features">
+</p>
+<script>
+function checkAnswerSignalFeatures() {
+    var selected = document.querySelector('input[name="answer_signal_features"]:checked');
+    var feedback = document.getElementById("feedback_signal_features");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The signal appears wiggly and possibly rhythmic, but it is noisy enough that the pattern is not obvious with certainty.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. The signal is not perfectly smooth; one of the main features is that it looks noisy.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. The signal is not flat. It varies over time, which is why it looks wiggly.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Not quite. There may be some rhythmic structure, but the noise makes it hard to say the rhythm is perfectly regular.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>To more directly compare the <code>spikes</code> and <code>signals</code>, let’s plot one atop the other:</p>
+<div id="36e8774b-3148-408c-ba01-d39181c11021" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.plot(t, signals[:,<span class="dv">0</span>])<span class="op">;</span>        <span class="co"># Plot the first signal.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plot_spike_train(t, spikes[:,<span class="dv">0</span>])  <span class="co"># Plot the first spike train.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Compare the plots of example spiking and an example signal. Are they related?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-signal-relationship">
+<input type="radio" name="answer_signal_relationship" value="incorrect1"> Yes, the relationship is obvious from visual inspection.<br> <input type="radio" name="answer_signal_relationship" value="correct"> It is very difficult to tell what relationship, if any, exists between the signals.<br> <input type="radio" name="answer_signal_relationship" value="incorrect2"> Yes, they are clearly unrelated.<br> <input type="radio" name="answer_signal_relationship" value="incorrect3"> The spiking plot causes the signal plot.<br><br> <button type="button" onclick="checkAnswerSignalRelationship()">Submit</button>
+</form>
+<p id="feedback_signal_relationship">
+</p>
+<script>
+function checkAnswerSignalRelationship() {
+    var selected = document.querySelector('input[name="answer_signal_relationship"]:checked');
+    var feedback = document.getElementById("feedback_signal_relationship");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! It is very difficult to tell from visual inspection what relationship, if any, exists between the spiking data and the signal.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. In this example, visual inspection is not especially useful, and any relationship is hard to determine by eye.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Not quite. The issue is not that they are clearly unrelated, but that it is difficult to tell whether any relationship exists at all.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. These plots do not show causation. The main point is that the relationship, if any, is hard to judge visually.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We’ve used visual inspection to compare the spike train from one neuron (the first column of <code>spikes</code>) and one signal (the first column of <code>signals</code>). We didn’t see an obvious relationship. However, there are many more relationships to compare. Repeat this analysis to compare each spike train (columns 1 to 200 of <code>spikes</code>) with each signal (columns 1 to 100 of <code>signals</code>). Do you observe any relationships?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-many-plots">
+<input type="radio" name="answer_many_plots" value="incorrect1"> Yes, I can quickly visualize all of them and identify the meaningful relationships by eye.<br> <input type="radio" name="answer_many_plots" value="correct"> Wait! That’s <code>100 * 200 = 20,000</code> plots to visualize …<br> <input type="radio" name="answer_many_plots" value="incorrect2"> There are only 300 plots to check, so visual inspection is easy.<br> <input type="radio" name="answer_many_plots" value="incorrect3"> There are 2,000 plots, which is still manageable by eye.<br><br> <button type="button" onclick="checkAnswerManyPlots()">Submit</button>
+</form>
+<p id="feedback_many_plots">
+</p>
+<script>
+function checkAnswerManyPlots() {
+    var selected = document.querySelector('input[name="answer_many_plots"]:checked');
+    var feedback = document.getElementById("feedback_many_plots");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Comparing 200 spike trains with 100 signals would require 20,000 plots, which is far too many to assess usefully by visual inspection.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. There are far too many comparisons to inspect one by one visually.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. You need to multiply 200 spike trains by 100 signals, giving 20,000 plots.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. The correct count is 200 × 100 = 20,000 plots, not 2,000.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="alert alert-block alert-danger">
+<p><b>Alert: We can’t use visualization alone!</b></p>
+<p></p>
+<ul>
+<li><p>There are 200 neurons and 100 signals, resulting in 20,000 pairs to consider.</p></li>
+<li><p>We can’t possibly visualize all of those.</p></li>
+<li><p>Instead, we need to perform statistical tests.</p></li>
+</ul>
+</div>
+</section>
+<section id="profit-rat-brains-for-high-frequency-trading-in-the-nyse" class="level1">
+<h1>3- Profit! Rat brains for high-frequency trading in the NYSE</h1>
+<p>Let’s now investigate the pairwise associations between the spiking of 200 neurons in the rat brain, the rat position, and 99 stock prices.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We have 200 neurons and 100 signals. How many possible combinations of relationships exist between the neurons and signals?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-200-100-combos">
+<input type="radio" name="answer_200_100_combos" value="incorrect1"> 300<br> <input type="radio" name="answer_200_100_combos" value="incorrect2"> 2,000<br> <input type="radio" name="answer_200_100_combos" value="correct"> 20,000<br> <input type="radio" name="answer_200_100_combos" value="incorrect3"> 200,000<br><br> <button type="button" onclick="checkAnswer200100Combos()">Submit</button>
+</form>
+<p id="feedback_200_100_combos">
+</p>
+<script>
+function checkAnswer200100Combos() {
+    var selected = document.querySelector('input[name="answer_200_100_combos"]:checked');
+    var feedback = document.getElementById("feedback_200_100_combos");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! There are 200 × 100 = 20,000 possible neuron-signal relationships. That is a large number of comparisons.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Adding 200 and 100 gives 300, but the number of relationships is found by multiplying.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. That is too small. Each of the 200 neurons can be paired with each of the 100 signals, so the total is 20,000.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. That is too large. The correct calculation is 200 × 100 = 20,000.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>To compare the <code>spikes</code> and <code>signals</code>, we perform a statisitcal test of the association between each pair of data. There are many choices you could make to assess the associations and perform the statistical tests. We will not investigate those choices here. Instead, we will perform a sophisticated - yet standard - approach to assess the relationship between the <code>spikes</code> and <code>signals</code>; if you’re interested in (many) more analysis details, check out <a href="https://mark-kramer.github.io/Case-Studies-Python/09.html">this link</a>.</p>
+<p>Again, for our purposes, the details of the test are not important.</p>
+<p>What is important is that <strong>each test produces a p-value</strong> and we interpret small p-values to indicate statistically significant associations (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
+<p>Let’s compute those p-values now. This step is slow, because there are many p-values to compute!</p>
+<div id="7e3923ab-7914-4cab-b56b-53373e2ca723" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> compute_p_values(spikes, signals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████| 100/100 [00:29&lt;00:00,  3.37it/s]</code></pre>
+</div>
+</div>
+<p>For each neuron-signal pair, we estimate the association with an associated p-value.</p>
+<p>We now have 20,000 p-values to investigate.</p>
+<p>To start, let’s visualize those p-values.</p>
+<div id="1fbee484-9a1a-4c45-8ab0-9d8850b8ce09" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p)<span class="op">;</span> cbar <span class="op">=</span> plt.colorbar()<span class="op">;</span> cbar.set_label(<span class="st">'p-value'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="METER_Exploratory-Quarto_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What do you observe? Can you find the meaningful relationships between neurons and signals, if any?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-meaningful-relationships">
+<input type="radio" name="answer_meaningful_relationships" value="incorrect1"> The darkest blue pixels clearly reveal all of the meaningful relationships.<br> <input type="radio" name="answer_meaningful_relationships" value="correct"> We’re looking for small values (the darkest blue) in the image. There appear to be many dark blue pixels, and it is very difficult to see the meaningful relationships. The image is noisy.<br> <input type="radio" name="answer_meaningful_relationships" value="incorrect2"> There are no dark blue pixels, so there are no relationships at all.<br> <input type="radio" name="answer_meaningful_relationships" value="incorrect3"> The image is clean and the meaningful relationships are easy to identify by eye.<br><br> <button type="button" onclick="checkAnswerMeaningfulRelationships()">Submit</button>
+</form>
+<p id="feedback_meaningful_relationships">
+</p>
+<script>
+function checkAnswerMeaningfulRelationships() {
+    var selected = document.querySelector('input[name="answer_meaningful_relationships"]:checked');
+    var feedback = document.getElementById("feedback_meaningful_relationships");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! We are looking for small values, shown as the darkest blue pixels. But there are many dark blue pixels, the image is noisy, and it is difficult to identify the meaningful relationships.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Although the darkest blue pixels represent small values, there are many of them, so the meaningful relationships are not easy to identify.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. The issue is not that there are no dark blue pixels. The problem is that there are many of them, making the image noisy and hard to interpret.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. The image is noisy, so meaningful relationships are not easy to find by visual inspection.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>To isolate meaningful relationships, let’s count the number of associations in which p&lt;0.05, the standard threshold for signficance applied in practice (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
+<div id="5b5c6ba9-a696-4e96-bd1d-57d6dfd1b53e" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>1104</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpret this result. What do you conclude about the data?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-interpret-result">
+<input type="radio" name="answer_interpret_result" value="incorrect1"> We found exactly 20,000 meaningful associations between spikes and signals.<br> <input type="radio" name="answer_interpret_result" value="correct"> Of the 20,000 possible associations between spikes and signals, we detect 1104 associations with <code>p &lt; 0.05</code>.<br> <input type="radio" name="answer_interpret_result" value="incorrect2"> There are no associations between spikes and signals.<br> <input type="radio" name="answer_interpret_result" value="incorrect3"> All 1104 detected associations must be truly meaningful.<br><br> <button type="button" onclick="checkAnswerInterpretResult()">Submit</button>
+</form>
+<p id="feedback_interpret_result">
+</p>
+<script>
+function checkAnswerInterpretResult() {
+    var selected = document.querySelector('input[name="answer_interpret_result"]:checked');
+    var feedback = document.getElementById("feedback_interpret_result");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Of the 20,000 possible associations between spikes and signals, 1104 have `p < 0.05`.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. The result does not say that all 20,000 associations are meaningful. It says that 1043 of them have `p < 0.05`.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. The analysis detected 1043 associations with `p < 0.05`, so it is not true that there are no associations.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Not quite. The result says 1043 associations have `p < 0.05`, but that does not automatically mean they are all truly meaningful.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><em>Conclusion</em>:</p>
+<ul>
+<li>Rat brain neural activity seems to be associated with stock prices and the rodent’s position!</li>
+<li>Let’s develop a new strategy for profitable high-frequency stock trading using rat brain neuron spiking.</li>
+</ul>
+</div>
+<div class="alert alert-block alert-info">
+<p><em>Reflection</em>:</p>
+<ul>
+<li>Hmm, there are a lot of significant relationships - this was so easy!</li>
+<li>Why doesn’t everyone use rat brain activity to predict the stock market?</li>
+</ul>
+</div>
+<div class="alert alert-block alert-danger">
+<p><b>Alert: Wait, this doesn’t make sense!</b></p>
+<p></p>
+<ul>
+<li><p>How can the spike timing in a rat brain relate to stock market prices?</p></li>
+<li><p>We’ve conducted many (20,000 in fact) statistical tests and identified all associations with p&lt;0.05 … Is that the right choice?</p></li>
+</ul>
+</div>
+</section>
+<section id="not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." class="level1">
+<h1>4- Not so fast … finding meaningful relationships after you’ve tested everything.</h1>
+<p>In the previous section, we assessed associations between 200 neurons and 100 signals.</p>
+<p>This exploration led to many (20,000) statistical tests.</p>
+<p>When we compute so many tests, we need to <strong>correct for multiplicity</strong>.</p>
+<p><strong>Important fact</strong>: When conducting multiple hypothesis tests, increased error rates occur because each test has a chance of incorrectly rejecting the null hypothesis (a false positive). This error, typically called the <strong>Type I error</strong>, is the probability of a single test falsely claiming a statistically significant effect.</p>
+<p>As more tests are performed, the cumulative probability of committing at least one Type I error across all these tests increases, leading to an overall higher error rate for the set of tests than for any individual test. This phenomenon is often referred to as the <a href="https://en.wikipedia.org/wiki/Multiple_comparisons_problem">“multiple comparisons problem”</a> or “multiplicity.”</p>
+<p><strong>To mitigate multiplicity in our analysis</strong>, we must account for increased error rates due to conducting multiple hypothesis tests on the same dataset.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+In our initial analysis, we found all p-values &lt; 0.05. If we want to talk like a statistician, we’d say: <em>We chose a Type I error rate (<code>\alpha</code>) of 0.05.</em>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This means that each test has probability 0.05 of falsely claiming a statistically significant effect.</p>
+<p>We performed 20,000 total tests. How many false statistically significant effects do we expect?</p>
+<form id="quiz-form-false-positives">
+<input type="radio" name="answer_false_positives" value="incorrect1"> 50<br> <input type="radio" name="answer_false_positives" value="incorrect2"> 100<br> <input type="radio" name="answer_false_positives" value="correct"> 1000<br> <input type="radio" name="answer_false_positives" value="incorrect3"> 1104<br><br> <button type="button" onclick="checkAnswerFalsePositives()">Submit</button>
+</form>
+<p id="feedback_false_positives">
+</p>
+<script>
+function checkAnswerFalsePositives() {
+    var selected = document.querySelector('input[name="answer_false_positives"]:checked');
+    var feedback = document.getElementById("feedback_false_positives");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! We expect 20,000 × 0.05 = 1000 false statistically significant effects. Since 1104 associations had `p < 0.05`, this suggests that most of them are likely false positives.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. That is far too small. You need to multiply the number of tests by the Type I error rate: 20,000 × 0.05 = 1000.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. That is too small. With 20,000 tests and `\\alpha = 0.05`, the expected number of false positives is 1000.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Not quite. 1104 is the number of observed associations with `p < 0.05`, not the expected number of false positives. The expected number is 20,000 × 0.05 = 1000.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<section id="intuition-building-aside" class="level2">
+<h2 class="anchored" data-anchor-id="intuition-building-aside">Intuition building aside</h2>
+<p>Imagine you have a fair coin and you flip it a few times. Let’s think about what happens …</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Flip 5 coins. Are you likely to get all heads?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-five-coins">
+<input type="radio" name="answer_five_coins" value="correct"> No.&nbsp;That’s unlikely when you do it once.<br> <input type="radio" name="answer_five_coins" value="incorrect1"> Yes. You are likely to get all heads in one flip of 5 coins.<br> <input type="radio" name="answer_five_coins" value="incorrect2"> Yes. You will always get all heads if you flip carefully.<br> <input type="radio" name="answer_five_coins" value="incorrect3"> It is impossible to get all heads.<br><br> <button type="button" onclick="checkAnswerFiveCoins()">Submit</button>
+</form>
+<p id="feedback_five_coins">
+</p>
+<script>
+function checkAnswerFiveCoins() {
+    var selected = document.querySelector('input[name="answer_five_coins"]:checked');
+    var feedback = document.getElementById("feedback_five_coins");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Getting all heads in 5 coin flips is possible, but it is unlikely if you do it only once.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Getting all heads can happen, but it is not likely in a single set of 5 flips.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. Coin flips are random, so flipping carefully does not guarantee all heads.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. It is possible to get all heads, just not very likely in one try.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Now, ask 1000 people to repeat this 5-coin-flip process. Do you think <em>someone</em> will get all heads?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-many-people-coins">
+<input type="radio" name="answer_many_people_coins" value="correct"> Yes. By chance, someone might flip 5 coins and get all heads.<br> <input type="radio" name="answer_many_people_coins" value="incorrect1"> No.&nbsp;If getting all heads is unlikely for one person, it cannot happen for a group of 1000 people.<br> <input type="radio" name="answer_many_people_coins" value="incorrect2"> No.&nbsp;It is impossible for anyone to get all heads.<br> <input type="radio" name="answer_many_people_coins" value="incorrect3"> Yes. Every person will probably get all heads.<br><br> <button type="button" onclick="checkAnswerManyPeopleCoins()">Submit</button>
+</form>
+<p id="feedback_many_people_coins">
+</p>
+<script>
+function checkAnswerManyPeopleCoins() {
+    var selected = document.querySelector('input[name="answer_many_people_coins"]:checked');
+    var feedback = document.getElementById("feedback_many_people_coins");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Even though all heads is unlikely for one person, with 1000 people trying, someone might get all heads just by chance. This is why accounting for multiplicity matters.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. An event can be unlikely for one person but still happen for someone when many people try.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. Getting all heads is not impossible. It is just unlikely for a single person.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. Someone might get all heads by chance, but it is not likely that everyone will.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p><strong>Many methods exist to correct for multiplicity.</strong> In this unit, we’ll investigate a couple of these methods.</p>
+<p>To start, let’s apply one of the most popular procedures to correct for multiplicity: <a href="https://en.wikipedia.org/wiki/Bonferroni_correction"><strong>the Bonferroni correction</strong></a>.</p>
+<p>The Bonferroni correction reduces the Type I error rate by dividing the desired overall significance level (<span class="math inline">\(\alpha\)</span>) by the number of tests performed (call it <span class="math inline">\(m\)</span>). For example, if a trial is testing <span class="math inline">\(m = 20\)</span> hypotheses with a desired overall <span class="math inline">\(\alpha = 0.05\)</span>, then the Bonferroni correction would test each individual hypothesis at <span class="math inline">\(\alpha = 0.05/20 = 0.0025\)</span>.</p>
+<p>The Bonferroni test is considered conservative because it adjusts the significance level <span class="math inline">\(\alpha\)</span> by dividing it by the number of comparisons. Doing so reduces the risk of Type I errors (false positives) but increases the likelihood of false negatives (i.e., incorrectly labeling a significant relationship as not significant).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Compute the Bonferroni correction using our desired overall significance level (<code>\alpha = 0.05</code>) and the number of tests performed.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-bonferroni-correction">
+<input type="radio" name="answer_bonferroni_correction" value="incorrect1"> <code>0.05 * 20000 = 1000</code><br> <input type="radio" name="answer_bonferroni_correction" value="incorrect2"> <code>0.05 / 1000 = 0.00005</code><br> <input type="radio" name="answer_bonferroni_correction" value="correct"> <code>0.05 / 20000 = 0.0000025</code><br> <input type="radio" name="answer_bonferroni_correction" value="incorrect3"> <code>20000 / 0.05 = 400000</code><br><br> <button type="button" onclick="checkAnswerBonferroniCorrection()">Submit</button>
+</form>
+<p id="feedback_bonferroni_correction">
+</p>
+<script>
+function checkAnswerBonferroniCorrection() {
+    var selected = document.querySelector('input[name="answer_bonferroni_correction"]:checked');
+    var feedback = document.getElementById("feedback_bonferroni_correction");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The Bonferroni correction is `0.05 / 20000 = 0.0000025`. Using this correction, we declare associations significant only if `p < 0.0000025`.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. For the Bonferroni correction, you divide the overall significance level by the number of tests. You do not multiply them.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. This uses the wrong number of tests. The Bonferroni correction divides `0.05` by all `20000` tests.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. The Bonferroni correction divides the significance level by the number of tests, not the other way around.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>Let’s apply the Bonferroni correction to our matrix of p-values (<code>p</code>) and determine the number of significant associations, after correcting for multiplicity.</p>
+<div id="b49e0d46-2484-45a2-850c-8db55fd577c9" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(p <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">/</span><span class="dv">20000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>0</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpret this result. What do you conclude about the data?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-bonferroni-result">
+<input type="radio" name="answer_bonferroni_result" value="incorrect1"> Of the 20,000 possible associations, we detect 1043 significant associations after applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="incorrect2"> Of the 20,000 possible associations, we detect 0 associations before applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="correct"> Of the 20,000 possible associations between spikes and signals, we detect 0 associations with <code>p &lt; 0.05</code> after applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="incorrect3"> Of the 20,000 possible associations, all of them are truly meaningful.<br><br> <button type="button" onclick="checkAnswerBonferroniResult()">Submit</button>
+</form>
+<p id="feedback_bonferroni_result">
+</p>
+<script>
+function checkAnswerBonferroniResult() {
+    var selected = document.querySelector('input[name="answer_bonferroni_result"]:checked');
+    var feedback = document.getElementById("feedback_bonferroni_result");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! After applying the Bonferroni correction, we detect 0 associations. This suggests that the apparent spike-signal associations do not survive correction for multiple comparisons. In other words, rat brains are not associated with stock prices or positions in these data.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. After applying the Bonferroni correction, we detect 0 associations, not 1043.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. The key point is what happens after applying the Bonferroni correction: no associations remain significant.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. The Bonferroni-corrected result suggests the opposite: none of the associations remain significant.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="alert alert-block alert-danger">
+<p><b>Alert: Wait, this doesn’t make sense!</b></p>
+<p></p>
+<ul>
+<li><p>Much work (including <a href="https://www.nature.com/articles/514153a">Noble Prize work</a>) has established a relationship between rat neuron spiking and rodent position.</p></li>
+<li><p>We’ve identified all associations with p&lt;0.05 after Bonferroni correction … and there aren’t any.</p></li>
+<li><p>Is that the right choice?</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="rat-brains-either-predict-many-things-or-no-things" class="level1">
+<h1>5- Rat brains either predict many things or no things?</h1>
+<p>We’ve applied two strategies to confront multiplicity in our analysis:</p>
+<ul>
+<li>Do nothing (Unit 3)</li>
+<li>Bonferroni correction (Unit 4)</li>
+</ul>
+<p>The two strategies give completely different results. Either neurons in the rat brain spike with many associations to observed signals (Unit 3) or no associations (Unit 4). And, neither result makes sense when compared to the <a href="https://www.nature.com/articles/514153a">existing</a> <a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">literature</a>. <strong>So, now what?</strong></p>
+<p>Again, many strategies exist to correct for multiplicity. There’s no single “right” approach.</p>
+<ul>
+<li><p>Our first approach (do nothing) is too lenient - we allow two many false positives. And, in doing so, we draw a ridiculous scientific conclusion: action potentials in the rat brain predict prices on the stock market.</p></li>
+<li><p>Our second approach (Bonferroni correction) is too strict - we allow too few false positives. And, in doing so, we find no evidence for a well-established scientific conclusion: action potentials in the rat brain encode the rodent’s position.</p></li>
+</ul>
+<p>Perhaps we can find an intermediate approach, that allows neither too many nor too few false positives …</p>
+<p>In what follows, you can explore alternatives to our choices above, and see how these choices to address multiplicity impact your results.</p>
+</section>
+<section id="choose-your-own-adventure" class="level1">
+<h1>Choose your own adventure!</h1>
+<ul>
+<li>False Discovery Rate or FDR (go to Unit 6)</li>
+<li>Split the data (go to Unit 7)</li>
+</ul>
+</section>
+<section id="fdr-a-less-conservative-approach-to-multiplicity." class="level1">
+<h1>6- FDR: a less conservative approach to multiplicity.</h1>
+<p>You’ve chosen one approach to mitigate the impact of performing multiple statistical tests: calculate the False Discovery Rate (FDR).</p>
+<p>To do so, we’ll use the <a href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x">Benjamini-Hochberg (BH) procedure</a>. The BH procedure is a statistical method to control the false discovery rate (FDR) in multiple hypothesis testing. It ranks the p-values from smallest to largest and compares each to a threshold that increases with rank, defined as <span class="math inline">\((r/m) \cdot q\)</span>, where <span class="math inline">\(r\)</span> is the rank of the p-value (i.e., the p-values position when ordered from smallest to largest), <span class="math inline">\(m\)</span> is the total number of tests, and <span class="math inline">\(q\)</span> is the desired FDR level, which is the expected proportion of false positives among all rejected hypotheses. For example, if <span class="math inline">\(q = 0.05\)</span>, it means that, on average, no more than 5% of the rejected hypotheses are expected to be false positives. This allows for a controlled balance between identifying true effects and limiting false discoveries in multiple hypothesis testing.</p>
+<p>The BH procedure is less conservative than methods like Bonferroni correction, offering more power while maintaining control over the expected proportion of false positives.</p>
+<p>The BH procedure is implemented in three steps:</p>
+<ol type="1">
+<li><p><strong>Assign each p-value a rank</strong>, <span class="math inline">\(r\)</span>, where the smallest p-value has rank <span class="math inline">\(r=1\)</span>, the next smallest has rank <span class="math inline">\(r=2\)</span>, and so on.</p></li>
+<li><p><strong>Calculate the critical value</strong> for each p-value using the formula:</p></li>
+</ol>
+<p><span class="math inline">\(CriticalValue =(r/m) \cdot q\)</span></p>
+<p>where <span class="math inline">\(m\)</span> is the total number of tests, and <span class="math inline">\(q\)</span> is the desired overall significance level (typically 0.05 for 5% FDR).</p>
+<ol start="3" type="1">
+<li><strong>Compare each p-value to its corresponding critical value.</strong> The largest rank, <span class="math inline">\(r\)</span>, for which the p-value is less than or equal to the critical value is considered significant, and all p-values with ranks less than or equal to this <span class="math inline">\(r\)</span> are considered significant. In other words, we reject the null hypothesis for all p-valyes with ranks less than or equal to <span class="math inline">\(r\)</span>.</li>
+</ol>
+<section id="to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." class="level2">
+<h2 class="anchored" data-anchor-id="to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example.">To build some intuition for these steps, let’s start with a simple example.</h2>
+<p>Consider an experiment in which you perform 5 hypothesis tests (<span class="math inline">\(m=5\)</span>) and collect 5 p-values:</p>
+<p><code>p-value: [0.1, 0.12, 0.001, 0.03, 0.045]</code></p>
+<p>We conducted 5 tests, and decide to correct for multiplicity.</p>
+<p>Let’s use the p-values to perform each step of the Benjamini-Hochberg procedure.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+To start, order the p-values from smallest to largest.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-order-pvalues">
+<input type="radio" name="answer_order_pvalues" value="incorrect1"> <code>[0.12, 0.1, 0.045, 0.015, 0.001]</code><br> <input type="radio" name="answer_order_pvalues" value="incorrect2"> <code>[0.001, 0.045, 0.015, 0.1, 0.12]</code><br> <input type="radio" name="answer_order_pvalues" value="correct"> <code>[0.001, 0.015, 0.045, 0.1, 0.12]</code><br> <input type="radio" name="answer_order_pvalues" value="incorrect3"> <code>[0.015, 0.001, 0.045, 0.12, 0.1]</code><br><br> <button type="button" onclick="checkAnswerOrderPvalues()">Submit</button>
+</form>
+<p id="feedback_order_pvalues">
+</p>
+<script>
+function checkAnswerOrderPvalues() {
+    var selected = document.querySelector('input[name="answer_order_pvalues"]:checked');
+    var feedback = document.getElementById("feedback_order_pvalues");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! From smallest to largest, the p-values are `[0.001, 0.015, 0.045, 0.1, 0.12]`.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. That list is ordered from largest to smallest, not smallest to largest.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. `0.015` should come before `0.045`.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. `0.001` is the smallest p-value, so it should come first. Also, `0.1` should come before `0.12`.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Then, perform Step 1. <strong>Assign each p-value a rank</strong>.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-rank-pvalues">
+<input type="radio" name="answer_rank_pvalues" value="incorrect1"> <code>0.001, r = 5</code> ; <code>0.015, r = 4</code> ; <code>0.045, r = 3</code> ; <code>0.1, r = 2</code> ; <code>0.12, r = 1</code><br> <input type="radio" name="answer_rank_pvalues" value="correct"> <code>0.001, r = 1</code> ; <code>0.015, r = 2</code> ; <code>0.045, r = 3</code> ; <code>0.1, r = 4</code> ; <code>0.12, r = 5</code><br> <input type="radio" name="answer_rank_pvalues" value="incorrect2"> <code>0.001, r = 1</code> ; <code>0.015, r = 3</code> ; <code>0.045, r = 2</code> ; <code>0.1, r = 4</code> ; <code>0.12, r = 5</code><br> <input type="radio" name="answer_rank_pvalues" value="incorrect3"> <code>0.001, r = 2</code> ; <code>0.015, r = 1</code> ; <code>0.045, r = 3</code> ; <code>0.1, r = 5</code> ; <code>0.12, r = 4</code><br><br> <button type="button" onclick="checkAnswerRankPvalues()">Submit</button>
+</form>
+<p id="feedback_rank_pvalues">
+</p>
+<script>
+function checkAnswerRankPvalues() {
+    var selected = document.querySelector('input[name="answer_rank_pvalues"]:checked');
+    var feedback = document.getElementById("feedback_rank_pvalues");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! After ordering the p-values from smallest to largest, the ranks are assigned in order: `0.001 → r = 1`, `0.015 → r = 2`, `0.045 → r = 3`, `0.1 → r = 4`, and `0.12 → r = 5`.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. The smallest p-value should get rank 1, not rank 5.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. `0.015` is smaller than `0.045`, so it should have the smaller rank.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. The ranks should follow the sorted order from smallest p-value to largest p-value.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Next, perform Step 2. <strong>Calculate the critical value</strong>.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-critical-values">
+<input type="radio" name="answer_critical_values" value="incorrect1"> Rank 1: <code>0.05</code>, Rank 2: <code>0.04</code>, Rank 3: <code>0.03</code>, Rank 4: <code>0.02</code>, Rank 5: <code>0.01</code><br> <input type="radio" name="answer_critical_values" value="incorrect2"> Rank 1: <code>0.002</code>, Rank 2: <code>0.004</code>, Rank 3: <code>0.006</code>, Rank 4: <code>0.008</code>, Rank 5: <code>0.01</code><br> <input type="radio" name="answer_critical_values" value="correct"> Rank 1: <code>(1/5)*0.05 = 0.01</code>, Rank 2: <code>(2/5)*0.05 = 0.02</code>, Rank 3: <code>(3/5)*0.05 = 0.03</code>, Rank 4: <code>(4/5)*0.05 = 0.04</code>, Rank 5: <code>(5/5)*0.05 = 0.05</code><br> <input type="radio" name="answer_critical_values" value="incorrect3"> Rank 1: <code>0.05/1 = 0.05</code>, Rank 2: <code>0.05/2 = 0.025</code>, Rank 3: <code>0.05/3 = 0.0167</code>, Rank 4: <code>0.05/4 = 0.0125</code>, Rank 5: <code>0.05/5 = 0.01</code><br><br> <button type="button" onclick="checkAnswerCriticalValues()">Submit</button>
+</form>
+<p id="feedback_critical_values">
+</p>
+<script>
+function checkAnswerCriticalValues() {
+    var selected = document.querySelector('input[name="answer_critical_values"]:checked');
+    var feedback = document.getElementById("feedback_critical_values");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Using the formula `(r / m) * q` with `m = 5` and `q = 0.05`, the critical values are `0.01`, `0.02`, `0.03`, `0.04`, and `0.05` for ranks 1 through 5.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Those values are in reverse order. In the Benjamini-Hochberg procedure, the critical value increases with rank.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. Those values are too small. Using `(r / 5) * 0.05`, the first critical value is `0.01`, not `0.002`.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. That divides `0.05` by the rank, but the correct formula is `(r / m) * q`, where `m = 5` and `q = 0.05`.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Perform Step 3. <strong>Compare each p-value to its corresponding critical value.</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-compare-pvalues">
+<input type="radio" name="answer_compare_pvalues" value="incorrect1"> <code>0.001</code>, <code>0.015</code>, and <code>0.045</code> are significant because they are all less than <code>0.05</code>.<br> <input type="radio" name="answer_compare_pvalues" value="correct"> <code>0.001</code> and <code>0.015</code> are significant, but <code>0.045</code>, <code>0.1</code>, and <code>0.12</code> are not significant.<br> <input type="radio" name="answer_compare_pvalues" value="incorrect2"> Only <code>0.001</code> is significant; all other p-values are not significant.<br> <input type="radio" name="answer_compare_pvalues" value="incorrect3"> All five p-values are significant because each one has a matching critical value.<br><br> <button type="button" onclick="checkAnswerComparePvalues()">Submit</button>
+</form>
+<p id="feedback_compare_pvalues">
+</p>
+<script>
+function checkAnswerComparePvalues() {
+    var selected = document.querySelector('input[name="answer_compare_pvalues"]:checked');
+    var feedback = document.getElementById("feedback_compare_pvalues");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Comparing each p-value to its Benjamini-Hochberg critical value shows that `0.001 < 0.01` and `0.015 < 0.02`, so those two are significant. The others are larger than their corresponding critical values, so they are not significant.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. In this step, each p-value must be compared to its own critical value, not just to `0.05`. Since `0.045 > 0.03`, it is not significant here.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. Both `0.001 < 0.01` and `0.015 < 0.02`, so the first two p-values are significant.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. A p-value is significant only if it is less than its corresponding critical value. That is true only for `0.001` and `0.015` in this example.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+In this illustrative example, we found two p-values are considered significant using the FDR procedure. What would you find if you instead used a <strong>Bonferroni correction</strong>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-bonferroni-vs-fdr">
+<input type="radio" name="answer_bonferroni_vs_fdr" value="incorrect1"> The same two p-values, <code>0.001</code> and <code>0.015</code>, would still be significant.<br> <input type="radio" name="answer_bonferroni_vs_fdr" value="correct"> Only one p-value, <code>0.001</code>, would be significant under a Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_vs_fdr" value="incorrect2"> None of the p-values would be significant under a Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_vs_fdr" value="incorrect3"> All five p-values would be significant because they were already ranked in order.<br><br> <button type="button" onclick="checkAnswerBonferroniVsFdr()">Submit</button>
+</form>
+<p id="feedback_bonferroni_vs_fdr">
+</p>
+<script>
+function checkAnswerBonferroniVsFdr() {
+    var selected = document.querySelector('input[name="answer_bonferroni_vs_fdr"]:checked');
+    var feedback = document.getElementById("feedback_bonferroni_vs_fdr");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Under a Bonferroni correction, the threshold is `0.05 / 5 = 0.01` for every comparison. Only `0.001` is less than `0.01`, so only that p-value remains significant.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Bonferroni is more stringent than FDR here. With the Bonferroni threshold of `0.01`, `0.015` is no longer significant.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. One p-value does survive: `0.001 < 0.01`.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. Ranking the p-values does not make them all significant. Under Bonferroni, each p-value is compared to the same threshold, `0.01`.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>Now, having built some intuition for computing the FDR using the Benjamini-Hochberg (BH) procedure, let’s apply it to our data of interest.</p>
+<p>It’s the same idea, but instead of considering 5 p-values, we must consider the 20,000 p-values.</p>
+<div id="5b69b131-76b4-4e45-a470-53645b08535a" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p_values_signficant_after_FDR <span class="op">=</span> fdr(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The function <code>fdr</code> returns whether each p-value in <code>p</code> remains signficant after correcting for multiplicity using FDR.</p>
+<p>Let’s display the p-values that remain significant after correcting for multiplicity using FDR:</p>
+<div id="a6df5236-c13a-4208-b360-bc55fbced814" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">8</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(p_values_signficant_after_FDR)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Neuron number'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Signal number'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="METER_Exploratory-Quarto_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Examine the figure above. Do you see any dots, indicating significant relationships between neurons and signals after correcting for multiplicity using FDR?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-fdr-dots-pattern">
+<input type="radio" name="answer_fdr_dots_pattern" value="incorrect1"> No, there are no dots indicating significant relationships after FDR correction.<br> <input type="radio" name="answer_fdr_dots_pattern" value="incorrect2"> There is one dot, and it is located at a single neuron-signal pair.<br> <input type="radio" name="answer_fdr_dots_pattern" value="correct"> There are multiple dots. They are concentrated between signals 0 and 10, and are scattered across neurons.<br> <input type="radio" name="answer_fdr_dots_pattern" value="incorrect3"> The dots are evenly spread across all signals and all neurons.<br><br> <button type="button" onclick="checkAnswerFdrDotsPattern()">Submit</button>
+</form>
+<p id="feedback_fdr_dots_pattern">
+</p>
+<script>
+function checkAnswerFdrDotsPattern() {
+    var selected = document.querySelector('input[name="answer_fdr_dots_pattern"]:checked');
+    var feedback = document.getElementById("feedback_fdr_dots_pattern");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! There are multiple dots, concentrated between signals 0 and 10, and they are scattered across neurons.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. There are multiple dots indicating significant relationships after FDR correction.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. There is more than one dot, and the pattern is spread across multiple neurons.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. The dots are not evenly spread across all signals. They are concentrated between signals 0 and 10.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><em>Interpretation</em>:</p>
+<ul>
+<li><p>We originally corrected for multiplicity using the Bonferroni correction. Following this strict correction, we found no evidence of significanet associations <code>spikes</code> and <code>signals</code>.</p></li>
+<li><p>After correcting for multiplicity using FDR, we now find some neurons in the rat brain are associated with the some signals.</p></li>
+<li><p>We return to our collaborators and they confirm that Signals 0-10 corresponds to different measures of the rodent’s position and direction.</p></li>
+</ul>
+</div>
+<div class="alert alert-block alert-info">
+<p><em>Relief</em></p>
+<ul>
+<li><p>We’ve corrected for multiple comparisons using FDR and find a sensible result.</p></li>
+<li><p>The results are consistent with the existing theory that neuron’s in the brain encode rodent position.</p></li>
+<li><p>We find no evidence that neurons in the rodent brain predict stock market prices.</p></li>
+<li><p>Using a less strict correction (FDR instead of Bonferroni) we identify significant associations in the data.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="split-your-data-to-test-your-conclusions." class="level1">
+<h1>7- Split your data to test your conclusions.</h1>
+<p>(Pending: describe how you can split your data in half to test your conclusions. You take the first half of your data and epxlore. Find the significant relationships. Then test those relationships in the second half.</p>
+<p>(Use first half of data, in time)</p>
+<div id="db00d1b5-562b-4560-8ba9-8ae1a45c4e90" class="cell" data-execution_count="25">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> np.shape(spikes)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>p_split <span class="op">=</span> compute_p_values(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:], signals[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████| 100/100 [00:24&lt;00:00,  4.15it/s]</code></pre>
+</div>
+</div>
+<p>(Find candidate significant associations)</p>
+<div id="50dde2d1-ceb5-4fb8-94d0-b726ed5e2e1a" class="cell" data-execution_count="27">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>np.shape(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>)<span class="op">-</span><span class="dv">1</span>,:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>(249, 200)</code></pre>
+</div>
+</div>
+<div id="bfd58ec8-fa9a-4ffb-b878-b376e7b635f4" class="cell" data-execution_count="38">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<pre><code>array([[2.76298342e-01, 1.93779483e-01, 3.21559511e-01, ...,
+        5.83579451e-01, 4.55213251e-01, 9.67559263e-01],
+       [7.13627427e-01, 1.96871382e-01, 1.37859754e-01, ...,
+        2.29391494e-01, 4.87550873e-01, 2.44911587e-01],
+       [9.20386735e-01, 3.49294902e-01, 5.57160646e-01, ...,
+        1.25762463e-04, 1.62009782e-03, 5.99855458e-01],
+       ...,
+       [2.06981589e-02, 1.48315904e-01, 6.60448601e-01, ...,
+        4.58320683e-01, 6.51190811e-01, 9.48354359e-02],
+       [4.33764831e-01, 3.73249555e-01, 6.59935926e-01, ...,
+        1.64988870e-01, 7.00656464e-01, 1.22953709e-01],
+       [7.46086224e-01, 7.70883112e-02, 4.26626802e-01, ...,
+        1.86698612e-01, 8.32739797e-01, 9.30276589e-01]])</code></pre>
+</div>
+</div>
+<div id="e7611a7f-6a39-46b5-91d1-ecc5bd06c17c" class="cell" data-execution_count="41">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>candidate_significant_pairs <span class="op">=</span> (p_split<span class="op">&lt;</span><span class="fl">0.05</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(candidate_significant_pairs.flatten()))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>[i_signals,i_spikes] <span class="op">=</span> np.where(candidate_significant_pairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>981</code></pre>
+</div>
+</div>
+<p>(Test these predicted associations in the second half of data)</p>
+<div id="c2d65bc1-7ca9-4485-b63e-cb854edd5e98" class="cell" data-execution_count="42">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p_test <span class="op">=</span> np.zeros(np.shape(i_signals))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, element <span class="kw">in</span> <span class="bu">enumerate</span>(i_signals):</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> signals[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_signals[index]]       <span class="co"># Predictor variable</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> spikes[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_spikes[index]]        <span class="co"># Response variable</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(X)  <span class="co"># Adding a constant column for the intercept</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    glm_model <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    glm_results <span class="op">=</span> glm_model.fit()</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    p_test[index] <span class="op">=</span> glm_results.pvalues[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>(Identify significant associations)</p>
+<div id="07ee72b6-8928-43e7-9f87-75426fd1c4a2" class="cell" data-execution_count="37">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>i0 <span class="op">=</span> np.where(p_test<span class="op">&lt;</span><span class="fl">0.05</span><span class="op">/</span>np.size(i_signals))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Signal'</span>, i_signals[i0], <span class="st">', Spike'</span>, i_spikes[i0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Signal [] , Spike []</code></pre>
+</div>
+</div>
+<div id="8374bb32-367f-4894-a4a0-ff2ad6c0dfe4" class="cell" data-execution_count="31">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>np.size(i_signals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>981</code></pre>
+</div>
+</div>
+<div id="8b4327e1-2afc-4d5d-8d2b-17c31de53312" class="cell" data-execution_count="35">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>i_spikes[index]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>189</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

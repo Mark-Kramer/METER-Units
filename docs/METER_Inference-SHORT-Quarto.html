@@ -1,0 +1,2658 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Evaluate your evaluation methods! A key to meaningful inference. – BU METER</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+<style type="text/css">
+.monaco-editor pre {
+  background-color: unset !important;
+}
+
+.qpyodide-editor-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.qpyodide-editor-toolbar-left-buttons, .qpyodide-editor-toolbar-right-buttons {
+  display: flex;
+}
+
+.qpyodide-non-interactive-loading-container.qpyodide-cell-needs-evaluation, .qpyodide-non-interactive-loading-container.qpyodide-cell-evaluated {
+  justify-content: center;
+  display: flex;
+  background-color: rgba(250, 250, 250, 0.65);
+  border: 1px solid rgba(233, 236, 239, 0.65);
+  border-radius: 0.5rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.qpyodide-r-project-logo {
+  color: #2767B0; /* R Project's blue color */
+}
+
+.qpyodide-icon-status-spinner {
+  color: #7894c4;
+}
+
+.qpyodide-icon-run-code {
+  color: #0d9c29
+}
+
+.qpyodide-output-code-stdout {
+  color: #111;
+}
+
+.qpyodide-output-code-stderr {
+  color: #db4133;
+}
+
+.qpyodide-editor {
+  border: 1px solid #EEEEEE;
+}
+
+.qpyodide-editor-toolbar {
+  background-color: #EEEEEE;
+  padding: 0.2rem 0.5rem;
+}
+
+.qpyodide-button {
+  background-color: #EEEEEE;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  text-align: center;
+  color: #000;
+  border-color: #dee2e6;
+  border: 1px solid rgba(0,0,0,0);
+  padding: 0.375rem 0.75rem;
+  font-size: .9rem;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.qpyodide-button:hover {
+  color: #000;
+  background-color: #d9dce0;
+  border-color: #c8ccd0;
+}
+
+.qpyodide-button:disabled,.qpyodide-button.disabled,fieldset:disabled .qpyodide-button {
+  pointer-events: none;
+  opacity: .65
+}
+
+.qpyodide-button-reset {
+  color: #696969; /*#4682b4;*/
+}
+
+.qpyodide-button-copy {
+  color: #696969;
+}
+
+
+/* Custom styling for RevealJS Presentations*/
+
+/* Reset the style of the interactive area */
+.reveal div.qpyodide-interactive-area {
+  display: block;
+  box-shadow: none;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+} 
+
+/* Provide space to entries */
+.reveal div.qpyodide-output-code-area pre div {
+  margin: 1px 2px 1px 10px;
+}
+
+/* Collapse the inside code tags to avoid extra space between line outputs */
+.reveal pre div code.qpyodide-output-code-stdout, .reveal pre div code.qpyodide-output-code-stderr {
+  padding: 0;
+  display: contents;
+}
+
+.reveal pre div code.qpyodide-output-code-stdout {
+  color: #111;
+}
+
+.reveal pre div code.qpyodide-output-code-stderr {
+  color: #db4133;
+}
+
+
+/* Create a border around console and output (does not effect graphs) */
+.reveal div.qpyodide-console-area {
+  border: 1px solid #EEEEEE;
+  box-shadow: 2px 2px 10px #EEEEEE;
+}
+
+/* Cap output height and allow text to scroll */
+/* TODO: Is there a better way to fit contents/max it parallel to the monaco editor size? */
+.reveal div.qpyodide-output-code-area pre {
+  max-height: 400px;
+  overflow: scroll;
+}
+</style>
+<script type="module">
+// Document level settings ----
+
+// Determine if we need to install python packages
+globalThis.qpyodideInstallPythonPackagesList = [''];
+
+// Check to see if we have an empty array, if we do set to skip the installation.
+globalThis.qpyodideSetupPythonPackages = !(qpyodideInstallPythonPackagesList.indexOf("") !== -1);
+
+// Display a startup message?
+globalThis.qpyodideShowStartupMessage = true;
+
+// Describe the webR settings that should be used
+globalThis.qpyodideCustomizedPyodideOptions = {
+  "indexURL": "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/",
+  "env": {
+    "HOME": "/home/pyodide",
+  }, 
+  stdout: (text) => {qpyodideAddToOutputArray(text, "out");},
+  stderr: (text) => {qpyodideAddToOutputArray(text, "error");}
+}
+
+// Store cell data
+globalThis.qpyodideCellDetails = [{"id":1,"code":"# Load modules\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.stats import pearsonr\nimport statsmodels.api as sm\n#await micropip.install(\"cartopy\")\nimport cartopy.crs as ccrs\nimport cartopy.feature as cfeature\n# Load custom functions\nimport requests\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/inference_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\n\nswim_lessons, drownings, x,y = load_data()","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":2,"code":"# Plot the data.\nplt.figure()\nplt.figure(figsize=(8, 5))\nplt.scatter(swim_lessons, drownings)\nplt.xlabel('Swim Lessons')\nplt.ylabel('Drownings')\nplt.show()","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":3,"code":"plot_spatial_coordinates(x, y, np.zeros(np.size(x)))","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":4,"code":"m, m_standard_error = estimate_line(swim_lessons, drownings)\nprint('m=',round(m,4))\nprint('standard_error=',round(m_standard_error,4))","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":5,"code":"plot_line(swim_lessons, drownings)","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":6,"code":"plot_line(swim_lessons, drownings)","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":7,"code":"plot_line_with_residuals(swim_lessons, drownings)\nplt.xlim([400, 500])","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":8,"code":"residuals = compute_residuals_2d(swim_lessons, drownings)\nplt.figure(figsize=(10, 5))\nplt.plot(residuals, '*')\nplt.xlabel('Index')\nplt.ylabel('Residuals')\nplt.show()","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":9,"code":"plt.figure(figsize=(10, 5))\nplt.scatter(swim_lessons, residuals)\nplt.xlabel('Number of swim lessons')\nplt.ylabel('Model residuals');\nplt.show()","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":10,"code":"plot_spatial_coordinates(x, y, residuals)","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":11,"code":"residuals = compute_residuals_2d(swim_lessons, drownings)\nplot_spatial_coordinates(x, y, residuals)","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":12,"code":"# Load the data with new the variable.\nswim_lessons, drownings, x,y, distance_from_ocean = load_more_data()","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":13,"code":"# Plot the data in 3-dimensions.\nfig = plt.figure()\nax  = fig.add_subplot(111, projection='3d')\nax.scatter(swim_lessons, distance_from_ocean, drownings)\nax.set_xlabel('Swim lessons')\nax.set_ylabel('Distance from ocean')\nax.set_zlabel('Drownings')\nplt.show()","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":14,"code":"m1, m1_standard_error, m2, m2_standard_error = estimate_plane(swim_lessons, drownings, distance_from_ocean)\nprint('Swim Lessons:')\nprint('m1=',round(m1,4))\nprint('standard_error=',round(m1_standard_error,4))\nprint('Distance from Ocean:')\nprint('m2=',round(m2,4))\nprint('standard_error=',round(m2_standard_error,4))","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":15,"code":"plot_plane(swim_lessons, drownings, distance_from_ocean)","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":16,"code":"residuals = compute_residuals_3d(swim_lessons, drownings, distance_from_ocean)\nplt.figure(figsize=(10, 5))\nplt.scatter(swim_lessons, residuals)\nplt.xlabel('Number of swim lessons')\nplt.ylabel('Model residuals');\nplt.show()","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}},{"id":17,"code":"plot_spatial_coordinates(x, y, residuals)","options":{"read-only":"false","dpi":72,"results":"markup","label":"","fig-height":5,"fig-cap":"","message":"true","fig-width":7,"comment":"","context":"interactive","output":"true","autorun":"","classes":"","out-width":"700px","out-height":"","warning":"true"}}];
+
+
+</script>
+<script type="module">
+// Declare startupMessageqpyodide globally
+globalThis.qpyodideStartupMessage = document.createElement("p");
+
+// Function to set the button text
+globalThis.qpyodideSetInteractiveButtonState = function(buttonText, enableCodeButton = true) {
+  document.querySelectorAll(".qpyodide-button-run").forEach((btn) => {
+    btn.innerHTML = buttonText;
+    btn.disabled = !enableCodeButton;
+  });
+}
+
+// Function to update the status message in non-interactive cells
+globalThis.qpyodideUpdateStatusMessage = function(message) {
+  document.querySelectorAll(".qpyodide-status-text.qpyodide-cell-needs-evaluation").forEach((elem) => {
+    elem.innerText = message;
+  });
+}
+
+// Function to update the status message
+globalThis.qpyodideUpdateStatusHeader = function(message) {
+
+  if (!qpyodideShowStartupMessage) return;
+
+  qpyodideStartupMessage.innerHTML = message;
+}
+
+// Status header update with customized spinner message
+globalThis.qpyodideUpdateStatusHeaderSpinner = function(message) {
+
+  qpyodideUpdateStatusHeader(`
+    <i class="fa-solid fa-spinner fa-spin qpyodide-icon-status-spinner"></i>
+    <span>${message}</span>
+  `);
+}
+
+
+// Function that attaches the document status message
+function qpyodideDisplayStartupMessage(showStartupMessage) {
+  if (!showStartupMessage) {
+    return;
+  }
+
+  // Get references to header elements
+  const headerHTML = document.getElementById("title-block-header");
+  const headerRevealJS = document.getElementById("title-slide");
+
+  // Create the outermost div element for metadata
+  const quartoTitleMeta = document.createElement("div");
+  quartoTitleMeta.classList.add("quarto-title-meta");
+
+  // Create the first inner div element
+  const firstInnerDiv = document.createElement("div");
+  firstInnerDiv.setAttribute("id", "qpyodide-status-message-area");
+
+  // Create the second inner div element for "Pyodide Status" heading and contents
+  const secondInnerDiv = document.createElement("div");
+  secondInnerDiv.setAttribute("id", "qpyodide-status-message-title");
+  secondInnerDiv.classList.add("quarto-title-meta-heading");
+  secondInnerDiv.innerText = "Pyodide Status";
+
+  // Create another inner div for contents
+  const secondInnerDivContents = document.createElement("div");
+  secondInnerDivContents.setAttribute("id", "qpyodide-status-message-body");
+  secondInnerDivContents.classList.add("quarto-title-meta-contents");
+
+  // Describe the Pyodide state
+  qpyodideStartupMessage.innerText = "🟡 Loading...";
+  qpyodideStartupMessage.setAttribute("id", "qpyodide-status-message-text");
+  // Add `aria-live` to auto-announce the startup status to screen readers
+  qpyodideStartupMessage.setAttribute("aria-live", "assertive");
+
+  // Append the startup message to the contents
+  secondInnerDivContents.appendChild(qpyodideStartupMessage);
+
+  // Combine the inner divs and contents
+  firstInnerDiv.appendChild(secondInnerDiv);
+  firstInnerDiv.appendChild(secondInnerDivContents);
+  quartoTitleMeta.appendChild(firstInnerDiv);
+
+  // Determine where to insert the quartoTitleMeta element
+  if (headerHTML || headerRevealJS) {
+    // Append to the existing "title-block-header" element or "title-slide" div
+    (headerHTML || headerRevealJS).appendChild(quartoTitleMeta);
+  } else {
+    // If neither headerHTML nor headerRevealJS is found, insert after "Pyodide-monaco-editor-init" script
+    const monacoScript = document.getElementById("qpyodide-monaco-editor-init");
+    const header = document.createElement("header");
+    header.setAttribute("id", "title-block-header");
+    header.appendChild(quartoTitleMeta);
+    monacoScript.after(header);
+  }
+}
+
+qpyodideDisplayStartupMessage(qpyodideShowStartupMessage);
+</script>
+<script type="module">
+// Create a logging setup
+globalThis.qpyodideMessageArray = []
+
+// Add messages to array
+globalThis.qpyodideAddToOutputArray = function(message, type) {
+  qpyodideMessageArray.push({ message, type });
+}
+
+// Function to reset the output array
+globalThis.qpyodideResetOutputArray = function() {
+  qpyodideMessageArray = [];
+}
+
+globalThis.qpyodideRetrieveOutput = function() {
+  return qpyodideMessageArray.map(entry => entry.message).join('\n');
+}
+
+// Start a timer
+const initializePyodideTimerStart = performance.now();
+
+// Encase with a dynamic import statement
+globalThis.qpyodideInstance = await import(
+  qpyodideCustomizedPyodideOptions.indexURL + "pyodide.mjs").then(
+   async({ loadPyodide }) => {
+
+    console.log("Start loading Pyodide");
+    
+    // Populate Pyodide options with defaults or new values based on `pyodide`` meta
+    let mainPyodide = await loadPyodide(
+      qpyodideCustomizedPyodideOptions
+    );
+    
+    // Setup a namespace for global scoping
+    // await loadedPyodide.runPythonAsync("globalScope = {}"); 
+    
+    // Update status to reflect the next stage of the procedure
+    qpyodideUpdateStatusHeaderSpinner("Initializing Python Packages");
+
+    // Load the `micropip` package to allow installation of packages.
+    await mainPyodide.loadPackage("micropip");
+    await mainPyodide.runPythonAsync(`import micropip`);
+
+    // Load the `pyodide_http` package to shim uses of `requests` and `urllib3`.
+    // This allows for `pd.read_csv(url)` to work flawlessly.
+    // Details: https://github.com/coatless-quarto/pyodide/issues/9
+    await mainPyodide.loadPackage("pyodide_http");
+    await mainPyodide.runPythonAsync(`
+    import pyodide_http
+    pyodide_http.patch_all()  # Patch all libraries
+    `);
+
+    // Load the `matplotlib` package with necessary environment hook
+    await mainPyodide.loadPackage("matplotlib");
+
+    // Set the backend for matplotlib to be interactive.
+    await mainPyodide.runPythonAsync(`
+    import matplotlib
+    matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")
+    from matplotlib import pyplot as plt
+    `);
+
+    // Unlock interactive buttons
+    qpyodideSetInteractiveButtonState(
+      `<i class="fa-solid fa-play qpyodide-icon-run-code"></i> <span>Run Code</span>`, 
+      true
+    );
+
+    // Set document status to viable
+    qpyodideUpdateStatusHeader(
+      "🟢 Ready!"
+    );
+
+    // Assign Pyodide into the global environment
+    globalThis.mainPyodide = mainPyodide;
+
+    console.log("Completed loading Pyodide");
+    return mainPyodide;
+  }
+);
+
+// Stop timer
+const initializePyodideTimerEnd = performance.now();
+
+// Create a function to retrieve the promise object.
+globalThis._qpyodideGetInstance = function() {
+    return qpyodideInstance;
+}
+
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">BU METER</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./METER_Sample_Size-SHORT-Quarto.html"> 
+<span class="menu-text">Sample Size</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./METER_Inference-SHORT-Quarto.html" aria-current="page"> 
+<span class="menu-text">Inference</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./METER_P_Values-Quarto.html"> 
+<span class="menu-text">P-values</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">1. Introduction</a>
+  <ul class="collapse">
+  <li><a href="#what-is-inference" id="toc-what-is-inference" class="nav-link" data-scroll-target="#what-is-inference">What is Inference?</a></li>
+  <li><a href="#why-is-inference-important" id="toc-why-is-inference-important" class="nav-link" data-scroll-target="#why-is-inference-important">Why is Inference Important?</a></li>
+  <li><a href="#everyday-examples-of-inference" id="toc-everyday-examples-of-inference" class="nav-link" data-scroll-target="#everyday-examples-of-inference">Everyday Examples of Inference</a></li>
+  <li><a href="#so-what-is-inference" id="toc-so-what-is-inference" class="nav-link" data-scroll-target="#so-what-is-inference">So, what is Inference?</a></li>
+  <li><a href="#inference-skills-to-develop" id="toc-inference-skills-to-develop" class="nav-link" data-scroll-target="#inference-skills-to-develop">Inference Skills To Develop</a></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s next?</a></li>
+  </ul></li>
+  <li><a href="#the-data-swim-lessons-versus-drownings." id="toc-the-data-swim-lessons-versus-drownings." class="nav-link" data-scroll-target="#the-data-swim-lessons-versus-drownings.">2. The data: swim lessons versus drownings.</a></li>
+  <li><a href="#make-an-inference-how-do-the-number-of-swim-lessons-relate-to-drownings" id="toc-make-an-inference-how-do-the-number-of-swim-lessons-relate-to-drownings" class="nav-link" data-scroll-target="#make-an-inference-how-do-the-number-of-swim-lessons-relate-to-drownings">3. Make an inference: How do the number of swim lessons relate to drownings?</a>
+  <ul class="collapse">
+  <li><a href="#step-1-choose-a-model-for-the-data." id="toc-step-1-choose-a-model-for-the-data." class="nav-link" data-scroll-target="#step-1-choose-a-model-for-the-data.">Step 1: Choose a model for the data.</a></li>
+  <li><a href="#step-2.-use-the-data-to-infer-model-parameters." id="toc-step-2.-use-the-data-to-infer-model-parameters." class="nav-link" data-scroll-target="#step-2.-use-the-data-to-infer-model-parameters.">Step 2. Use the data to infer model parameters.</a></li>
+  <li><a href="#step-3.-summarize-conclusions." id="toc-step-3.-summarize-conclusions." class="nav-link" data-scroll-target="#step-3.-summarize-conclusions.">Step 3. Summarize conclusions.</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#somethings-not-right-evaluate-your-evaluation-method." id="toc-somethings-not-right-evaluate-your-evaluation-method." class="nav-link" data-scroll-target="#somethings-not-right-evaluate-your-evaluation-method.">4. Something’s not right … evaluate your evaluation method.</a>
+  <ul class="collapse">
+  <li><a href="#residual-analysis" id="toc-residual-analysis" class="nav-link" data-scroll-target="#residual-analysis">Residual Analysis</a></li>
+  <li><a href="#model-refinement-infinite-choice" id="toc-model-refinement-infinite-choice" class="nav-link" data-scroll-target="#model-refinement-infinite-choice">Model Refinement: infinite choice</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
+  </ul></li>
+  <li><a href="#iterate-the-statistical-inference-loop-improve-your-scientific-conclusions-by-improving-your-inference-model." id="toc-iterate-the-statistical-inference-loop-improve-your-scientific-conclusions-by-improving-your-inference-model." class="nav-link" data-scroll-target="#iterate-the-statistical-inference-loop-improve-your-scientific-conclusions-by-improving-your-inference-model.">5. Iterate the statistical inference loop: improve your scientific conclusions by improving your inference model.</a>
+  <ul class="collapse">
+  <li><a href="#step-1-choose-a-model-for-the-data.-1" id="toc-step-1-choose-a-model-for-the-data.-1" class="nav-link" data-scroll-target="#step-1-choose-a-model-for-the-data.-1">Step 1: Choose a model for the data.</a></li>
+  <li><a href="#step-2.-use-the-data-to-infer-model-parameters.-1" id="toc-step-2.-use-the-data-to-infer-model-parameters.-1" class="nav-link" data-scroll-target="#step-2.-use-the-data-to-infer-model-parameters.-1">Step 2. Use the data to infer model parameters.</a></li>
+  <li><a href="#step-3.-check-and-refine-the-model." id="toc-step-3.-check-and-refine-the-model." class="nav-link" data-scroll-target="#step-3.-check-and-refine-the-model.">Step 3. Check and refine the model.</a></li>
+  <li><a href="#step-4.-summarize-conclusions." id="toc-step-4.-summarize-conclusions." class="nav-link" data-scroll-target="#step-4.-summarize-conclusions.">Step 4. Summarize conclusions.</a></li>
+  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1">Summary</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/loader.js"></script>
+<script type="module" id="qpyodide-monaco-editor-init">
+
+  // Configure the Monaco Editor's loader
+  require.config({
+    paths: {
+      'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs'
+    }
+  });
+</script>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Evaluate your evaluation methods! A key to meaningful inference.</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1">
+<h1>1. Introduction</h1>
+<section id="what-is-inference" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-inference">What is Inference?</h3>
+<p>Inference is a fundamental concept in both everyday life and scientific investigation. It is the process of drawing conclusions based on evidence and reasoning. Inference allows us to make predictions, understand relationships, and gain insights from data and observations.</p>
+</section>
+<section id="why-is-inference-important" class="level3">
+<h3 class="anchored" data-anchor-id="why-is-inference-important">Why is Inference Important?</h3>
+<ul>
+<li><p><strong>Decision-Making</strong>: Inference helps us make informed decisions. Whether you’re deciding what to wear based on the weather forecast or determining the best strategy for your experiment, inference plays a crucial role in evaluating options and outcomes.</p></li>
+<li><p><strong>Understanding Brain Function</strong>: Inference helps neuroscientists draw conclusions about brain activity from experimental data, bridging the gap between observed neural signals and underlying brain processes.</p></li>
+<li><p><strong>Clinical Applications</strong>: Inference is essential for diagnosing and treating neurological disorders. By analyzing patient data, clinicians can infer the underlying causes of symptoms and tailor treatments accordingly.</p></li>
+</ul>
+</section>
+<section id="everyday-examples-of-inference" class="level3">
+<h3 class="anchored" data-anchor-id="everyday-examples-of-inference">Everyday Examples of Inference</h3>
+<ul>
+<li><p><strong>Weather Predictions</strong>: Meteorologists use data from satellites, weather stations, and historical patterns to infer future weather conditions. This helps us prepare for what’s coming, whether it’s bringing an umbrella or planning for a sunny day.</p></li>
+<li><p><strong>Medical Diagnoses</strong>: Doctors use symptoms, medical history, and test results to infer the most likely cause of a patient’s condition. This process is critical in providing accurate diagnoses and effective treatments.</p></li>
+<li><p><strong>Electrophysiology</strong>: Recording electrical activity from neurons allows researchers to infer the roles of specific neurons or networks in processing information.</p></li>
+<li><p><strong>Behavioral Studies</strong>: By observing behavior in response to stimuli, neuroscientists infer the neural mechanisms underlying perception, decision-making, and learning.</p></li>
+</ul>
+</section>
+<section id="so-what-is-inference" class="level3">
+<h3 class="anchored" data-anchor-id="so-what-is-inference">So, what is Inference?</h3>
+<ul>
+<li>Here, we focus on <strong>statistical inference</strong> - using data from a sample to make inferences about a population. We will learn to apply statistical inference in this Unit.</li>
+</ul>
+</section>
+<section id="inference-skills-to-develop" class="level3">
+<h3 class="anchored" data-anchor-id="inference-skills-to-develop">Inference Skills To Develop</h3>
+<ul>
+<li><p><strong>Ask Questions</strong>: Cultivate curiosity by asking questions about the world around you. Why did something happen? What might influence this happening? Asking questions leads to deeper understanding and better inference skills.</p></li>
+<li><p><strong>Gather Evidence</strong>: Collect relevant information and data. The more evidence you have, the stronger your inferences will be. Evaluate the quality and reliability of your sources. We can arrive at better conclusions through better data collection.</p></li>
+<li><p><strong>Think Critically</strong>: Analyze the evidence and consider multiple perspectives. Avoid jumping to conclusions without thorough examination. Critical thinking helps in making sound inferences.</p></li>
+</ul>
+</section>
+<section id="whats-next" class="level3">
+<h3 class="anchored" data-anchor-id="whats-next">What’s next?</h3>
+<ul>
+<li><p>In this Unit, we will practice making inferences from from noisy data.</p></li>
+<li><p>To do so, we will use data from a specific example. We will build models from these data to make inferences about a population (i.e., statistical inference).</p></li>
+<li><p>We will think critically about our inference results, ask questions about the interpretation (i.e., check our model), and update our model to improve the inferences we make from the data.</p></li>
+</ul>
+</section>
+</section>
+<section id="the-data-swim-lessons-versus-drownings." class="level1">
+<h1>2. The data: swim lessons versus drownings.</h1>
+<p>You receive data from a community organization interested in understanding the impact of swimming lessons on swim safety. The data consist of the following information from in <code>N = 299</code> communities:</p>
+<ul>
+<li><p><code>swim_lessons</code> - the number of swim lessons in a community,</p></li>
+<li><p><code>drownings</code> - the number of drownings (per 100,000 individuals) in a community,</p></li>
+<li><p><code>x</code>, <code>y</code> - the geographic location (latitude and longitude) of the community,</p></li>
+</ul>
+<div id="qpyodide-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>We’re interested in inferring the relationship (if any) between <code>swim_lessons</code> and <code>drownings</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What relationship do you expect to observe between <code>swim_lessons</code> and <code>drownings</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form">
+<input type="radio" name="answer" value="correct"> I expect drownings to <strong>decrease</strong> as the number of swim lessons increases. <br> <input type="radio" name="answer" value="incorrect"> I expect drownings to <strong>increase</strong> as the number of swim lessons increases. <br><br> <button type="button" onclick="checkAnswer()">Submit</button>
+</form>
+<p id="feedback">
+</p>
+<script>
+function checkAnswer() {
+    var selected = document.querySelector('input[name="answer"]:checked');
+    var feedback = document.getElementById("feedback");
+    
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Swim lessons should help reduce drownings.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. More swim lessons should lead to fewer drownings, not more.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>A very reasonable expectation is that:</p>
+<ul>
+<li><strong>Expectation:</strong> Drownings <em>decrease</em> as the number of swim lessons increase.</li>
+</ul>
+<p>That’s a fine statement.</p>
+<p>However, we’d like to go beyond this qualitative expecation and put some numbers to it.</p>
+<p>For example, does adding 1000 swim lessons to a community (e.g., by providing free programs, by promotion through advertising) reduce the number of drownings by 1, by 10, by 100?</p>
+<p>In what follows, <strong>we’ll infer this expected relationship from the data.</strong></p>
+<p>But before we begin our inference procedure, let’s start by <strong>visualizing the data</strong>.</p>
+<div id="qpyodide-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Look at the data. Do these data match the intuitive expectation that the number of swim lessons influences the number of drownings?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-2">
+<input type="radio" name="answer2" value="incorrect"> Yes, as the number of swim lessons increases, the number of drownings appears to <em>decrease</em>. <br> <input type="radio" name="answer2" value="correct"> No, as the number of swim lessons increases, the number of drownings appears to <em>increase</em>. <br><br> <button type="button" onclick="checkAnswer2()">Submit</button>
+</form>
+<p id="feedback2">
+</p>
+<script>
+function checkAnswer2() {
+    var selected = document.querySelector('input[name="answer2"]:checked');
+    var feedback = document.getElementById("feedback2");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The data suggest that as swim lessons increase, drownings also increase.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. The data actually show an increase in drownings as swim lessons increase.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>We’re provided one additional piece of information: the location (<code>x</code>,<code>y</code>) of each community with reported results.</p>
+<p>Let’s also plot these geographic locations.</p>
+<div id="qpyodide-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What do you observe in the geographic locations of the communities?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-3">
+<input type="radio" name="answer3" value="incorrect1"> All communities are <strong>near</strong> the ocean. <br> <input type="radio" name="answer3" value="incorrect2"> All communities are <strong>far</strong> from the ocean. <br> <input type="radio" name="answer3" value="correct"> Communities are both <strong>near to and far from</strong> the ocean. <br><br> <button type="button" onclick="checkAnswer3()">Submit</button>
+</form>
+<p id="feedback3">
+</p>
+<script>
+function checkAnswer3() {
+    var selected = document.querySelector('input[name="answer3"]:checked');
+    var feedback = document.getElementById("feedback3");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! The communities are located both near to and far from the ocean.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. The communities are not exclusively near or far from the ocean.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="alert alert-block alert-danger">
+<p><strong>NOTE:</strong> Data visualization is often essential to statistical inference:</p>
+<ul>
+<li>We visualize the data to draw conclusions (inferences) about a larger population based on the sample of collected data.</li>
+</ul>
+<p>Here we utilize data visulzation to gain some intuition for the data.</p>
+<p>However, <strong>our focus is statisitcal inference</strong>, as we discuss next.</p>
+</div>
+</section>
+<section id="make-an-inference-how-do-the-number-of-swim-lessons-relate-to-drownings" class="level1">
+<h1>3. Make an inference: How do the number of swim lessons relate to drownings?</h1>
+<p>Now, let’s perform <strong>statistical inference</strong>.</p>
+<p>To start, we’ll perform the following three steps:</p>
+<ol type="1">
+<li>Choose a model for the data.</li>
+<li>Use the data to infer model parameters.</li>
+<li>Summarize conclusions.</li>
+</ol>
+<p>Our initial statistical inference appraoch takes the form (<a href="https://www.routledge.com/Generalized-Linear-Models/McCullagh-Nelder/p/book/9780412317606">McCullagh &amp; Nelder, 1989; page 391</a>):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="IMG_Inference/Inference_Path_1.jpg" class="img-fluid figure-img"></p>
+<figcaption>Initital statistical inference procedure. We start here, but will modify this procedure later.</figcaption>
+</figure>
+</div>
+<p>We’ve already collected the data. Our next step is to choose a model for these data.</p>
+<section id="step-1-choose-a-model-for-the-data." class="level2">
+<h2 class="anchored" data-anchor-id="step-1-choose-a-model-for-the-data.">Step 1: Choose a model for the data.</h2>
+<p>Choosing a model requires we apply our prior knowledge as scientists.</p>
+<p>In this case, let’s apply our intuition to express our model in words.</p>
+<ul>
+<li><strong>Initial Model:</strong> I expect more swim lessons reduce the number of drownings.</li>
+</ul>
+<p>That’s a fine model. To perform statistical inference, let’s express our model as an equation:</p>
+<ul>
+<li><code>drownings</code> = m <code>swim_lessons</code> + b</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Compare our model to the equation for a line: ( y = mx + b ). Match each variable to the correct interpretation.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table>
+<tbody><tr>
+<td>
+<strong>( y )</strong> →
+</td>
+<td>
+<select id="match-y"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<strong>( x )</strong> →
+</td>
+<td>
+<select id="match-x"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<strong>( m )</strong> →
+</td>
+<td>
+<select id="match-m"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<strong>( b )</strong> →
+</td>
+<td>
+<select id="match-b"> <option value="">Select…</option> <option value="swim_lessons">Swim Lessons</option> <option value="drownings">Drownings</option> <option value="slope">Slope</option> <option value="intercept">Intercept</option> </select>
+</td>
+</tr>
+</tbody></table>
+<br> <button onclick="checkMatching()">Submit</button>
+<p id="feedback-matching">
+</p>
+<script>
+function checkMatching() {
+    var matchY = document.getElementById("match-y").value;
+    var matchX = document.getElementById("match-x").value;
+    var matchM = document.getElementById("match-m").value;
+    var matchB = document.getElementById("match-b").value;
+    
+    var feedback = document.getElementById("feedback-matching");
+    
+    if (!matchY || !matchX || !matchM || !matchB) {
+        feedback.innerHTML = "Please match all terms before submitting.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (matchY === "drownings" && matchX === "swim_lessons" && matchM === "slope" && matchB === "intercept") {
+        feedback.innerHTML = "✅ Correct! Your matches are accurate.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. Check your matches and try again.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>Here, our initial model is a <strong>line</strong>.</p>
+<ul>
+<li><p>That’s a very simple model of the data.</p></li>
+<li><p>We do not expect a line will capture all of the complexity in our data.</p></li>
+</ul>
+<p>However, a line (or <em>linear relationship</em>) often provides a useful first step.</p>
+<p>And, a line is relatively simple to compute and interpret.</p>
+</section>
+<section id="step-2.-use-the-data-to-infer-model-parameters." class="level2">
+<h2 class="anchored" data-anchor-id="step-2.-use-the-data-to-infer-model-parameters.">Step 2. Use the data to infer model parameters.</h2>
+<p>Having chosen our model – a line – our next step is to <strong>infer the parameters</strong> in our model.</p>
+<p>There are two parameters in the model:</p>
+<ul>
+<li><p><code>m</code>, the slope, and</p></li>
+<li><p><code>b</code>, the intercept.</p></li>
+</ul>
+<p>We’re primarily interested in the slope (<code>m</code>). This parameter indicates the relationship between <code>swim_lessons</code> and <code>drownings</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What sign (positive or negative) do you expect for the slope <code>m</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-4">
+<input type="radio" name="answer4" value="incorrect"> I expect the slope is positive because I expect <code>drownings</code> will increase with <code>swim_lessons</code>. <br> <input type="radio" name="answer4" value="correct"> I expect the slope is negative because I expect <code>drownings</code> will decrease with <code>swim_lessons</code>. <br><br> <button type="button" onclick="checkAnswer4()">Submit</button>
+</form>
+<p id="feedback4">
+</p>
+<script>
+function checkAnswer4() {
+    var selected = document.querySelector('input[name="answer4"]:checked');
+    var feedback = document.getElementById("feedback4");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! A negative slope means drownings decrease as swim lessons increase.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. A positive slope would mean drownings increase with swim lessons, which is not expected.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>We expect <span class="math inline">\(m&lt;0\)</span>.</p>
+<ul>
+<li><p>We expect a negative relationship between <code>drownings</code> and <code>swim_lessons</code></p></li>
+<li><p>We expect more swim lessons will reduce the number of drownings.</p></li>
+</ul>
+<p>Let’s infer <span class="math inline">\(m\)</span> from the data.</p>
+<div id="qpyodide-insertion-location-4"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p><strong>Meaning:</strong></p>
+<ul>
+<li><p>The slope estimate <code>m</code> represents the estimated change in the number of <code>drownings</code> when the number of <code>swim_lessons</code> increases by 1.</p></li>
+<li><p>The <code>standard_error</code> represents the variability of the slope estimate.</p></li>
+</ul>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><p>If the number of <code>swim_lessons</code> increases by 1, we estimate the number of <code>drownings</code>to increase by 0.0014, on average.</p></li>
+<li><p>The standard error (0.0002) is small compared to the slope estimate, so the variability in the slope estimate is small; i.e., the estimate is precise.</p></li>
+</ul>
+<p>Remember our model is a line.</p>
+<p>A line is easy to visualize.</p>
+<p>Since we’ve now inferrred the model parameters, let’s <strong>visualize</strong> the inferred line by plotting it with the data.</p>
+<div id="qpyodide-insertion-location-5"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Looking at this plot, what is the slope of the inferred line?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-5">
+<input type="radio" name="answer5" value="correct"> The slope is positive – the line tilts up. <br> <input type="radio" name="answer5" value="incorrect"> The slope is negative – the line tilts down. <br><br> <button type="button" onclick="checkAnswer5()">Submit</button>
+</form>
+<p id="feedback5">
+</p>
+<script>
+function checkAnswer5() {
+    var selected = document.querySelector('input[name="answer5"]:checked');
+    var feedback = document.getElementById("feedback5");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! A positive slope means the line tilts upward.";
+        feedback.style.color = "green";
+    } else {
+        feedback.innerHTML = "❌ Incorrect. A negative slope would mean the line tilts downward.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+</section>
+<section id="step-3.-summarize-conclusions." class="level2">
+<h2 class="anchored" data-anchor-id="step-3.-summarize-conclusions.">Step 3. Summarize conclusions.</h2>
+<p>We have chosen the model (Step 1) and inferred model parameters (Step 2).</p>
+<p>Our last step is to summarize the conclusions of our statistical inference.</p>
+<p>Let’s start by considering an explict numerical conclusion from our model:</p>
+<ul>
+<li>How does the number of drownings change if we increase the number of swim lessons by 1000?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We find an increase of 0.0014 <code>drownings</code> for a one-unit increase in the number of <code>swim_lessons</code>. How does the number of <code>drownings</code> change when the number of <code>swim_lessons</code> increases by 1000.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Answer:</strong></p>
+<p>Our model of the data is a line:</p>
+<p><code>drownings</code> = m <code>swim_lessons</code> + b</p>
+<p>We inferred the model parameter <code>m</code> from the data and found:</p>
+<p><code>drownings</code> = 0.0014 <code>swim_lessons</code> + b</p>
+<p>Consider what happens if the number of swim lessons increases by 1. According to our fit model, the number of drownings increases by:</p>
+<p><span class="math inline">\(0.0014 * 1\)</span> swim lesson <span class="math inline">\(= 0.0014\)</span></p>
+<p>That’s a small increase, in both the number of swim lessons and number of drownings.</p>
+<p>Alternately, consider what happens if the number of swim lessons increases by 1000. Plugging into our model, we find the number of drownings increases by:</p>
+<p><span class="math inline">\(0.0014 * 1000\)</span> swim lessons <span class="math inline">\(= 1.4\)</span></p>
+<p>That’s perhaps a more interpertable result; a community making a policy decision to promote more swim lessons (e.g., through subsidies, though advertisements) might expect 1 more drowning.</p>
+<p>In this way, we can always interpert the results of a model. It’s often useful to plug in values, and see what happens.</p>
+</div>
+</div>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>We’ve applied a statistical inference approach and found a compelling result:</p>
+<ul>
+<li><strong>The number of drowings <em>increases</em> with more swim lessons.</strong></li>
+</ul>
+<p>The slope estimate <code>m</code> in our model looks convincing:</p>
+<ul>
+<li>The standard error is small (0.0002) compared to the slope (0.0014); i.e., the estimate is precise.</li>
+</ul>
+<p>These results are certainly passable for peer-reviewed publication and perhaps enough to motivate a new public policy:</p>
+<ul>
+<li>To prevent drownings, discourage swim lessons.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What’s our next step?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!-- Buttons -->
+<button onclick="showDiscussion('change')" style="display: block; margin: 10px auto; padding: 10px 20px; font-size: 16px;">
+These results are convincing - let’s advocate for change!
+</button>
+<button onclick="showDiscussion('not_sure')" style="display: block; margin: 10px auto; padding: 10px 20px; font-size: 16px;">
+I’m not sure yet!
+</button>
+<!-- Discussion Output -->
+<p id="discussion-output" style="margin-top: 20px; font-weight: lighter;">
+</p>
+<script>
+function showDiscussion(choice) {
+    var output = document.getElementById("discussion-output");
+
+    if (choice === "change") {
+        output.innerHTML = "That's a reasonable conclusion, based on the evidence we've looked at so far. However, our conclusion is controversial: to reduce drownings, reduce the number of swim lessons. Before we recommend this policy, let's investigate an essential aspect of our inference - how well our model (the line) fits the data. A good fit to the data inspires confidence in our inference. Alternatively, a poor fit provides us motivation to continue developing our model. Continue on to the next Mini to learn a strategy to answer this question.";
+        output.style.color = "black";
+    } else if (choice === "not_sure") {
+        output.innerHTML = "I'm glad you're not sure. Neither am I. Our results suggest a controversial conclusion: to reduce drownings, reduce the number of swim lessons. To make this conclusion, we modeled the data as a line. But, is this line a good model of the data? If so, that inspires confidence in our result. However, if the model (a line) is not a good representation of the data, then we might question the result. Continue on to the next Mini to learn a strategy to answer this question.";
+        output.style.color = "black";
+    }
+}
+</script>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="somethings-not-right-evaluate-your-evaluation-method." class="level1">
+<h1>4. Something’s not right … evaluate your evaluation method.</h1>
+<p>To look for a relationship between <code>swim_lessons</code> and <code>drownings</code>, our initial statistical inference appraoch required we chose a model of the data.</p>
+<p><strong>We chose a line to model the data.</strong></p>
+<p>This simple model resulted in a precise (i.e., low varaibility) estimate of the relationship between <code>swim_lessons</code> and <code>drownings</code>.</p>
+<p>But, was this a good model choice?</p>
+<p>An important step in any statistical inference is to <strong>check our model</strong>.</p>
+<p>Let’s update our initial statistical inference appraoch to include this fundamental step (<a href="https://www.routledge.com/Generalized-Linear-Models/McCullagh-Nelder/p/book/9780412317606">McCullagh &amp; Nelder, 1989; page 391</a>):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="IMG_Inference/Inference_Path_2.jpg" class="img-fluid figure-img"></p>
+<figcaption>Modified statistical inference loop</figcaption>
+</figure>
+</div>
+<p>Our updated statistical inference appraoch becomes:</p>
+<ol type="1">
+<li>Choose a model for the data.</li>
+<li>Use the data to infer model parameters.</li>
+<li><strong>Check and refine the model.</strong></li>
+<li>Summarize conclusions.</li>
+</ol>
+<p>Notice that we’ve included a new step: <em>Check and refine the model.</em></p>
+<p>In checking the model, we look for <strong>discrepancies between the data and model</strong>.</p>
+<p>These discrepancies help us determine whether the model is suitable or inadequate.</p>
+<p>If we determine the model is inadequate, then we return to Step 1 (red arrow), consider an alternative model for the data, and repeat the inference and model checking steps.</p>
+<p>If we determine the model is suitable, then we continue to Step 4 and summarize our conclusions.</p>
+<p>This statistical inference loops profoundly changes the process of analysis (<a href="https://www.routledge.com/Generalized-Linear-Models/McCullagh-Nelder/p/book/9780412317606">McCullagh &amp; Nelder, 1989; page 392</a>).</p>
+<p>In what follows, we’ll illustrate this updated statistical inference loop by checking the model (Step 3) we developed for the <code>swim_lessons</code> and <code>drownings</code>.</p>
+<section id="residual-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="residual-analysis">Residual Analysis</h2>
+<p>Many appraoches exist to check a model (<a href="https://www.routledge.com/Generalized-Linear-Models/McCullagh-Nelder/p/book/9780412317606">McCullagh &amp; Nelder, 1989; Chapter 12</a>).</p>
+<p>Here, we implement a common and powerful appraoch: <strong>residual analysis</strong>.</p>
+<p><strong>Residuals</strong> are the differences between the observed data and model predicted values.</p>
+<p>In our case, the residuals are the difference between the estimated drownings from our model (the line we fit to the data) and the actual values for <code>drownings</code>.</p>
+<p>Remember our plot of the estimated model (solid red line) and the data (blue dots):</p>
+<div id="qpyodide-insertion-location-6"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>The residuals are the distance from each blue dot (the data) to the red line (the estimated model).</p>
+<div id="qpyodide-insertion-location-7"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>In the plot above, each orange line indicates a residual.</p>
+<p>If the model is a good fit to the data, then we expect a patternless set of residuals (i.e., the residuals are randomly scattered around zero).</p>
+<p>Alternatively, if we find patterns in the residuals, we might wonder about our model choice, and consider strategies to update and improve our model.</p>
+<div class="alert alert-block alert-danger">
+<p><strong>NOTE:</strong> Other approaches exist to check our model. These include goodness-of-fit metrics (like R-squared), comparison with alternative models (using techniques like AIC), and cross-validation to assess how well the model generalizes to new data. There’s unfortunately no one best strategy to check a model. Here we focus on residual analysis because the appraoch is intuitive and provides a good gauge of how our model is doing.</p>
+</div>
+<p>Let’s plot the residuals for our original model:</p>
+<div id="qpyodide-insertion-location-8"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Do you see any patterns in this plot of the residuals?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Short answer)</p>
+<ul>
+<li>No.&nbsp;At first glance, these residuals look mostly patternless.</li>
+</ul>
+</div>
+</div>
+<p>Our visualization of the residuals revelas no systematic patterns.</p>
+<ul>
+<li>Instead, the residuals appear to fluctuate around 0.</li>
+</ul>
+<div class="alert alert-block alert-danger">
+<p>That means our model is ok, right?</p>
+<p><strong>NO!</strong></p>
+<p>This visualization of the residuals is <em>not</em> very informative.</p>
+<p>The horizontal axis (the variable <code>index</code>) is arbitrary.</p>
+</div>
+<p>To observe systematic patterns in the residuals, let’s plot the <code>residuals</code> versus the predictor in our model: the number of <code>swim_lessons</code>.</p>
+<div id="qpyodide-insertion-location-9"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Now, what pattens do you see in the residuals, when plotted versus the model variable <code>swim_lessons</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Short Answer)</p>
+<p>Inspection of <code>residuals</code> versus <code>swim_lessons</code> reveals two clear patterns:</p>
+<ul>
+<li><p>As <code>swim_lessons</code> increases, a systematic decrease in the <code>residuals</code>.</p></li>
+<li><p>As <code>swim_lessons</code> increases, the variability of the <code>residuals</code> tends to increase.</p></li>
+</ul>
+</div>
+</div>
+<p>We conclude from this <strong>model check</strong> that something isn’t right.</p>
+<ul>
+<li>Our model doesn’t adequately describe features in the data.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We’ve plotted the <code>residuals</code> versus the predictor <code>swim_lessons</code>. We could also plot <code>residuals</code> versus the outcome variable <code>drownings</code>. Doing so, what do you see?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Extension / Challenge Question)</p>
+</div>
+</div>
+</section>
+<section id="model-refinement-infinite-choice" class="level2">
+<h2 class="anchored" data-anchor-id="model-refinement-infinite-choice">Model Refinement: infinite choice</h2>
+<p>Our initial approached modeled <code>swim_lessons</code> versus <code>drownings</code>.</p>
+<p>To do so, we chose a line as our model (Step 1).</p>
+<p>We then inferred model parameters from the data (Step 2) and checked the model (Step 3) by visualizing the residuals.</p>
+<p>Our model check suggests the model is inadequate.</p>
+<ul>
+<li>We find systematic discrepancies between the model estimates and data.</li>
+</ul>
+<p>Therefore, it’s time to <strong>refine our model</strong>.</p>
+<p>We can refine the model in infinite ways.</p>
+<p>For example, we could consider this model:</p>
+<ul>
+<li><code>drownings</code> = m <code>swim_lessons</code> + b + a <code>swim_lessons</code><span class="math inline">\(^2\)</span></li>
+</ul>
+<p>where we propose that the number of drownings depends on the number of swim lessons and the number of swim lessons squared.</p>
+<p>Or we might consider:</p>
+<ul>
+<li><code>drownings</code> = m <code>swim_lessons</code> + b + a <code>swim_lessons</code><span class="math inline">\(^2\)</span> + c <code>swim_lessons</code><span class="math inline">\(^3\)</span> + <span class="math inline">\(\log10\)</span>(<code>swim_lessons</code>)</li>
+</ul>
+<p>where we propose that the number of drownings depends on the number of swim lessons, the number of swim lessons squared, the number of swim lessons cubed, and log10 of the number of swim lessons.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What other terms might you include in the model?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Short Answer)</p>
+<ul>
+<li><code>swim_lessons</code><span class="math inline">\(^4\)</span></li>
+<li><code>swim_lessons</code><span class="math inline">\(^{10}\)</span></li>
+</ul>
+</div>
+</div>
+<p><strong>Your challenge, as a scientist, is to select a meaningful next model from these infinite model choices.</strong></p>
+<p>For each choice, we can iterate our statistical inference loop (infer the model parameters from data, then check the model).</p>
+<div class="alert alert-block alert-danger">
+<p><strong>Selecting a model is an art.</strong> You must use your knowledge and intution as a scientist to select model terms.</p>
+</div>
+<p>As scientists, we use our intuition to rule out ridiculous models.</p>
+<p>For example, you probably would not consider this model:</p>
+<ul>
+<li><code>drownings</code> = m <code>swim_lessons</code> + b + a <span class="math inline">\(\sin(\exp(\)</span> <code>swim_lessons</code><span class="math inline">\(^{1/3}\)</span> ))</li>
+</ul>
+<p>Why not consider this model?</p>
+<ul>
+<li><p>Because the term <span class="math inline">\(\sin(\exp(\)</span> <code>swim_lessons</code><span class="math inline">\(^{1/3}\)</span> )) looks like overly-complicated nonsense.</p></li>
+<li><p>We have intuition that <code>drownings</code> does <strong>not</strong> depend on <code>swim_lessons</code> in this complicated way.</p></li>
+</ul>
+<p><strong>When we observe additional data, we can decide to include that additional information in the model.</strong></p>
+<p>In this case, we also observe the geographic location (latitude and longitude) of each community in the study.</p>
+<p>Let’s investigate how the <code>residuals</code> relate to the geographic location of the community.</p>
+<div id="qpyodide-insertion-location-10"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Do you observe any patterns in the residuals that depend on location?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Multiple Choice)</p>
+<ul>
+<li>(Correct) Yes, the residuals appear to vary with geographic location. Nearer to the ocean, the residuals tend to be more positive (darker blue colors).</li>
+<li>(Incorrect) No, the residuals do <strong>not</strong> appear to vary with geographic location.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="conclusions" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions">Conclusions</h2>
+<p>Our analysis of the residuals suggests an important result</p>
+<ul>
+<li><strong>Our inital model fit (a line) is no good</strong>.</li>
+</ul>
+<p>This is a very useful result.</p>
+<p>Our initial statistical inference produced a counter-intuitive result:</p>
+<ul>
+<li>As swim lessons increase, so do drownings.</li>
+</ul>
+<p>But this initial inference is based on a model - the line - that’s not a good representation of the data.</p>
+<ul>
+<li>Clear trends exist in the residuals.</li>
+</ul>
+<p>Checking the model is our first step to improving the model, and thereby improving the statistical inferences we make from the data.</p>
+<div class="alert alert-block alert-danger">
+<p><strong>NOTE</strong>: In this case, our model check (<strong>Residual Analysis</strong>) failed; the resiudals were not randomly scattered around 0.</p>
+<p>Because the model check failed, we can dismiss the counter-intuitve relationship identified in our initial model (i.e., that more <code>swim_lessons</code> increase the number of <code>drownings</code>) and continue model development.</p>
+<p>However, we emphasize that further model development should be pursued regardless of the relationship our initial model identified. Even if the initial statistcal inference proposed an intuitive result (i.e., that more <code>swim_lessons</code> decrease the number of <code>drownings</code>), we would still continue model development; when the model check fails, we’re not satisified with the initial model, no matter the intuitive appeal of the result.</p>
+</div>
+</section>
+</section>
+<section id="iterate-the-statistical-inference-loop-improve-your-scientific-conclusions-by-improving-your-inference-model." class="level1">
+<h1>5. Iterate the statistical inference loop: improve your scientific conclusions by improving your inference model.</h1>
+<p>Remember our statistical inference loop:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="IMG_Inference/Inference_Path_2.jpg" class="img-fluid figure-img"></p>
+<figcaption>Statistical inference loop</figcaption>
+</figure>
+</div>
+<p>In Mini 3, we proposed our initial model</p>
+<ul>
+<li><strong>Initial model:</strong> <code>drownings</code> = m <code>swim_lessons</code> + b</li>
+</ul>
+<p>In Mini 4, we checked our model by visualing the residuals (i.e., the difference between our initial model predictions and the data).</p>
+<p>We found systematic discrepancies (i.e., patterns) in the residuals and concluded:</p>
+<ul>
+<li><strong>Our inital model fit (a line) is no good</strong>.</li>
+</ul>
+<p>With this knowledge, our task now is to <strong>refine the model</strong>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Many strategies exist to refine our model. To get started, consider this question: What is missing from the model?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Short Answer)</p>
+<ul>
+<li>Many things could be missing, including the age of individuals in the community, or the time of year in which the data were collected, or the socioeconomic status of each community. The goal of a model is not to capture every possible cause of <code>drownings</code>. Instead, the goal of the model is to develop a simple, but useful, description of the population, given the small sample of data we get to observe. In the words of George Box: <em>“All models are wrong, but some are useful.”</em></li>
+<li>There could be issues with the sampling of data. Maybe the data were collected incorrectly. That’s possible, but not the issue here.</li>
+</ul>
+</div>
+</div>
+<p>To update our model, consider these data we examined in previous Minis:</p>
+<ul>
+<li>The geographic location of each community.</li>
+</ul>
+<p>Let’s again consider the initial model residuals versus the geographic location of each communitiy:</p>
+<div id="qpyodide-insertion-location-11"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>We observe that these <strong>residuals vary with geographic location</strong>.</p>
+<p>More specficily, we notice spatial patterns in the residuals:</p>
+<ul>
+<li><p>positive residuals near the coast,</p></li>
+<li><p>negative resiudals away from the coast.</p></li>
+</ul>
+<p>These observations suggest an important model refinement:</p>
+<ul>
+<li><strong>Update the model to include distance to the ocean as another predictor.</strong></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+There are infinite features we could include in the model. Why include distance to the ocean?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Multiple Choice)</p>
+<ul>
+<li>(Correct) The feature makes intuitive sense: we might expect more <code>drownings</code> at locations near to the ocean, and fewer drownings at locations far from the ocean.</li>
+<li>(Correct) We have data for this predictor (i.e., we can determine the distance from each community to the ocean).</li>
+</ul>
+</div>
+</div>
+<p>With this idea for our new model, let’s <strong>implement each step of our statistical inference loop</strong>:</p>
+<ol type="1">
+<li>Choose a model for the data.</li>
+<li>Use the data to infer model parameters.</li>
+<li>Check and refine the model.</li>
+<li>Summarize conclusions.</li>
+</ol>
+<section id="step-1-choose-a-model-for-the-data.-1" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-choose-a-model-for-the-data.-1">Step 1: Choose a model for the data.</h2>
+<p>Our refined model of <code>drownings</code> includes two predictors:</p>
+<ul>
+<li>The number of swim lessons (<code>swim_lessons</code>).</li>
+<li>The distance from the ocean (<code>distance_from_ocean</code>)
+<ul>
+<li>measured as the geodesic distance in kilometers as the crow flies from Myrtle Beach).</li>
+</ul></li>
+</ul>
+<p>Our refined model becomes:</p>
+<ul>
+<li><strong>Refined model:</strong> <code>drownings</code> = <span class="math inline">\(m_1\)</span> <code>swim_lessons</code> + <span class="math inline">\(m_2\)</span> <code>distance_from_ocean</code> + b</li>
+</ul>
+<p>Remember that our initial model - a line in Mini 3 - contained one outcome (<code>drownings</code>) and one predictor (<code>swim_lessons</code>).</p>
+<p>Our refined model contains one outcome (<code>drownings</code>) and <strong>two predictors</strong> (<code>swim_lessons</code> and <code>distance_from_ocean</code>).</p>
+<p>Therefore, <strong>our refined model is a 2-dimensional plane in the 3-dimensional space of the data</strong>.</p>
+<p>To visualize our 3-dimensional data, let’s load these new data and plot it.</p>
+<div id="qpyodide-insertion-location-12"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div id="qpyodide-insertion-location-13"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Look at the three-dimensional plot. Can you sketch (or imagine) a plane that slices through these points?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> It’s difficult to see, but maybe.</p>
+</div>
+</div>
+</section>
+<section id="step-2.-use-the-data-to-infer-model-parameters.-1" class="level2">
+<h2 class="anchored" data-anchor-id="step-2.-use-the-data-to-infer-model-parameters.-1">Step 2. Use the data to infer model parameters.</h2>
+<p>With these data and our refined model, let’s continue our statistical inference loop and <strong>infer model parameters</strong>.</p>
+<p>To do so, we’ll fit a plane to the data.</p>
+<p>The idea is <em>exactly</em> the same as fitting a line to the data in our original model.</p>
+<p>By fitting a plane to the data, we’ll infer three model parameters:</p>
+<ul>
+<li><span class="math inline">\(m_1\)</span>, the slope corresponding to the predictor <code>swim_lessons</code>.</li>
+<li><span class="math inline">\(m_2\)</span>, the slope corresponding to the predictor <code>distance_from_ocean</code>.</li>
+<li><span class="math inline">\(b\)</span>, the intercept.</li>
+</ul>
+<p>We’re primarily interested in <span class="math inline">\(m_1\)</span>, the slope corresponding to the predictor <code>swim_lessons</code>.</p>
+<ul>
+<li>This parameter indicates the relationship between <code>swim_lessons</code> and <code>drownings</code>.</li>
+</ul>
+<p>However, we now include the additional predictor <code>distance_to_ocean</code> and also infer its slope (<span class="math inline">\(m_2\)</span>) from the data.</p>
+<p>We’re not necessarily interested in the relationship between <code>drowings</code> and <code>distance_to_ocean</code>. Motivated by our scientific knowledge (e.g., that drownings may depend on a community’s distance to the ocean) and our residual analysis in the initial model, we include this new predictor.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What sign (positive or negative) do you expect for the slope <span class="math inline">\(m_1\)</span>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Multiple Choice)</p>
+<ul>
+<li><p>(Incorrect) I expect the slope is positive because I expect <code>drownings</code> will increases with <code>swim_lessions</code>.</p></li>
+<li><p>(Correct) I expect the slope is negative because I expect <code>drownings</code> will decrease with <code>swim_lessions</code>.</p></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What sign (positive or negative) do you expect for the slope <span class="math inline">\(m_2\)</span>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Multiple Choice)</p>
+<ul>
+<li><p>(Incorrect) I expect the slope is positive because I expect <code>drownings</code> will increases with <code>distance_from_ocean</code>.</p></li>
+<li><p>(Correct) I expect the slope is negative because I expect <code>drownings</code> will decrease with <code>distance_from_ocean</code>.</p></li>
+</ul>
+</div>
+</div>
+<p>We expect <span class="math inline">\(m_1&lt;0\)</span> and <span class="math inline">\(m_2&lt;0\)</span>.</p>
+<ul>
+<li><p>We expect a negative relationship between <code>drownings</code> and <code>swim_lessons</code>, i.e., we expect increased swim lessons will decrease the number of drownings.</p></li>
+<li><p>We expect a negative relationship between <code>drownings</code> and <code>distance_from_ocean</code>, i.e., we expect increased distance from the ocean will decrease the number of drownings.</p></li>
+</ul>
+<p>Let’s infer <span class="math inline">\(m_1\)</span> and <span class="math inline">\(m_2\)</span> from the data.</p>
+<div id="qpyodide-insertion-location-14"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p><strong>Meaning:</strong></p>
+<ul>
+<li>The slope estimate <code>m_1</code> represents the change in the number of <code>drownings</code> for a one-unit change in the number of <code>swim_lessons</code>.</li>
+<li>The slope estimate <code>m_2</code> represents the change in the number of <code>drownings</code> for a one-unit change in the <code>distance_from_ocean</code>.</li>
+<li>For each parameter, the <code>standard_error</code> represents the variability of the slope estimate.</li>
+</ul>
+<p><strong>Interpretation of inferred value for <code>m_1</code>:</strong></p>
+<ul>
+<li>The sign of <code>m_1</code> is negative.</li>
+<li>If the number of <code>swim_lessons</code> increases by 1, we estimate the number of <code>drownings</code> <em>decreases</em> by 0.0003, on average.</li>
+<li>The standard error (0.0003) is <strong>big</strong> compared to the slope estimate, so the variability in the slope estimate is large; i.e., the estimate is unreliable.</li>
+</ul>
+<p><strong>Interpretation of inferred value for <code>m_2</code>:</strong></p>
+<ul>
+<li>The sign of <code>m_2</code> is negative.</li>
+<li>If the <code>distance_from_ocean</code> increases by 1 kilometer, we estimate the number of <code>drownings</code> <em>decreases</em> by 0.06, on average.</li>
+<li>The standard error (0.0087) is <strong>small</strong> compared to the slope estimate, so the variability in the slope estimate is small; i.e., the estimate is precise.</li>
+</ul>
+<p>Our refined model is a 2-dimenisonal plane in the 3-dimensional space of variables (<code>swim_lessons</code>, <code>distance_from_ocean</code>, and <code>drownings</code>).</p>
+<p>Since we’ve now inferrred the model parameters from the data, we can <strong>visualize</strong> the inferred plane.</p>
+<p>In other words, let’s plot the model with the data.</p>
+<div id="qpyodide-insertion-location-15"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="step-3.-check-and-refine-the-model." class="level2">
+<h2 class="anchored" data-anchor-id="step-3.-check-and-refine-the-model.">Step 3. Check and refine the model.</h2>
+<p>Let’s now <strong>check the refined model</strong>.</p>
+<p>To do so, let’s plot the new model errors (i.e., the <code>residuals</code>) versus a predictor in our model (here, the number of <code>swim_lessons</code>).</p>
+<div id="qpyodide-insertion-location-16"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Wait, I thought this was a 2-dimensional model of 3-dimensional data. Why are the residuals only 1-dimensional?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Multiple Choice)</p>
+<ul>
+<li>(Correct) The residuals are the difference between the observed number of drownings (<code>drowning</code>) and the predicted number of drowning by the model. Both of these quantities are 1-dimensional.</li>
+<li>(Incorrect) The data are 3-dimensional and the model is 2-dimensional so 3-2 = 1.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What pattens do you see in the residuals, when plotted versus the model variable <code>swim_lessons</code>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Short Answer)</p>
+<p>Inspection of <code>residuals</code> versus <code>swim_lessons</code> reveals one pattern:</p>
+<ul>
+<li>As <code>swim_lessons</code> increases, the variability of the <code>residuals</code> tends to increase.</li>
+</ul>
+</div>
+</div>
+<p>Remember that, in our initial model, we observed a <strong>systematic trend</strong> in the <code>residuals</code>.</p>
+<ul>
+<li><strong>Original Model:</strong> As <code>swim_lessons</code> increase, the average <code>residuals</code> value decreases.</li>
+</ul>
+<p>In our reifned model, visual inspection reveals <em>no</em> systematic trend in the <code>residuals</code></p>
+<ul>
+<li><strong>Refined Model:</strong> As <code>swim_lessons</code> increase, the average <code>residuals</code> value remains approximately constant.</li>
+</ul>
+<p>This is a nice improvement compared to our original model.</p>
+<p><strong>Including the additional variable <code>distance_to_ocean</code> has reduced a systematic trend in the residuals.</strong></p>
+<p>Let’s also plot the <code>residuals</code> of the new model versus the geographic location.</p>
+<div id="qpyodide-insertion-location-17"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Do you observe any patterns in the residuals that depend on location?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong> (Multiple Choice)</p>
+<ul>
+<li>(Incorrect) Yes, the residuals appear to vary with geographic location. Nearer to the ocean, the residuals tend to be more positive (darker blue colors).</li>
+<li>(Correct) No, the residuals do <strong>not</strong> appear to vary with geographic location.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="step-4.-summarize-conclusions." class="level2">
+<h2 class="anchored" data-anchor-id="step-4.-summarize-conclusions.">Step 4. Summarize conclusions.</h2>
+<p>Having chosen the model (Step 1), inferred model parameters (Step 2), and checked our model (Step 3), our last step is to summarize the conclusions of our statistical inference.</p>
+<p>To do so, let’s consider explict numerical conclusions from our model:</p>
+<ul>
+<li>How does the number of drownings change if we increase the number of swim lessons by 1000 or distance from the ocean by 100 kilometers?</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We found <span class="math inline">\(m_1=-0.0003\)</span> with standard error <span class="math inline">\(0.0003\)</span>. How does the number of <code>drownings</code> change when the number of <code>swim_lessons</code> increases by 1000.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong></p>
+<p>Our model of the data is a plane:</p>
+<p><code>drownings</code> = <span class="math inline">\(m_1\)</span> <code>swim_lessons</code> + <span class="math inline">\(m_2\)</span> <code>distance_from_ocean</code> + b</p>
+<p>We inferred the model parameter <code>m_1</code> from the data and found:</p>
+<p><code>drownings</code> = -0.0003 <code>swim_lessons</code> + …</p>
+<p>If the number of swim lessons increases by 1000, then the number of drownings changes by:</p>
+<p><code>drownings = -0.0003 * 1000 = -0.3</code></p>
+<p>So, by this calculation, increasing the number of swim lessons by 1000 reduces the number of drownings by -0.3.</p>
+<p>However, <strong>we have no confidence in this result!</strong></p>
+<p>We found a standard error of 0.0003 for the estimate of <span class="math inline">\(m_1\)</span>. This standard error is as large as the estimate <span class="math inline">\(m_1\)</span> itself.</p>
+<p>We therefore would not be surprised if repeated experiments found <span class="math inline">\(m_1\)</span> values between approximatley:</p>
+<p><span class="math inline">\(m_1 \pm 2 * \mathrm{standard \, error} = -0.0003 \pm 2*0.0003 = [-0.0009, 0.0003]\)</span></p>
+<p>So, due to the large standard error, we cannot confidently conclude whether <span class="math inline">\(m_1\)</span> is positive or negative.</p>
+<p>In other words, <strong>we cannot conclude whether increasing swim lessons increases or decreases the number of drownings</strong>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We found <span class="math inline">\(m_2=-0.06\)</span> with standard error <span class="math inline">\(0.0087\)</span>. How does the number of <code>drownings</code> change when the <code>distance_to_ocean</code> increases by 100 kilometers.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A:</strong></p>
+<p>Our model of the data is a plane:</p>
+<p><code>drownings</code> = <span class="math inline">\(m_1\)</span> <code>swim_lessons</code> + <span class="math inline">\(m_2\)</span> <code>distance_from_ocean</code> + b</p>
+<p>We inferred the model parameter <code>m_2</code> from the data and found:</p>
+<p><code>drownings</code> = … -0.06 <code>distance_from_ocean</code> + …</p>
+<p>If the distance from the ocean increases by 100 kilometers, then the number of drownings changes by:</p>
+<p><code>drownings = -0.06 * 100 = -6</code></p>
+<p>So, by this calculation, increasing the distance to the ocean by 100 kilometers reduces the number of drownings by -7.</p>
+<p>In this case, <strong>we are confident in this result!</strong></p>
+<p>We found a standard error of 0.0087 for the estimate of <span class="math inline">\(m_2\)</span>. This standard error is much smaller than the estimate of <span class="math inline">\(m_2\)</span> itself.</p>
+<p>We therefore would not be surprised if repeated experiments found <span class="math inline">\(m_2\)</span> values between approximatley:</p>
+<p><span class="math inline">\(m_2 \pm 2 * \mathrm{standard \, error} = -0.06 \pm 2*0.0087 = [-0.077, -0.043]\)</span></p>
+<p>So, due to the small standard error, we can confidently conclude that <span class="math inline">\(m_2\)</span> is negative.</p>
+<p>In other words, <strong>we conclude that increasing distance from the ocean decreases the number of drownings</strong>.</p>
+</div>
+</div>
+</section>
+<section id="summary-1" class="level2">
+<h2 class="anchored" data-anchor-id="summary-1">Summary</h2>
+<p>Our residual analysis suggests an important result: <strong>Our refined model (a plane) improves the model fit</strong>.</p>
+<p>We’ve made progress improving our model!</p>
+<p>Our initial model produced a significant - but nonsensical - result:</p>
+<ul>
+<li><strong>Initial model conclusion:</strong> As swim lessons increase, so do the number of drownings.</li>
+</ul>
+<p>However, performing our model checks, residual analysis revealed a poor model fit.</p>
+<p>The poor model fit motivated a cycle through our <strong>statistical inference loop</strong>.</p>
+<p>We refined the model by adding another predictor - the distance to the ocean.</p>
+<p>The refined model changed our results dramatically:</p>
+<ol type="1">
+<li>We improved our model fit (by reducing a systematic trend in the residuals).</li>
+</ol>
+<ul>
+<li>However, we still observe that the variability of the residuals tends to increase with the number of swim lessons.</li>
+</ul>
+<ol start="2" type="1">
+<li>We found a (weak) relationship between increasing swim lessons and decreasing drownings.</li>
+</ol>
+<ul>
+<li>While this result makes intuitive sense, our evidence for this relationship is not convincing (the variability in the estimate is large).</li>
+</ul>
+<ol start="2" type="1">
+<li>We found a (strong) relationship between increasing distance from the ocean and decreasing drownings.</li>
+</ol>
+<ul>
+<li>This result also makes intuitive sense and our evidence for this relationship is strong (the variability in the estimate is small).</li>
+</ul>
+<p>We show in the next Minis that continued model refinement in our <strong>statistical inference loop</strong> can further strengthen our results. - If you’re interested, check out the other Minis associated with this Unit.</p>
+<hr>
+<p><strong>To conclude</strong>, we applied our <strong>statistical inference loop</strong> to make inferences from noisy data.</p>
+<p>We started by choosing a model and inferring the model parameters (i.e., the slopes).</p>
+<p>But that is not enough!</p>
+<p>We must also check our model, in our case by plotting the residuals.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<script type="module">
+/**
+ * Factory function to create different types of cells based on options.
+ * @param {Object} cellData - JSON object containing code, id, and options.
+ * @returns {BaseCell} Instance of the appropriate cell class.
+ */
+globalThis.qpyodideCreateCell = function(cellData) {
+    switch (cellData.options.context) {
+        case 'interactive':
+            return new InteractiveCell(cellData);
+        case 'output':
+            return new OutputCell(cellData);
+        case 'setup':
+            return new SetupCell(cellData);
+        default:
+            return new InteractiveCell(cellData);
+            // throw new Error('Invalid cell type specified in options.');
+    }
+}  
+
+/**
+ * CellContainer class for managing a collection of cells.
+ * @class
+ */
+class CellContainer {
+    /**
+     * Constructor for CellContainer.
+     * Initializes an empty array to store cells.
+     * @constructor
+     */
+    constructor() {
+        this.cells = [];
+    }
+
+    /**
+     * Add a cell to the container.
+     * @param {BaseCell} cell - Instance of a cell (BaseCell or its subclasses).
+     */
+    addCell(cell) {
+        this.cells.push(cell);
+    }
+
+    /**
+     * Execute all cells in the container.
+     */
+    async executeAllCells() {
+        for (const cell of this.cells) {
+            await cell.executeCode();
+        }
+    }
+
+    /**
+     * Execute all cells in the container.
+     */
+    async autoRunExecuteAllCells() {
+        for (const cell of this.cells) {
+            await cell.autoRunExecuteCode();
+        }
+    }
+}
+  
+
+/**
+ * BaseCell class for handling code execution using Pyodide.
+ * @class
+ */
+class BaseCell {
+    /**
+     * Constructor for BaseCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+        this.code = cellData.code;
+        this.id = cellData.id;
+        this.options = cellData.options;
+        this.insertionLocation = document.getElementById(`qpyodide-insertion-location-${this.id}`);
+        this.executionLock = false;
+    }
+
+    cellOptions() {
+        // Subclass this? 
+        console.log(this.options);
+        return this.options;
+    }
+
+    /**
+     * Execute the Python code using Pyodide.
+     * @returns {*} Result of the code execution.
+     */
+    async executeCode() {
+        // Execute code using Pyodide
+        const result = getPyodide().runPython(this.code);
+        return result;
+    }
+};
+
+/**
+ * InteractiveCell class for creating editable code editor with Monaco Editor.
+ * @class
+ * @extends BaseCell
+ */
+class InteractiveCell extends BaseCell {
+
+    /**
+     * Constructor for InteractiveCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+        super(cellData);
+        this.editor = null;
+        this.setupElement();
+        this.setupMonacoEditor();
+    }
+
+    /**
+     * Set up the interactive cell elements
+     */
+    setupElement() {
+
+        // Create main div element
+        var mainDiv = document.createElement('div');
+        mainDiv.id = `qpyodide-interactive-area-${this.id}`;
+        mainDiv.className = `qpyodide-interactive-area`;
+        if (this.options.classes) {
+            mainDiv.className += " " + this.options.classes
+        }
+
+        // Add a unique cell identifier that users can customize
+        if (this.options.label) {
+            mainDiv.setAttribute('data-id', this.options.label);
+        }
+
+        // Create toolbar div
+        var toolbarDiv = document.createElement('div');
+        toolbarDiv.className = 'qpyodide-editor-toolbar';
+        toolbarDiv.id = `qpyodide-editor-toolbar-${this.id}`;
+
+        // Create a div to hold the left buttons
+        var leftButtonsDiv = document.createElement('div');
+        leftButtonsDiv.className = 'qpyodide-editor-toolbar-left-buttons';
+
+        // Create a div to hold the right buttons
+        var rightButtonsDiv = document.createElement('div');
+        rightButtonsDiv.className = 'qpyodide-editor-toolbar-right-buttons';
+
+        // Create Run Code button
+        var runCodeButton = document.createElement('button');
+        runCodeButton.className = 'btn btn-default qpyodide-button qpyodide-button-run';
+        runCodeButton.disabled = true;
+        runCodeButton.type = 'button';
+        runCodeButton.id = `qpyodide-button-run-${this.id}`;
+        runCodeButton.textContent = '🟡 Loading Pyodide...';
+        runCodeButton.title = `Run code (Shift + Enter)`;
+
+        // Append buttons to the leftButtonsDiv
+        leftButtonsDiv.appendChild(runCodeButton);
+
+        // Create Reset button
+        var resetButton = document.createElement('button');
+        resetButton.className = 'btn btn-light btn-xs qpyodide-button qpyodide-button-reset';
+        resetButton.type = 'button';
+        resetButton.id = `qpyodide-button-reset-${this.id}`;
+        resetButton.title = 'Start over';
+        resetButton.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
+
+        // Create Copy button
+        var copyButton = document.createElement('button');
+        copyButton.className = 'btn btn-light btn-xs qpyodide-button qpyodide-button-copy';
+        copyButton.type = 'button';
+        copyButton.id = `qpyodide-button-copy-${this.id}`;
+        copyButton.title = 'Copy code';
+        copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+
+        // Append buttons to the rightButtonsDiv
+        rightButtonsDiv.appendChild(resetButton);
+        rightButtonsDiv.appendChild(copyButton);
+
+        // Create console area div
+        var consoleAreaDiv = document.createElement('div');
+        consoleAreaDiv.id = `qpyodide-console-area-${this.id}`;
+        consoleAreaDiv.className = 'qpyodide-console-area';
+
+        // Create editor div
+        var editorDiv = document.createElement('div');
+        editorDiv.id = `qpyodide-editor-${this.id}`;
+        editorDiv.className = 'qpyodide-editor';
+
+        // Create output code area div
+        var outputCodeAreaDiv = document.createElement('div');
+        outputCodeAreaDiv.id = `qpyodide-output-code-area-${this.id}`;
+        outputCodeAreaDiv.className = 'qpyodide-output-code-area';
+        outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+        // Create pre element inside output code area
+        var preElement = document.createElement('pre');
+        preElement.style.visibility = 'hidden';
+        outputCodeAreaDiv.appendChild(preElement);
+
+        // Create output graph area div
+        var outputGraphAreaDiv = document.createElement('div');
+        outputGraphAreaDiv.id = `qpyodide-output-graph-area-${this.id}`;
+        outputGraphAreaDiv.className = 'qpyodide-output-graph-area';
+
+        // Append buttons to the toolbar
+        toolbarDiv.appendChild(leftButtonsDiv);
+        toolbarDiv.appendChild(rightButtonsDiv);
+
+        // Append all elements to the main div
+        mainDiv.appendChild(toolbarDiv);
+        consoleAreaDiv.appendChild(editorDiv);
+        consoleAreaDiv.appendChild(outputCodeAreaDiv);
+        mainDiv.appendChild(consoleAreaDiv);
+        mainDiv.appendChild(outputGraphAreaDiv);
+
+        // Insert the dynamically generated object at the document location.
+        this.insertionLocation.appendChild(mainDiv);
+    }
+
+    /**
+     * Set up Monaco Editor for code editing.
+     */
+    setupMonacoEditor() {
+
+        // Retrieve the previously created document elements
+        this.runButton = document.getElementById(`qpyodide-button-run-${this.id}`);
+        this.resetButton = document.getElementById(`qpyodide-button-reset-${this.id}`);
+        this.copyButton = document.getElementById(`qpyodide-button-copy-${this.id}`);
+        this.editorDiv = document.getElementById(`qpyodide-editor-${this.id}`);
+        this.outputCodeDiv = document.getElementById(`qpyodide-output-code-area-${this.id}`);
+        this.outputGraphDiv = document.getElementById(`qpyodide-output-graph-area-${this.id}`);
+        
+        // Store reference to the object
+        var thiz = this;
+
+        // Load the Monaco Editor and create an instance
+        require(['vs/editor/editor.main'], function () {
+            thiz.editor = monaco.editor.create(
+                thiz.editorDiv, {
+                    value: thiz.code,
+                    language: 'python',
+                    theme: 'vs-light',
+                    automaticLayout: true,           // Works wonderfully with RevealJS
+                    scrollBeyondLastLine: false,
+                    minimap: {
+                        enabled: false
+                    },
+                    fontSize: '17.5pt',              // Bootstrap is 1 rem
+                    renderLineHighlight: "none",     // Disable current line highlighting
+                    hideCursorInOverviewRuler: true,  // Remove cursor indictor in right hand side scroll bar
+                    readOnly: thiz.options['read-only'] ?? false
+                }
+            );
+        
+            // Store the official counter ID to be used in keyboard shortcuts
+            thiz.editor.__qpyodideCounter = thiz.id;
+        
+            // Store the official div container ID
+            thiz.editor.__qpyodideEditorId = `qpyodide-editor-${thiz.id}`;
+        
+            // Store the initial code value and options
+            thiz.editor.__qpyodideinitialCode = thiz.code;
+            thiz.editor.__qpyodideOptions = thiz.options;
+        
+            // Set at the model level the preferred end of line (EOL) character to LF.
+            // This prevent `\r\n` from being given to the Pyodide engine if the user is on Windows.
+            // See details in: https://github.com/coatless/quarto-Pyodide/issues/94
+            // Associated error text: 
+            // Error: <text>:1:7 unexpected input
+        
+            // Retrieve the underlying model
+            const model = thiz.editor.getModel();
+            // Set EOL for the model
+            model.setEOL(monaco.editor.EndOfLineSequence.LF);
+        
+            // Dynamically modify the height of the editor window if new lines are added.
+            let ignoreEvent = false;
+            const updateHeight = () => {
+            const contentHeight = thiz.editor.getContentHeight();
+            // We're avoiding a width change
+            //editorDiv.style.width = `${width}px`;
+            thiz.editorDiv.style.height = `${contentHeight}px`;
+                try {
+                    ignoreEvent = true;
+            
+                    // The key to resizing is this call
+                    thiz.editor.layout();
+                } finally {
+                    ignoreEvent = false;
+                }
+            };
+        
+            // Helper function to check if selected text is empty
+            function isEmptyCodeText(selectedCodeText) {
+                return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+            }
+        
+            // Registry of keyboard shortcuts that should be re-added to each editor window
+            // when focus changes.
+            const addPyodideKeyboardShortCutCommands = () => {
+            // Add a keydown event listener for Shift+Enter to run all code in cell
+            thiz.editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+                // Retrieve all text inside the editor
+                thiz.runCode(thiz.editor.getValue());
+            });
+        
+            // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+            thiz.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+                    // Get the selected text from the editor
+                    const selectedText = thiz.editor.getModel().getValueInRange(thiz.editor.getSelection());
+                    // Check if no code is selected
+                    if (isEmptyCodeText(selectedText)) {
+                        // Obtain the current cursor position
+                        let currentPosition = thiz.editor.getPosition();
+                        // Retrieve the current line content
+                        let currentLine = thiz.editor.getModel().getLineContent(currentPosition.lineNumber);
+                
+                        // Propose a new position to move the cursor to
+                        let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+                
+                        // Check if the new position is beyond the last line of the editor
+                        if (newPosition.lineNumber > thiz.editor.getModel().getLineCount()) {
+                            // Add a new line at the end of the editor
+                            thiz.editor.executeEdits("addNewLine", [{
+                            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+                            text: "\n", 
+                            forceMoveMarkers: true,
+                            }]);
+                        }
+                        
+                        // Run the entire line of code.
+                        thiz.runCode(currentLine);
+                
+                        // Move cursor to new position
+                        thiz.editor.setPosition(newPosition);
+                    } else {
+                        // Code to run when Ctrl+Enter is pressed with selected code
+                        thiz.runCode(selectedText);
+                    }
+                });
+            }
+        
+            // Register an on focus event handler for when a code cell is selected to update
+            // what keyboard shortcut commands should work.
+            // This is a workaround to fix a regression that happened with multiple
+            // editor windows since Monaco 0.32.0 
+            // https://github.com/microsoft/monaco-editor/issues/2947
+            thiz.editor.onDidFocusEditorText(addPyodideKeyboardShortCutCommands);
+        
+            // Register an on change event for when new code is added to the editor window
+            thiz.editor.onDidContentSizeChange(updateHeight);
+        
+            // Manually re-update height to account for the content we inserted into the call
+            updateHeight();
+                
+        });
+
+        
+        // Add a click event listener to the run button
+        thiz.runButton.onclick = function () {
+            thiz.runCode(
+                thiz.editor.getValue()
+            );
+        };
+        
+        // Add a click event listener to the reset button
+        thiz.copyButton.onclick = function () {
+            // Retrieve current code data
+            const data = thiz.editor.getValue();
+            
+            // Write code data onto the clipboard.
+            navigator.clipboard.writeText(data || "");
+        };
+        
+        // Add a click event listener to the copy button
+        thiz.resetButton.onclick = function () {
+            thiz.editor.setValue(thiz.editor.__qpyodideinitialCode);
+        };
+    }
+
+    disableInteractiveCells() {
+        // Enable locking of execution for the cell
+        this.executionLock = true;
+
+        // Disallowing execution of other code cells
+        document.querySelectorAll(".qpyodide-button-run").forEach((btn) => {
+            btn.disabled = true;
+        });
+    }
+
+    enableInteractiveCells() {
+        // Remove locking of execution for the cell
+        this.executionLock = false;
+
+        // All execution of other code cells
+        document.querySelectorAll(".qpyodide-button-run").forEach((btn) => {
+            btn.disabled = false;
+        });
+    }
+
+    /**
+     * Execute the Python code inside the editor.
+     */
+    async runCode(code) {
+        
+        // Check if we have an execution lock
+        if (this.executeLock) return; 
+        
+        this.disableInteractiveCells();
+
+        // Force wait procedure
+        await mainPyodide;
+
+        // Clear the output stock
+        qpyodideResetOutputArray();
+
+        // Generate a new canvas element, avoid attaching until the end
+        let graphFigure = document.createElement("figure");
+        document.pyodideMplTarget = graphFigure;
+
+        console.log("Running code!");
+        // Obtain results from the base class
+        try {
+            // Always check to see if the user adds new packages
+            await mainPyodide.loadPackagesFromImports(code);
+
+            // Process result
+            const output = await mainPyodide.runPythonAsync(code);
+
+            // Add output
+            qpyodideAddToOutputArray(output, "stdout");
+        } catch (err) {
+            // Add error message
+            qpyodideAddToOutputArray(err, "stderr");
+            // TODO: There has to be a way to remove the Pyodide portion of the errors... 
+        }
+
+        const result = qpyodideRetrieveOutput();
+
+        // Nullify the output area of content
+        this.outputCodeDiv.innerHTML = "";
+        this.outputGraphDiv.innerHTML = "";        
+
+        // Design an output object for messages
+        const pre = document.createElement("pre");
+        if (/\S/.test(result)) {
+            // Display results as HTML elements to retain output styling
+            const div = document.createElement("div");
+            div.innerHTML = result;
+            pre.appendChild(div);
+        } else {
+            // If nothing is present, hide the element.
+            pre.style.visibility = "hidden";
+        }
+
+        // Add output under interactive div
+        this.outputCodeDiv.appendChild(pre);
+
+        // Place the graphics onto the page
+        if (graphFigure) {
+
+            if (this.options['fig-cap']) {
+                // Create figcaption element
+                const figcaptionElement = document.createElement('figcaption');
+                figcaptionElement.innerText = this.options['fig-cap'];
+                // Append figcaption to figure
+                graphFigure.appendChild(figcaptionElement);    
+            }
+
+            this.outputGraphDiv.appendChild(graphFigure);
+        }
+
+        // Re-enable execution
+        this.enableInteractiveCells();
+    }
+};
+
+/**
+ * OutputCell class for customizing and displaying output.
+ * @class
+ * @extends BaseCell
+ */
+class OutputCell extends BaseCell {
+    /**
+     * Constructor for OutputCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+      super(cellData);
+    }
+  
+    /**
+     * Display customized output on the page.
+     * @param {*} output - Result to be displayed.
+     */
+    displayOutput(output) {
+        const results = this.executeCode();
+        return results;
+    }
+  }
+
+/**
+ * SetupCell class for suppressed output.
+ * @class
+ * @extends BaseCell
+ */
+class SetupCell extends BaseCell {
+    /**
+     * Constructor for SetupCell.
+     * @constructor
+     * @param {Object} cellData - JSON object containing code, id, and options.
+     */
+    constructor(cellData) {
+        super(cellData);
+    }
+
+    /**
+     * Execute the Python code without displaying the results.
+     */
+    runSetupCode() {
+        // Execute code without displaying output
+        this.executeCode();
+    }
+};
+</script>
+<script type="module">
+// Handle cell initialization initialization
+qpyodideCellDetails.map(
+    (entry) => {
+      // Handle the creation of the element
+      qpyodideCreateCell(entry);
+    }
+  );
+</script>
+
+
+
+
+</body></html>

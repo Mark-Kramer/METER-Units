@@ -21,4 +21,4 @@ title: "BU METER"
 
 
 ### Reproducible exploratory analysis: Mitigating multiplicity when mining data
-- Static [notebook](https://github.com/Mark-Kramer/METER-Units/blob/main/METER_Exploratory.ipynb)
+- Interactive [notebook](METER_Exploratory-Quarto.ipynb)
