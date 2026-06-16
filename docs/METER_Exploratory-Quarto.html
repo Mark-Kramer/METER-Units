@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -262,7 +228,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"id":1,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"import numpy as np\nimport matplotlib.pyplot as plt\nimport statsmodels.api as sm\nimport requests\nimport asyncio\n\n# Load custom functions\nawait micropip.install(\"tqdm\")\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/exploratory_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\nspikes, signals, t = load_data()"},{"id":2,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"print(spikes.shape)\nprint(signals.shape)"},{"id":3,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"# Plot the spiking from an example neuron.\nplt.figure(figsize=(8, 2))\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()"},{"id":4,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"# Plot an example signal.\nplt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);\nplt.show()"},{"id":5,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"plt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);        # Plot the first signal.\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()"},{"id":6,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"p = compute_p_values(spikes, signals)"},{"id":7,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p); cbar = plt.colorbar(); cbar.set_label('p-value', fontsize=12)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()"},{"id":8,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"np.sum(p < 0.05)"},{"id":9,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"np.sum(p < 0.05/20000)"},{"id":10,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"p_values_significant_after_FDR = fdr(p)"},{"id":11,"options":{"output":"true","results":"markup","message":"true","comment":"","autorun":"","out-height":"","fig-width":7,"label":"","classes":"","warning":"true","context":"interactive","dpi":72,"out-width":"700px","fig-height":5,"fig-cap":"","read-only":"false"},"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p_values_significant_after_FDR)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()"}];
+globalThis.qpyodideCellDetails = [{"code":"import numpy as np\nimport matplotlib.pyplot as plt\nimport statsmodels.api as sm\nimport requests\nimport asyncio\n\n# Load custom functions\nawait micropip.install(\"tqdm\")\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/exploratory_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\nspikes, signals, t = load_data()","id":1,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"print(spikes.shape)\nprint(signals.shape)","id":2,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"# Plot the spiking from an example neuron.\nplt.figure(figsize=(8, 2))\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()","id":3,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"# Plot an example signal.\nplt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);\nplt.show()","id":4,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"plt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);        # Plot the first signal.\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()","id":5,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p = compute_p_values(spikes, signals)","id":6,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p); cbar = plt.colorbar(); cbar.set_label('p-value', fontsize=12)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","id":7,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"np.sum(p < 0.05)","id":8,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"np.sum(p < 0.05/20000)","id":9,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p_values_significant_after_FDR = fdr(p)","id":10,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p_values_significant_after_FDR)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","id":11,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"T = np.shape(spikes)[0];\np_split = compute_p_values(spikes[0:int(T/2),:], signals[0:int(T/2),:])","id":12,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"candidate_significant_pairs = (p_split<0.05)\nprint(sum(candidate_significant_pairs.flatten()))\n[i_signals,i_spikes] = np.where(candidate_significant_pairs)","id":13,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p_test = np.zeros(np.shape(i_signals))\nfor index, element in enumerate(i_signals):\n    X = signals[int(T/2):, i_signals[index]]          # Predictor variable\n    y = spikes[int(T/2):, i_spikes[index]]            # Response variable\n    X = sm.add_constant(X)                            # Adding a constant column for the intercept\n    glm_model     = sm.GLM(y, X, family=sm.families.Poisson())\n    glm_results   = glm_model.fit()\n    p_test[index] = glm_results.pvalues[1]","id":14,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"i0 = np.where(fdr(p_test)==1)            # FDR\nprint('Signal', i_signals[i0], ', Spike', i_spikes[i0])","id":15,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p_values_significant_after_splitting = np.zeros(np.shape(p_split))\np_values_significant_after_splitting[i_signals[i0], i_spikes[i0]] = 1\nplt.figure(figsize=(8, 6))\nplt.imshow(p_values_significant_after_splitting)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","id":16,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}}];
 
 
 </script>
@@ -555,6 +521,7 @@ window.Quarto = {
   <li><a href="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." id="toc-to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." class="nav-link" data-scroll-target="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example.">To build some intuition for these steps, let’s start with a simple example.</a></li>
   </ul></li>
   <li><a href="#split-your-data-to-test-your-conclusions." id="toc-split-your-data-to-test-your-conclusions." class="nav-link" data-scroll-target="#split-your-data-to-test-your-conclusions.">7- Split your data to test your conclusions.</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">8- Conclusions</a></li>
   </ul>
 </nav>
     </div>
@@ -573,7 +540,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Reproducible exploratory analysis - Mitigating multiplicity when mining data</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+<h1 class="title">Reproducible exploratory analysis - Mitigating multiplicity when mining data</h1>
 </div>
 
 
@@ -1438,10 +1405,10 @@ function checkAnswerBonferroniResult() {
 <h1>5- Rat brains either predict many things or no things?</h1>
 <p>We’ve applied two strategies to confront multiplicity in our analysis:</p>
 <ul>
-<li>Do nothing (Unit 3)</li>
-<li>Bonferroni correction (Unit 4)</li>
+<li>Do nothing (Part 3)</li>
+<li>Bonferroni correction (Part 4)</li>
 </ul>
-<p>The two strategies give completely different results. Either neurons in the rat brain spike with many associations to observed signals (Unit 3) or no associations (Unit 4). And, neither result makes sense when compared to the <a href="https://www.nature.com/articles/514153a">existing</a> <a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">literature</a>. <strong>So, now what?</strong></p>
+<p>The two strategies give completely different results. Either neurons in the rat brain spike with many associations to observed signals (Part 3) or no associations (Part 4). And, neither result makes sense when compared to the <a href="https://www.nature.com/articles/514153a">existing</a> <a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">literature</a>. <strong>So, now what?</strong></p>
 <p>Again, many strategies exist to correct for multiplicity. There’s no single “right” approach.</p>
 <ul>
 <li><p>Our first approach (do nothing) is too lenient - we allow too many false positives. And, in doing so, we draw a ridiculous scientific conclusion: action potentials in the rat brain predict prices on the stock market.</p></li>
@@ -1453,8 +1420,8 @@ function checkAnswerBonferroniResult() {
 <section id="choose-your-own-adventure" class="level1">
 <h1>Choose your own adventure!</h1>
 <ul>
-<li>False Discovery Rate or FDR (go to Unit 6)</li>
-<li>Split the data (go to Unit 7)</li>
+<li>False Discovery Rate or FDR (go to Part 6)</li>
+<li>Split the data (go to Part 7)</li>
 </ul>
 </section>
 <section id="fdr-a-less-conservative-approach-to-multiplicity." class="level1">
@@ -1765,46 +1732,32 @@ function checkAnswerFdrDotsPattern() {
 </section>
 <section id="split-your-data-to-test-your-conclusions." class="level1">
 <h1>7- Split your data to test your conclusions.</h1>
-<p>(Pending: describe how you can split your data in half to test your conclusions. You take the first half of your data and explore. Find the significant relationships. Then test those relationships in the second half.</p>
-<p>(Use first half of data, in time)</p>
-<div id="db00d1b5-562b-4560-8ba9-8ae1a45c4e90" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> np.shape(spikes)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>p_split <span class="op">=</span> compute_p_values(spikes[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:], signals[<span class="dv">0</span>:<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>),:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>(Find candidate significant associations)</p>
-<div id="e7611a7f-6a39-46b5-91d1-ecc5bd06c17c" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>candidate_significant_pairs <span class="op">=</span> (p_split<span class="op">&lt;</span><span class="fl">0.05</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(candidate_significant_pairs.flatten()))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>[i_signals,i_spikes] <span class="op">=</span> np.where(candidate_significant_pairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>(Test these predicted associations in the second half of data)</p>
-<div id="c2d65bc1-7ca9-4485-b63e-cb854edd5e98" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p_test <span class="op">=</span> np.zeros(np.shape(i_signals))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, element <span class="kw">in</span> <span class="bu">enumerate</span>(i_signals):</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> signals[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_signals[index]]       <span class="co"># Predictor variable</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> spikes[<span class="bu">int</span>(T<span class="op">/</span><span class="dv">2</span>):, i_spikes[index]]        <span class="co"># Response variable</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(X)  <span class="co"># Adding a constant column for the intercept</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    glm_model <span class="op">=</span> sm.GLM(y, X, family<span class="op">=</span>sm.families.Poisson())</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    glm_results <span class="op">=</span> glm_model.fit()</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    p_test[index] <span class="op">=</span> glm_results.pvalues[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>(Identify significant associations)</p>
-<div id="07ee72b6-8928-43e7-9f87-75426fd1c4a2" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>i0 <span class="op">=</span> np.where(p_test<span class="op">&lt;</span><span class="fl">0.05</span><span class="op">/</span>np.size(i_signals))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Signal'</span>, i_signals[i0], <span class="st">', Spike'</span>, i_spikes[i0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<p>(Pending: describe how you can split your data in half to test your conclusions. You take the first half of your data and explore. Find the significant relationships. Then test those relationships in the second half. Called a split-sample screening/validation procedure. Let’s do it.)</p>
+<p>(Use first half of data, in time. This part is slow.)</p>
+<div id="qpyodide-insertion-location-12"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>(Find candidate significant associations.)</p>
+<div id="qpyodide-insertion-location-13"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>(Test these predicted associations in the second half of data.)</p>
+<div id="qpyodide-insertion-location-14"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>(FDR correction on validated p-values.)</p>
+<div id="qpyodide-insertion-location-15"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>(Visualize validated associations.)</p>
+<div id="qpyodide-insertion-location-16"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>(There are three validated p-values, associated with rodent position.)</p>
+</section>
+<section id="conclusions" class="level1">
+<h1>8- Conclusions</h1>
+<ul>
+<li>Summarize rigor problem &amp; outline differences between approaches.</li>
+<li>Return to initial exploratory tongue-in-cheek study and identify rigor problem. Make clear that the authors intended to make this satire.</li>
+<li>Return to initial exploratory Nobel Prize study and consider context of rigor problem.</li>
+<li>Call out to other approaches from other units: causality (triangulation) others</li>
+</ul>
 
 
 </section>
