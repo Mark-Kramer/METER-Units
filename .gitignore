@@ -2,5 +2,5 @@
 IMG_Exploratory/.ipynb_checkpoints/*
 __pycache__*
 OLD/*
-
 /.quarto/
+*.DS_Store
