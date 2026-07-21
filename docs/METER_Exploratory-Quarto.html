@@ -228,7 +228,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"import numpy as np\nimport matplotlib.pyplot as plt\nimport statsmodels.api as sm\nimport requests\nimport asyncio\n\n# Load custom functions\nawait micropip.install(\"tqdm\")\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/exploratory_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\nspikes, signals, t = load_data()","id":1,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"print(spikes.shape)\nprint(signals.shape)","id":2,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"# Plot the spiking from an example neuron.\nplt.figure(figsize=(8, 2))\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()","id":3,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"# Plot an example signal.\nplt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);\nplt.show()","id":4,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"plt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);        # Plot the first signal.\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()","id":5,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p = compute_p_values(spikes, signals)","id":6,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p); cbar = plt.colorbar(); cbar.set_label('p-value', fontsize=12)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","id":7,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"np.sum(p < 0.05)","id":8,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"np.sum(p < 0.05/20000)","id":9,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p_values_significant_after_FDR = fdr(p)","id":10,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p_values_significant_after_FDR)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","id":11,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"T = np.shape(spikes)[0];\np_split = compute_p_values(spikes[0:int(T/2),:], signals[0:int(T/2),:])","id":12,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"candidate_significant_pairs = (p_split<0.05)\nprint(sum(candidate_significant_pairs.flatten()))\n[i_signals,i_spikes] = np.where(candidate_significant_pairs)","id":13,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p_test = np.zeros(np.shape(i_signals))\nfor index, element in enumerate(i_signals):\n    X = signals[int(T/2):, i_signals[index]]          # Predictor variable\n    y = spikes[int(T/2):, i_spikes[index]]            # Response variable\n    X = sm.add_constant(X)                            # Adding a constant column for the intercept\n    glm_model     = sm.GLM(y, X, family=sm.families.Poisson())\n    glm_results   = glm_model.fit()\n    p_test[index] = glm_results.pvalues[1]","id":14,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"i0 = np.where(fdr(p_test)==1)            # FDR\nprint('Signal', i_signals[i0], ', Spike', i_spikes[i0])","id":15,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}},{"code":"p_values_significant_after_splitting = np.zeros(np.shape(p_split))\np_values_significant_after_splitting[i_signals[i0], i_spikes[i0]] = 1\nplt.figure(figsize=(8, 6))\nplt.imshow(p_values_significant_after_splitting)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","id":16,"options":{"message":"true","results":"markup","comment":"","out-height":"","read-only":"false","label":"","fig-cap":"","context":"interactive","dpi":72,"fig-width":7,"out-width":"700px","fig-height":5,"output":"true","autorun":"","classes":"","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"import numpy as np\nimport matplotlib.pyplot as plt\nimport statsmodels.api as sm\nimport requests\nimport asyncio\n\n# Load custom functions\nawait micropip.install(\"tqdm\")\nurl = \"https://raw.githubusercontent.com/Mark-Kramer/METER-Units/refs/heads/main/exploratory_functions-SHORT.py\"\nresponse = requests.get(url)\nexec(response.text)\nspikes, signals, t = load_data()","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":1},{"code":"print(spikes.shape)\nprint(signals.shape)","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":2},{"code":"# Plot the spiking from an example neuron.\nplt.figure(figsize=(8, 2))\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":3},{"code":"# Plot an example signal.\nplt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);\nplt.show()","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":4},{"code":"plt.figure(figsize=(8, 2))\nplt.plot(t, signals[:,0]);        # Plot the first signal.\nplot_spike_train(t, spikes[:,0])  # Plot the first spike train.\nplt.show()","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":5},{"code":"p = compute_p_values(spikes, signals)","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":6},{"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p); cbar = plt.colorbar(); cbar.set_label('p-value', fontsize=12)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":7},{"code":"np.sum(p < 0.05)","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":8},{"code":"np.sum(p < 0.05/20000)","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":9},{"code":"p_values_significant_after_FDR = fdr(p)","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":10},{"code":"plt.figure(figsize=(8, 6))\nplt.imshow(p_values_significant_after_FDR)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":11},{"code":"# Determine total number of time steps,\nT            = np.shape(spikes)[0];\n# ... and compare spikes and signals for first half of time.\np_first_half = compute_p_values(spikes[0:int(T/2),:], signals[0:int(T/2),:])","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":12},{"code":"candidate_significant_pairs = (p_first_half < 0.05)\nprint(sum(candidate_significant_pairs.flatten()))","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":13},{"code":"[i_signals,i_spikes] = np.where(candidate_significant_pairs)\np_test = np.zeros(np.shape(i_signals))\nfor index, element in enumerate(i_signals):\n    X = signals[int(T/2):, i_signals[index]]          # Predictor variable\n    y = spikes[int(T/2):, i_spikes[index]]            # Response variable\n    X = sm.add_constant(X)                            # Adding a constant column for the intercept\n    glm_model     = sm.GLM(y, X, family=sm.families.Poisson())\n    glm_results   = glm_model.fit()\n    p_test[index] = glm_results.pvalues[1]","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":14},{"code":"i0 = np.where(fdr(p_test)==1)            # FDR\nprint('Signal', i_signals[i0], ', Spike', i_spikes[i0])","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":15},{"code":"p_values_significant_after_splitting = np.zeros(np.shape(p_first_half))\np_values_significant_after_splitting[i_signals[i0], i_spikes[i0]] = 1\nplt.figure(figsize=(8, 6))\nplt.imshow(p_values_significant_after_splitting)\nplt.xlabel('Neuron number'); plt.ylabel('Signal number');\nplt.show()","options":{"results":"markup","out-width":"700px","fig-cap":"","dpi":72,"fig-width":7,"message":"true","output":"true","label":"","comment":"","out-height":"","read-only":"false","autorun":"","context":"interactive","warning":"true","classes":"","fig-height":5},"id":16}];
 
 
 </script>
@@ -501,27 +501,33 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-mitigate-multiplicity" id="toc-why-mitigate-multiplicity" class="nav-link active" data-scroll-target="#why-mitigate-multiplicity">0 - Why mitigate multiplicity?</a></li>
-  <li><a href="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" id="toc-rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="nav-link" data-scroll-target="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity">1 - Rat brains, position, and profit: an introduction to mitigating multiplicity</a>
+  <li><a href="#why-mitigate-multiplicity" id="toc-why-mitigate-multiplicity" class="nav-link active" data-scroll-target="#why-mitigate-multiplicity">0. Why mitigate multiplicity?</a></li>
+  <li><a href="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" id="toc-rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="nav-link" data-scroll-target="#rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity">1. Rat brains, position, and profit: an introduction to mitigating multiplicity</a>
   <ul class="collapse">
   <li><a href="#the-first-suspicious-scenario" id="toc-the-first-suspicious-scenario" class="nav-link" data-scroll-target="#the-first-suspicious-scenario">The first suspicious scenario</a></li>
   <li><a href="#a-second-suspicious-scenario" id="toc-a-second-suspicious-scenario" class="nav-link" data-scroll-target="#a-second-suspicious-scenario">A second suspicious scenario</a></li>
   <li><a href="#so-what-do-we-believe" id="toc-so-what-do-we-believe" class="nav-link" data-scroll-target="#so-what-do-we-believe">So, what do we believe?</a></li>
   </ul></li>
-  <li><a href="#visualization-our-first-analysis-step" id="toc-visualization-our-first-analysis-step" class="nav-link" data-scroll-target="#visualization-our-first-analysis-step">2 - Visualization, our first analysis step</a></li>
-  <li><a href="#profit-rat-brains-for-high-frequency-trading-in-the-nyse" id="toc-profit-rat-brains-for-high-frequency-trading-in-the-nyse" class="nav-link" data-scroll-target="#profit-rat-brains-for-high-frequency-trading-in-the-nyse">3- Profit! Rat brains for high-frequency trading in the NYSE</a></li>
-  <li><a href="#not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." id="toc-not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." class="nav-link" data-scroll-target="#not-so-fast-finding-meaningful-relationships-after-youve-tested-everything.">4- Not so fast … finding meaningful relationships after you’ve tested everything.</a>
+  <li><a href="#does-this-really-work-analyze-some-data" id="toc-does-this-really-work-analyze-some-data" class="nav-link" data-scroll-target="#does-this-really-work-analyze-some-data">2. Does this really work? Analyze some data</a></li>
+  <li><a href="#profit-rat-brains-for-high-frequency-trading-on-the-nyse" id="toc-profit-rat-brains-for-high-frequency-trading-on-the-nyse" class="nav-link" data-scroll-target="#profit-rat-brains-for-high-frequency-trading-on-the-nyse">3. Profit! Rat brains for high-frequency trading on the NYSE</a></li>
+  <li><a href="#not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." id="toc-not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." class="nav-link" data-scroll-target="#not-so-fast-finding-meaningful-relationships-after-youve-tested-everything.">4. Not so fast … finding meaningful relationships after you’ve tested everything.</a>
   <ul class="collapse">
   <li><a href="#intuition-building-aside" id="toc-intuition-building-aside" class="nav-link" data-scroll-target="#intuition-building-aside">Intuition building aside</a></li>
+  <li><a href="#now-back-to-the-main-story---the-bonferroni-correction" id="toc-now-back-to-the-main-story---the-bonferroni-correction" class="nav-link" data-scroll-target="#now-back-to-the-main-story---the-bonferroni-correction">Now, back to the main story - the Bonferroni correction</a></li>
   </ul></li>
-  <li><a href="#rat-brains-either-predict-many-things-or-no-things" id="toc-rat-brains-either-predict-many-things-or-no-things" class="nav-link" data-scroll-target="#rat-brains-either-predict-many-things-or-no-things">5- Rat brains either predict many things or no things?</a></li>
-  <li><a href="#choose-your-own-adventure" id="toc-choose-your-own-adventure" class="nav-link" data-scroll-target="#choose-your-own-adventure">Choose your own adventure!</a></li>
-  <li><a href="#fdr-a-less-conservative-approach-to-multiplicity." id="toc-fdr-a-less-conservative-approach-to-multiplicity." class="nav-link" data-scroll-target="#fdr-a-less-conservative-approach-to-multiplicity.">6- FDR: a less conservative approach to multiplicity.</a>
+  <li><a href="#rat-brains-either-predict-many-things-or-no-things" id="toc-rat-brains-either-predict-many-things-or-no-things" class="nav-link" data-scroll-target="#rat-brains-either-predict-many-things-or-no-things">5. Rat brains either predict many things or no things?</a></li>
+  <li><a href="#fdr-a-less-conservative-approach-to-multiplicity." id="toc-fdr-a-less-conservative-approach-to-multiplicity." class="nav-link" data-scroll-target="#fdr-a-less-conservative-approach-to-multiplicity.">6. FDR: a less conservative approach to multiplicity.</a>
   <ul class="collapse">
-  <li><a href="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." id="toc-to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." class="nav-link" data-scroll-target="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example.">To build some intuition for these steps, let’s start with a simple example.</a></li>
+  <li><a href="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." id="toc-to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example." class="nav-link" data-scroll-target="#to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example.">To build some intuition for these steps, let’s start with a simple example.</a>
+  <ul class="collapse">
+  <li><a href="#example---step-1.-assign-each-p-value-a-rank." id="toc-example---step-1.-assign-each-p-value-a-rank." class="nav-link" data-scroll-target="#example---step-1.-assign-each-p-value-a-rank.">Example - Step 1. Assign each p-value a rank.</a></li>
+  <li><a href="#example---step-2.-calculate-the-critical-value-for-each-rank." id="toc-example---step-2.-calculate-the-critical-value-for-each-rank." class="nav-link" data-scroll-target="#example---step-2.-calculate-the-critical-value-for-each-rank.">Example - Step 2. Calculate the critical value for each rank.</a></li>
+  <li><a href="#example---step-3.-compare-each-p-value-to-its-corresponding-critical-value." id="toc-example---step-3.-compare-each-p-value-to-its-corresponding-critical-value." class="nav-link" data-scroll-target="#example---step-3.-compare-each-p-value-to-its-corresponding-critical-value.">Example - Step 3. Compare each p-value to its corresponding critical value.</a></li>
   </ul></li>
-  <li><a href="#split-your-data-to-test-your-conclusions." id="toc-split-your-data-to-test-your-conclusions." class="nav-link" data-scroll-target="#split-your-data-to-test-your-conclusions.">7- Split your data to test your conclusions.</a></li>
-  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">8- Conclusions</a></li>
+  <li><a href="#now-back-to-the-main-story." id="toc-now-back-to-the-main-story." class="nav-link" data-scroll-target="#now-back-to-the-main-story.">Now, back to the main story.</a></li>
+  </ul></li>
+  <li><a href="#split-the-data" id="toc-split-the-data" class="nav-link" data-scroll-target="#split-the-data">7. Split the Data</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">8. Conclusions</a></li>
   </ul>
 </nav>
     </div>
@@ -557,28 +563,36 @@ window.Quarto = {
 </header>
 
 
-<p>Identifying meaningful patterns and relationships within noisy data is a fundamental component of neuroscience research; however, multiplicity - the practice of conducting multiple simultaneous comparisons - can result in spurious and misleading conclusions. Alternatively, strict approaches to correct for multiplicity can result in missed scientific conclusions. In this unit, learners will understand how multiplicity occurs, its impacts, and strategies to address it.</p>
+<p>Identifying meaningful patterns and relationships within noisy data is a fundamental component of neuroscience research; however, multiplicity—the practice of conducting multiple simultaneous comparisons—can result in spurious and misleading conclusions. By contrast, overly strict corrections for multiplicity can cause us to miss meaningful scientific conclusions. In this unit, learners will understand how multiplicity occurs, its impacts, and strategies to address it.</p>
 <section id="why-mitigate-multiplicity" class="level1">
-<h1>0 - Why mitigate multiplicity?</h1>
+<h1>0. Why mitigate multiplicity?</h1>
 <p>In science, it’s common to test data in multiple ways. We might use our data to test multiple theories or we might test multiple features of data collected from a novel device.</p>
-<p>After doing so, we often want to make confident statements about these test results. It’s then important to deal with the challenges of <strong>multiplicity</strong>.</p>
-<p>There are (at least) two common mistakes when confronting multiplicity:</p>
+<p>After doing so, we often want to make confident statements about these test results. It’s then important to deal with the challenges of <strong>multiplicity</strong>. Multiplicity occurs whenever we have multiple opportunities to find a result. The more tests we perform, the more likely we are to obtain at least one apparently meaningful result purely by chance - even when no real effect exists.</p>
+<p>For example:</p>
+<ul>
+<li>A researcher tests whether a treatment affects 20 different health outcomes.</li>
+<li>A geneticist tests thousands of genes to determine which are associated with a disease.</li>
+<li>A researcher examines several subgroups, outcomes, and time periods, then reports the most promising result.</li>
+</ul>
+<p>In each case, performing more tests creates more opportunities for chance findings.</p>
+<p>After performing these tests, we often want to make confident statements about the results. It is therefore important to address the challenges created by multiplicity.</p>
+<p>There are at least two common mistakes when confronting multiplicity:</p>
 <ol type="1">
-<li><p><strong>Too lenient</strong>. If we do nothing about multiplicity in our results, then we might confuse spurious results occurring by chance with meaningful scientific conclusions.</p></li>
-<li><p><strong>Too strict</strong>. If we strictly address multiplicity, then - in our quest to avoid false positive results - we might disregard meaningful scientific conclusions.</p></li>
+<li><p><strong>Too lenient</strong>. If we do nothing about multiplicity in our results, then we might mistake spurious results occurring by chance for meaningful scientific findings.</p></li>
+<li><p><strong>Too strict</strong>. If we too aggressively address multiplicity, then - in our quest to avoid false positive results - we might overlook real and meaningful scientific conclusions.</p></li>
 </ol>
-<p>Unfortunately, no one-size-fits-all solution exists to address multiplicity. For your data and your results, you’ll need to make an informed decision.</p>
-<p>Our goal in this unit is to practice making these decisions to address multiplicity, and explore the impact of being too lenient or too strict.</p>
+<p>Unfortunately, no one-size-fits-all solution exists to address multiplicity. The appropriate approach depends on the scientific question, the number and structure of the tests, and the consequences of false-positive and false-negative conclusions.</p>
+<p>Our goal in this unit is to practice making decisions about multiplicity and to explore the consequences of being too lenient or too strict.</p>
 </section>
 <section id="rat-brains-position-and-profit-an-introduction-to-mitigating-multiplicity" class="level1">
-<h1>1 - Rat brains, position, and profit: an introduction to mitigating multiplicity</h1>
+<h1>1. Rat brains, position, and profit: an introduction to mitigating multiplicity</h1>
 <section id="the-first-suspicious-scenario" class="level2">
 <h2 class="anchored" data-anchor-id="the-first-suspicious-scenario">The first suspicious scenario</h2>
 <p>Consider the following data mining scenario:</p>
 <ul>
-<li><p>A research group inserts tiny electrodes into a rodent brain and records the activity of individual neurons while the rat walks, eats, drinks, grooms, and sleeps.</p></li>
-<li><p>The researchers collect data from 76 neurons and then, from these 76 neurons, choose 8 to analyze.</p></li>
-<li><p>The researchers report a handful of observations from the selected 8 neurons, such as how different neurons respond (i.e., generate action potentials) during some of the rat’s different behaviors (e.g., during walking, during grooming).</p></li>
+<li><p>A research group inserts tiny electrodes into a rodent brain and records the activity of individual neurons while the rat performs 5 behaviors: walks, eats, drinks, grooms, and sleeps.</p></li>
+<li><p>The researchers collect data from the 76 neurons and 5 behaviors and then choose 8 neurons to analyze.</p></li>
+<li><p>The researchers report observations from a handful of observations from the selected 8 neurons, such as how different neurons respond (i.e., generate action potentials) during some of the rat’s different behaviors (e.g., during walking, or during grooming).</p></li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -671,7 +685,7 @@ function checkAnswerPractice() {
 <h2 class="anchored" data-anchor-id="a-second-suspicious-scenario">A second suspicious scenario</h2>
 <p>Consider this press release from another data mining scenario:</p>
 <p><strong>EXTRA! EXTRA! RAT BRAINS CRACK THE STOCK MARKET CODE!</strong></p>
-<p><em>In a dazzling demonstration of rodent ingenuity—or perhaps sheer luck—<a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">researchers have harnessed the firing neurons of rat motor cortices to predict movements in the U.S. stock market</a>. That’s right, folks! A team from Michigan and Georgia linked rat brain activity to Wall Street ticker tapes, proving that whiskers may rival Wall Street wits. By monitoring the firing rates of 94 neurons across three rats, these scientists uncovered correlations between neural activity and the daily closing prices of stocks on NASDAQ, the NYSE, and the American Stock Exchange. The Coca-Cola stock price, for instance, danced in sync with the neurons like Fred and Ginger at the Ziegfeld Follies.</em></p>
+<p><em>In a dazzling demonstration of rodent ingenuity—or perhaps sheer luck—<a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">researchers have harnessed the firing neurons of rat motor cortices to predict movements in the U.S. stock market</a>. That’s right, folks! A team from Michigan and Georgia linked rat brain activity to Wall Street ticker tapes, proving that whiskers may rival Wall Street wits. By monitoring the firing rates of 94 neurons across three rats, these scientists uncovered correlations between neural activity and the daily closing prices of 4195 stocks on NASDAQ, the NYSE, and the American Stock Exchange. The Coca-Cola stock price, for instance, danced in sync with the neurons like Fred and Ginger at the Ziegfeld Follies.</em></p>
 <p><em>But wait, there’s more! The researchers didn’t stop at finding patterns — they dove headfirst into the trading floor with a predictive model based on neural firing rates. Rats’ neural spikes gave the orders: buy, sell, or hold. And the results? An impressive 43% increase in a simulated portfolio value, turning an initial $1,000 investment into a snappy $1,435 over just 20 trading days. Forget the contrarian strategies of hedge fund honchos—our furry friends seem to have cracked the code.</em></p>
 <p><em>And here’s the kicker, folks: this isn’t just about making a buck. The findings suggest a mysterious connection between rat neural activity and human economic behavior. The researchers propose a grand theory linking the creatures of Earth to the ebbs and flows of societal urges, tying their work to theories like Gaia’s interconnected organism hypothesis. So, the next time someone says, “it’s a rat race out there,” remember—they might just be running the show!</em></p>
 </section>
@@ -680,7 +694,7 @@ function checkAnswerPractice() {
 <p>Using noisy data recorded from rodent brains, the two scenarios above report relationships between:</p>
 <ol type="1">
 <li><p>the brain’s neural activity and rodent behavior, and</p></li>
-<li><p>the brain’s neural activity and the stock market.</p></li>
+<li><p>the brain’s neural activity and the stock market prices.</p></li>
 </ol>
 <p><strong>You might be (reasonably) skeptical.</strong> How could neural activity from a rat brain possibly predict so many different things?</p>
 <p>In what follows, we’ll investigate this question with the goal of confronting the challenge of multiplicity.</p>
@@ -738,7 +752,7 @@ In the second suspicious scenario discussed above, activity from 94 neurons was 
 </div>
 <div class="callout-body-container callout-body">
 <form id="quiz-form-stock-combos">
-<input type="radio" name="answer_stock_combos" value="incorrect1"> 4,289<br> <input type="radio" name="answer_stock_combos" value="incorrect2"> 39,433<br> <input type="radio" name="answer_stock_combos" value="correct"> 394,330<br> <input type="radio" name="answer_stock_combos" value="incorrect3"> 381,745<br><br> <button type="button" onclick="checkAnswerStockCombos()">Submit</button>
+<input type="radio" name="answer_stock_combos" value="incorrect1"> 4,289<br> <input type="radio" name="answer_stock_combos" value="incorrect2"> 39,433<br> <input type="radio" name="answer_stock_combos" value="incorrect3"> 381,745<br> <input type="radio" name="answer_stock_combos" value="correct"> 394,330<br><br> <button type="button" onclick="checkAnswerStockCombos()">Submit</button>
 </form>
 <p id="feedback_stock_combos">
 </p>
@@ -772,12 +786,12 @@ function checkAnswerStockCombos() {
 </div>
 </section>
 </section>
-<section id="visualization-our-first-analysis-step" class="level1">
-<h1>2 - Visualization, our first analysis step</h1>
-<p>Motivated by these previous scenarios, you receive data from a collaborator interested in understanding the relationship between neural activity in the rodent brain, a measure of rodent behaviors (e.g., measures of the rodent’s position, movement speed, head angle, etc.), and stock prices on the NYSE. The data consist of the following information:</p>
+<section id="does-this-really-work-analyze-some-data" class="level1">
+<h1>2. Does this really work? Analyze some data</h1>
+<p>Motivated by these previous scenarios, you receive data from a collaborator interested in understanding the relationship between neural activity in the rodent brain, measures of rodent behaviors (e.g., measures of the rodent’s position, movement speed, head angle, etc.), and stock prices on the NYSE. The data consist of the following information:</p>
 <ul>
 <li><p><code>spikes</code> - the action potentials (or “spikes”) generated by 200 neurons,</p></li>
-<li><p><code>signals</code> - the rodent position (one of the signals) and the price of 99 stocks.</p></li>
+<li><p><code>signals</code> - rodent behaviors (10 of the signals) and the price of 90 stocks.</p></li>
 </ul>
 <p>Both the <code>spikes</code> and <code>signals</code> are recorded simultaneously, every 1 ms for 0.5 s, resulting in a total of 500 data points.</p>
 <div id="qpyodide-insertion-location-1"></div>
@@ -788,12 +802,7 @@ function checkAnswerStockCombos() {
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Both <code>spikes</code> and <code>signals</code> consist of 500 time points (the number of rows). We collect data from 200 neurons and 100 signals (the number of columns).</p>
 <p>You might think of these variables as rectangles (or matrices), where each row indicates a time point, and each column indicates a neuron or signal:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="IMG_Exploratory/simple_boxes_neuron_and_signals.jpg" class="img-fluid figure-img"></p>
-<figcaption>title</figcaption>
-</figure>
-</div>
+<p><img src="IMG_Exploratory/simple_boxes_neuron_and_signals.jpg" class="img-fluid"></p>
 <p>Let’s plot the data from one neuron in <code>spikes</code>:</p>
 <div id="qpyodide-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -803,12 +812,12 @@ function checkAnswerStockCombos() {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-How do these data represent “spikes”?
+What features do you notice in this example from <code>spikes</code>?
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <form id="quiz-form-spike-representation">
-<input type="radio" name="answer_spike_representation" value="correct"> In this signal, the value 1 means a spike occurs at time <code>t</code>, and the value 0 means no spike occurs at time <code>t</code>. The black circles indicate the times of spikes.<br> <input type="radio" name="answer_spike_representation" value="incorrect1"> In this signal, the value 1 means no spike occurs at time <code>t</code>, and the value 0 means a spike occurs at time <code>t</code>.<br> <input type="radio" name="answer_spike_representation" value="incorrect2"> The signal uses large values to show strong spikes and small values to show weak spikes.<br> <input type="radio" name="answer_spike_representation" value="incorrect3"> The black circles indicate missing data points rather than spikes.<br><br> <button type="button" onclick="checkAnswerSpikeRepresentation()">Submit</button>
+<input type="radio" name="answer_spike_representation" value="correct"> At each time point, a spike is either present (black circle) or absent.<br> <input type="radio" name="answer_spike_representation" value="incorrect2"> The plot indicates large values to show strong spikes and small values to show weak spikes.<br> <input type="radio" name="answer_spike_representation" value="incorrect3"> The black circles indicate missing data points rather than spikes.<br><br> <button type="button" onclick="checkAnswerSpikeRepresentation()">Submit</button>
 </form>
 <p id="feedback_spike_representation">
 </p>
@@ -824,13 +833,10 @@ function checkAnswerSpikeRepresentation() {
     }
 
     if (selected.value === "correct") {
-        feedback.innerHTML = "✅ Correct! In these data, 1 means a spike occurs at time `t`, 0 means no spike occurs at time `t`, and the black circles mark the spike times.";
+        feedback.innerHTML = "✅ Correct! In these data, a black circle (value of 1 in the vector) means a spike occurs at time `t`, the absence of a black cricle (value of 0 in the vector) means no spike occurs at time `t`.";
         feedback.style.color = "green";
-    } else if (selected.value === "incorrect1") {
-        feedback.innerHTML = "❌ Incorrect. The coding is the other way around: 1 indicates that a spike occurs, and 0 indicates that no spike occurs.";
-        feedback.style.color = "red";
-    } else if (selected.value === "incorrect2") {
-        feedback.innerHTML = "❌ Incorrect. These data are represented in a binary way: 1 for a spike and 0 for no spike, rather than using larger values for stronger spikes.";
+    }  else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. These data are represented in a binary way: a black circle (value 1) for a spike and no black circle (value 0) for no spike, rather than using larger values for stronger spikes.";
         feedback.style.color = "red";
     } else if (selected.value === "incorrect3") {
         feedback.innerHTML = "❌ Incorrect. The black circles are used to show the times when spikes occur, not missing data.";
@@ -849,7 +855,7 @@ function checkAnswerSpikeRepresentation() {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-What features do you notice in the signal?
+What features do you notice in this example from <code>signals</code>?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -938,7 +944,7 @@ function checkAnswerSignalRelationship() {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-We’ve used visual inspection to compare the spike train from one neuron (the first column of <code>spikes</code>) and one signal (the first column of <code>signals</code>). We didn’t see an obvious relationship. However, there are many more relationships to compare. Repeat this analysis to compare each spike train (columns 1 to 200 of <code>spikes</code>) with each signal (columns 1 to 100 of <code>signals</code>). Do you observe any relationships?
+We’ve used visual inspection to compare the spike train from one neuron (the first column of <code>spikes</code>) and one signal (the first column of <code>signals</code>). We didn’t see an obvious relationship. However, there are many more relationships to compare. Repeat this analysis to compare each spike train (all 200 columns of <code>spikes</code>) with each signal (all 100 columns <code>signals</code>). Do you observe any relationships?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -985,9 +991,9 @@ function checkAnswerManyPlots() {
 </ul>
 </div>
 </section>
-<section id="profit-rat-brains-for-high-frequency-trading-in-the-nyse" class="level1">
-<h1>3- Profit! Rat brains for high-frequency trading in the NYSE</h1>
-<p>Let’s now investigate the pairwise associations between the spiking of 200 neurons in the rat brain, the rat position, and 99 stock prices.</p>
+<section id="profit-rat-brains-for-high-frequency-trading-on-the-nyse" class="level1">
+<h1>3. Profit! Rat brains for high-frequency trading on the NYSE</h1>
+<p>Let’s now investigate the pairwise associations between the spiking of 200 neurons in the rat brain with signals related to rat behavior and stock prices.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1031,14 +1037,14 @@ function checkAnswer200100Combos() {
 </script>
 </div>
 </div>
-<p>To compare the <code>spikes</code> and <code>signals</code>, we perform a statistical test of the association between each pair of data. There are many choices you could make to assess the associations and perform the statistical tests. We will not investigate those choices here. Instead, we will perform a sophisticated - yet standard - approach to assess the relationship between the <code>spikes</code> and <code>signals</code>; if you’re interested in (many) more analysis details, check out <a href="https://mark-kramer.github.io/Case-Studies-Python/09.html">this link</a>.</p>
+<p>To compare the <code>spikes</code> and <code>signals</code>, we perform a statistical test of the association between each pair of variables. There are many choices you could make to assess the associations and perform the statistical tests. We will not investigate those choices here. Instead, we will use a sophisticated—yet standard—approach to assess the relationship between the <code>spikes</code> and <code>signals</code>; if you’re interested in (many) more analysis details, check out <a href="https://mark-kramer.github.io/Case-Studies-Python/09.html">this link</a>.</p>
 <p>Again, for our purposes, the details of the test are not important.</p>
 <p>What is important is that <strong>each test produces a p-value</strong> and we interpret small p-values to indicate statistically significant associations (<a href="https://mark-kramer.github.io/METER-Units/METER_P_Values-Quarto.html">Putting the p-value in Context</a>).</p>
 <p>Let’s compute those p-values now.</p>
 <p><strong>This step is slow</strong>, because there are many p-values to compute!</p>
 <div id="qpyodide-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>For each neuron-signal pair, we estimate the association with an associated p-value.</p>
+<p>For each neuron-signal pair, we estimate the association and its p-value.</p>
 <p>We now have 20,000 p-values to investigate.</p>
 <p>To start, let’s visualize those p-values.</p>
 <div id="qpyodide-insertion-location-7"></div>
@@ -1086,7 +1092,7 @@ function checkAnswerMeaningfulRelationships() {
 </script>
 </div>
 </div>
-<p>To isolate meaningful relationships, let’s count the number of associations in which p&lt;0.05, the standard threshold for significance applied in practice (<strong>link to Unit:“Putting the p-value in Context”</strong>).</p>
+<p>To isolate meaningful relationships, let’s count the number of associations in which <span class="math inline">\(p &lt; 0.05\)</span>, a standard threshold for significance applied in practice (see <a href="METER_P_Values-Quarto.html">Putting the p-value in Context</a>).</p>
 <div id="qpyodide-insertion-location-8"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1119,13 +1125,13 @@ function checkAnswerInterpretResult() {
         feedback.innerHTML = "✅ Correct! Of the 20,000 possible associations between spikes and signals, 1104 have `p < 0.05`.";
         feedback.style.color = "green";
     } else if (selected.value === "incorrect1") {
-        feedback.innerHTML = "❌ Incorrect. The result does not say that all 20,000 associations are meaningful. It says that 1043 of them have `p < 0.05`.";
+        feedback.innerHTML = "❌ Incorrect. The result does not say that all 20,000 associations are meaningful. It says that 1104 of them have `p < 0.05`.";
         feedback.style.color = "red";
     } else if (selected.value === "incorrect2") {
-        feedback.innerHTML = "❌ Incorrect. The analysis detected 1043 associations with `p < 0.05`, so it is not true that there are no associations.";
+        feedback.innerHTML = "❌ Incorrect. The analysis detected 1104 associations with `p < 0.05`, so it is not true that there are no associations.";
         feedback.style.color = "red";
     } else if (selected.value === "incorrect3") {
-        feedback.innerHTML = "❌ Not quite. The result says 1043 associations have `p < 0.05`, but that does not automatically mean they are all truly meaningful.";
+        feedback.innerHTML = "❌ Not quite. The result says 1104 associations have `p < 0.05`, but that does not automatically mean they are all truly meaningful.";
         feedback.style.color = "red";
     }
 }
@@ -1135,7 +1141,7 @@ function checkAnswerInterpretResult() {
 <div class="alert alert-block alert-info">
 <p><em>Conclusion</em>:</p>
 <ul>
-<li>Rat brain neural activity seems to be associated with stock prices and the rodent’s position!</li>
+<li>We detect many significant associations between rat brain neural activity, stock prices, and the rodent’s position!</li>
 <li>Let’s develop a new strategy for profitable high-frequency stock trading using rat brain neuron spiking.</li>
 </ul>
 </div>
@@ -1151,12 +1157,12 @@ function checkAnswerInterpretResult() {
 <p></p>
 <ul>
 <li><p>How can the spike timing in a rat brain relate to stock market prices?</p></li>
-<li><p>We’ve conducted many (20,000 in fact) statistical tests and identified all associations with p&lt;0.05 … Is that the right choice?</p></li>
+<li><p>We’ve conducted many (20,000 in fact) statistical tests and identified all associations with p&lt;0.05 <br>… Is that the right choice?</p></li>
 </ul>
 </div>
 </section>
 <section id="not-so-fast-finding-meaningful-relationships-after-youve-tested-everything." class="level1">
-<h1>4- Not so fast … finding meaningful relationships after you’ve tested everything.</h1>
+<h1>4. Not so fast … finding meaningful relationships after you’ve tested everything.</h1>
 <p>In the previous section, we assessed associations between 200 neurons and 100 signals.</p>
 <p>This exploration led to many (20,000) statistical tests.</p>
 <p>When we compute so many tests, we need to <strong>correct for multiplicity</strong>.</p>
@@ -1169,12 +1175,10 @@ function checkAnswerInterpretResult() {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-In our initial analysis, we found all p-values &lt; 0.05. If we want to talk like a statistician, we’d say: <em>We chose a Type I error rate (<span class="math inline">\(\alpha\)</span>) of 0.05.</em>
+In our initial analysis, we treated all p-values less than 0.05 as significant. If we want to talk like a statistician, we’d say: <em>We chose a Type I error rate (<span class="math inline">\(\alpha\)</span>) of 0.05.</em> This means that each test has probability 0.05 of falsely claiming a statistically significant effect. We performed 20,000 total tests. How many false statistically significant effects do we expect to occur by chance?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This means that each test has probability 0.05 of falsely claiming a statistically significant effect.</p>
-<p>We performed 20,000 total tests. How many false statistically significant effects do we expect?</p>
 <form id="quiz-form-false-positives">
 <input type="radio" name="answer_false_positives" value="incorrect1"> 50<br> <input type="radio" name="answer_false_positives" value="incorrect2"> 100<br> <input type="radio" name="answer_false_positives" value="correct"> 1000<br> <input type="radio" name="answer_false_positives" value="incorrect3"> 1104<br><br> <button type="button" onclick="checkAnswerFalsePositives()">Submit</button>
 </form>
@@ -1210,19 +1214,19 @@ function checkAnswerFalsePositives() {
 </div>
 <section id="intuition-building-aside" class="level2">
 <h2 class="anchored" data-anchor-id="intuition-building-aside">Intuition building aside</h2>
-<p>Imagine you have a fair coin and you flip it a few times. Let’s think about what happens …</p>
+<p>Imagine you have a fair coin and you flip it 5 times. Let’s think about what happens.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Flip 5 coins. Are you likely to get all heads?
+Flip a fair coin 5 times. Are you likely to get all heads?
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <form id="quiz-form-five-coins">
-<input type="radio" name="answer_five_coins" value="correct"> No.&nbsp;That’s unlikely when you do it once.<br> <input type="radio" name="answer_five_coins" value="incorrect1"> Yes. You are likely to get all heads in one flip of 5 coins.<br> <input type="radio" name="answer_five_coins" value="incorrect2"> Yes. You will always get all heads if you flip carefully.<br> <input type="radio" name="answer_five_coins" value="incorrect3"> It is impossible to get all heads.<br><br> <button type="button" onclick="checkAnswerFiveCoins()">Submit</button>
+<input type="radio" name="answer_five_coins" value="correct"> No.&nbsp;That’s unlikely when you do perfom the 5 coin flips only one time.<br> <input type="radio" name="answer_five_coins" value="incorrect1"> Yes. You are likely to get all heads.<br> <input type="radio" name="answer_five_coins" value="incorrect2"> Yes. You will always get all heads if you flip carefully.<br> <input type="radio" name="answer_five_coins" value="incorrect3"> No.&nbsp;It is impossible to get all heads.<br><br> <button type="button" onclick="checkAnswerFiveCoins()">Submit</button>
 </form>
 <p id="feedback_five_coins">
 </p>
@@ -1260,12 +1264,12 @@ function checkAnswerFiveCoins() {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Now, ask 1000 people to repeat this 5-coin-flip process. Do you think <em>someone</em> will get all heads?
+Now, ask 1000 people to repeat this 5-flip process. Do you think <em>someone</em> will get all heads?
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <form id="quiz-form-many-people-coins">
-<input type="radio" name="answer_many_people_coins" value="correct"> Yes. By chance, someone might flip 5 coins and get all heads.<br> <input type="radio" name="answer_many_people_coins" value="incorrect1"> No.&nbsp;If getting all heads is unlikely for one person, it cannot happen for a group of 1000 people.<br> <input type="radio" name="answer_many_people_coins" value="incorrect2"> No.&nbsp;It is impossible for anyone to get all heads.<br> <input type="radio" name="answer_many_people_coins" value="incorrect3"> Yes. Every person will probably get all heads.<br><br> <button type="button" onclick="checkAnswerManyPeopleCoins()">Submit</button>
+<input type="radio" name="answer_many_people_coins" value="correct"> Yes. By chance, someone might flip a fair coin 5 times and get all heads.<br> <input type="radio" name="answer_many_people_coins" value="incorrect1"> No.&nbsp;If getting all heads is unlikely for one person, it cannot happen for a group of 1000 people.<br> <input type="radio" name="answer_many_people_coins" value="incorrect2"> No.&nbsp;It is impossible for anyone to get all heads.<br> <input type="radio" name="answer_many_people_coins" value="incorrect3"> Yes. Every person will probably get all heads.<br><br> <button type="button" onclick="checkAnswerManyPeopleCoins()">Submit</button>
 </form>
 <p id="feedback_many_people_coins">
 </p>
@@ -1297,17 +1301,20 @@ function checkAnswerManyPeopleCoins() {
 </script>
 </div>
 </div>
-<p><strong>Many methods exist to correct for multiplicity.</strong> In this unit, we’ll investigate a couple of these methods.</p>
+</section>
+<section id="now-back-to-the-main-story---the-bonferroni-correction" class="level2">
+<h2 class="anchored" data-anchor-id="now-back-to-the-main-story---the-bonferroni-correction">Now, back to the main story - the Bonferroni correction</h2>
+<p><strong>Many methods exist to correct for multiplicity.</strong> In this unit, we’ll investigate three of these methods.</p>
 <p>To start, let’s apply one of the most popular procedures to correct for multiplicity: <a href="https://en.wikipedia.org/wiki/Bonferroni_correction"><strong>the Bonferroni correction</strong></a>.</p>
 <p>The Bonferroni correction reduces the Type I error rate by dividing the desired overall significance level (<span class="math inline">\(\alpha\)</span>) by the number of tests performed (call it <span class="math inline">\(m\)</span>). For example, if a trial is testing <span class="math inline">\(m = 20\)</span> hypotheses with a desired overall <span class="math inline">\(\alpha = 0.05\)</span>, then the Bonferroni correction would test each individual hypothesis at <span class="math inline">\(\alpha = 0.05/20 = 0.0025\)</span>.</p>
-<p>The Bonferroni test is considered conservative because it adjusts the significance level <span class="math inline">\(\alpha\)</span> by dividing it by the number of comparisons. Doing so reduces the risk of Type I errors (false positives) but increases the likelihood of false negatives (i.e., incorrectly labeling a significant relationship as not significant).</p>
+<p>The Bonferroni correction is considered conservative because it adjusts the significance level <span class="math inline">\(\alpha\)</span> by dividing it by the number of comparisons. Doing so reduces the risk of Type I errors (false positives) but increases the likelihood of false negatives (i.e., incorrectly labeling a significant relationship as not significant).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Compute the Bonferroni correction using our desired overall significance level (<code>\alpha = 0.05</code>) and the number of tests performed.
+For the <code>signals</code> and <code>spikes</code> data, compute the Bonferroni adjusted significance level using our desired overall significance level (<span class="math inline">\(\alpha = 0.05\)</span>) and the number of tests performed.
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1358,7 +1365,7 @@ Interpret this result. What do you conclude about the data?
 </div>
 <div class="callout-body-container callout-body">
 <form id="quiz-form-bonferroni-result">
-<input type="radio" name="answer_bonferroni_result" value="incorrect1"> Of the 20,000 possible associations, we detect 1043 significant associations after applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="incorrect2"> Of the 20,000 possible associations, we detect 0 associations before applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="correct"> Of the 20,000 possible associations between spikes and signals, we detect 0 associations with <code>p &lt; 0.05</code> after applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="incorrect3"> Of the 20,000 possible associations, all of them are truly meaningful.<br><br> <button type="button" onclick="checkAnswerBonferroniResult()">Submit</button>
+<input type="radio" name="answer_bonferroni_result" value="incorrect1"> Of the 20,000 possible associations, we detect 1104 significant associations <strong>after</strong> applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="incorrect2"> Of the 20,000 possible associations, we detect 0 associations <strong>before</strong> applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="correct"> Of the 20,000 possible associations between spikes and signals, we detect 0 associations with <code>p &lt; 0.05 / 20000</code> after applying the Bonferroni correction.<br> <input type="radio" name="answer_bonferroni_result" value="incorrect3"> Of the 20,000 possible associations, all of them are truly meaningful.<br><br> <button type="button" onclick="checkAnswerBonferroniResult()">Submit</button>
 </form>
 <p id="feedback_bonferroni_result">
 </p>
@@ -1374,10 +1381,10 @@ function checkAnswerBonferroniResult() {
     }
 
     if (selected.value === "correct") {
-        feedback.innerHTML = "✅ Correct! After applying the Bonferroni correction, we detect 0 associations. This suggests that the apparent spike-signal associations do not survive correction for multiple comparisons. In other words, rat brains are not associated with stock prices or positions in these data.";
+        feedback.innerHTML = "✅ Correct! After applying the Bonferroni correction, we detect 0 associations. This suggests that the apparent spike-signal associations do not survive this correction for multiple comparisons. In other words, these data provide no evidence that rat brains are associated with stock prices or position.";
         feedback.style.color = "green";
     } else if (selected.value === "incorrect1") {
-        feedback.innerHTML = "❌ Incorrect. After applying the Bonferroni correction, we detect 0 associations, not 1043.";
+        feedback.innerHTML = "❌ Incorrect. After applying the Bonferroni correction, we detect 0 associations, not 1104.";
         feedback.style.color = "red";
     } else if (selected.value === "incorrect2") {
         feedback.innerHTML = "❌ Incorrect. The key point is what happens after applying the Bonferroni correction: no associations remain significant.";
@@ -1395,44 +1402,38 @@ function checkAnswerBonferroniResult() {
 <p></p>
 <ul>
 <li><p>Much work (including <a href="https://www.nature.com/articles/514153a">Nobel Prize work</a>) has established a relationship between rat neuron spiking and rodent position.</p></li>
-<li><p>We’ve identified all associations with p&lt;0.05 after Bonferroni correction … and there aren’t any.</p></li>
+<li><p>We’ve identified all associations with <span class="math inline">\(p &lt; 0.05 / 20000\)</span> after Bonferroni correction … and there aren’t any.</p></li>
 <li><p>Is that the right choice?</p></li>
 </ul>
 </div>
 </section>
 </section>
 <section id="rat-brains-either-predict-many-things-or-no-things" class="level1">
-<h1>5- Rat brains either predict many things or no things?</h1>
+<h1>5. Rat brains either predict many things or no things?</h1>
 <p>We’ve applied two strategies to confront multiplicity in our analysis:</p>
 <ul>
-<li>Do nothing (Part 3)</li>
-<li>Bonferroni correction (Part 4)</li>
+<li><a href="Part 3">Do nothing</a></li>
+<li><a href="Part 4">Bonferroni correction</a></li>
 </ul>
-<p>The two strategies give completely different results. Either neurons in the rat brain spike with many associations to observed signals (Part 3) or no associations (Part 4). And, neither result makes sense when compared to the <a href="https://www.nature.com/articles/514153a">existing</a> <a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">literature</a>. <strong>So, now what?</strong></p>
+<p>The two strategies give completely different results. When we do nothing (Part 3), we conclude that neurons in the rat brain spike in association with many observed signals, including rodent behavior and stock prices. However, when we correct for multiplicity using the Bonferroni correction (Part 4), we identify no associations between <code>signals</code> and <code>spikes</code>. Neither result makes sense when compared to the <a href="https://www.nature.com/articles/514153a">existing</a> <a href="https://improbable.com/airchives/paperair/volume12/v12i4/rats-12-4.pdf">literature</a>.</p>
+<p><strong>So, now what?</strong></p>
 <p>Again, many strategies exist to correct for multiplicity. There’s no single “right” approach.</p>
 <ul>
 <li><p>Our first approach (do nothing) is too lenient - we allow too many false positives. And, in doing so, we draw a ridiculous scientific conclusion: action potentials in the rat brain predict prices on the stock market.</p></li>
 <li><p>Our second approach (Bonferroni correction) is too strict - we allow too few false positives. And, in doing so, we find no evidence for a well-established scientific conclusion: action potentials in the rat brain encode the rodent’s position.</p></li>
 </ul>
 <p>Perhaps we can find an intermediate approach, that allows neither too many nor too few false positives …</p>
-<p>In what follows, you can explore alternatives to our choices above, and see how these choices to address multiplicity impact your results.</p>
-</section>
-<section id="choose-your-own-adventure" class="level1">
-<h1>Choose your own adventure!</h1>
-<ul>
-<li>False Discovery Rate or FDR (go to Part 6)</li>
-<li>Split the data (go to Part 7)</li>
-</ul>
+<p>In what follows, we’ll implement alternatives to our choices above, and see how these choices to address multiplicity impact our results.</p>
 </section>
 <section id="fdr-a-less-conservative-approach-to-multiplicity." class="level1">
-<h1>6- FDR: a less conservative approach to multiplicity.</h1>
-<p>You’ve chosen one approach to mitigate the impact of performing multiple statistical tests: calculate the False Discovery Rate (FDR).</p>
+<h1>6. FDR: a less conservative approach to multiplicity.</h1>
+<p>We’ll first consider a popular choice to mitigate the impact of performing multiple statistical tests: calculate the False Discovery Rate (FDR).</p>
 <p>To do so, we’ll use the <a href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x">Benjamini-Hochberg (BH) procedure</a>. The BH procedure is a statistical method to control the false discovery rate (FDR) in multiple hypothesis testing. It ranks the p-values from smallest to largest and compares each to a threshold that increases with rank, defined as <span class="math inline">\((r/m) \cdot q\)</span>, where <span class="math inline">\(r\)</span> is the rank of the p-value (i.e., the p-value’s position when ordered from smallest to largest), <span class="math inline">\(m\)</span> is the total number of tests, and <span class="math inline">\(q\)</span> is the desired FDR level, which is the expected proportion of false positives among all rejected hypotheses. For example, if <span class="math inline">\(q = 0.05\)</span>, it means that, on average, no more than 5% of the rejected hypotheses are expected to be false positives. This allows for a controlled balance between identifying true effects and limiting false discoveries in multiple hypothesis testing.</p>
 <p>The BH procedure is less conservative than methods like Bonferroni correction, offering more power while maintaining control over the expected proportion of false positives.</p>
 <p>The BH procedure is implemented in three steps:</p>
 <ol type="1">
 <li><p><strong>Assign each p-value a rank</strong>, <span class="math inline">\(r\)</span>, where the smallest p-value has rank <span class="math inline">\(r=1\)</span>, the next smallest has rank <span class="math inline">\(r=2\)</span>, and so on.</p></li>
-<li><p><strong>Calculate the critical value</strong> for each p-value using the formula:</p></li>
+<li><p><strong>Calculate the critical value</strong> for each rank <span class="math inline">\(r\)</span> using the formula:</p></li>
 </ol>
 <p><span class="math inline">\(CriticalValue =(r/m) \cdot q\)</span></p>
 <p>where <span class="math inline">\(m\)</span> is the total number of tests, and <span class="math inline">\(q\)</span> is the desired overall significance level (typically 0.05 for 5% FDR).</p>
@@ -1443,7 +1444,7 @@ function checkAnswerBonferroniResult() {
 <h2 class="anchored" data-anchor-id="to-build-some-intuition-for-these-steps-lets-start-with-a-simple-example.">To build some intuition for these steps, let’s start with a simple example.</h2>
 <p>Consider an experiment in which you perform 5 hypothesis tests (<span class="math inline">\(m=5\)</span>) and collect 5 p-values:</p>
 <p><code>p-value: [0.1, 0.12, 0.001, 0.015, 0.045]</code></p>
-<p>We conducted 5 tests, and decide to correct for multiplicity.</p>
+<p>We conducted 5 tests and decided to correct for multiplicity.</p>
 <p>Let’s use the p-values to perform each step of the Benjamini-Hochberg procedure.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1488,13 +1489,15 @@ function checkAnswerOrderPvalues() {
 </script>
 </div>
 </div>
+<section id="example---step-1.-assign-each-p-value-a-rank." class="level3">
+<h3 class="anchored" data-anchor-id="example---step-1.-assign-each-p-value-a-rank.">Example - Step 1. Assign each p-value a rank.</h3>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Then, perform Step 1. <strong>Assign each p-value a rank</strong>.
+Having sorted the p-values in the previous question, now assign each p-value a rank.
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1531,13 +1534,16 @@ function checkAnswerRankPvalues() {
 </script>
 </div>
 </div>
+</section>
+<section id="example---step-2.-calculate-the-critical-value-for-each-rank." class="level3">
+<h3 class="anchored" data-anchor-id="example---step-2.-calculate-the-critical-value-for-each-rank.">Example - Step 2. Calculate the critical value for each rank.</h3>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Next, perform Step 2. <strong>Calculate the critical value</strong>.
+For each rank <span class="math inline">\(r\)</span>, determine the critical value using the formula <span class="math inline">\((r/m) \cdot q\)</span> with <span class="math inline">\(q=0.05\)</span>
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1574,13 +1580,16 @@ function checkAnswerCriticalValues() {
 </script>
 </div>
 </div>
+</section>
+<section id="example---step-3.-compare-each-p-value-to-its-corresponding-critical-value." class="level3">
+<h3 class="anchored" data-anchor-id="example---step-3.-compare-each-p-value-to-its-corresponding-critical-value.">Example - Step 3. Compare each p-value to its corresponding critical value.</h3>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Perform Step 3. <strong>Compare each p-value to its corresponding critical value.</strong>
+You’ve ranked the p-values in order and computed the corresponding critical value for each rank. Now, compare them to determine which p-value are significant.
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1623,7 +1632,7 @@ function checkAnswerComparePvalues() {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-In this illustrative example, we found two p-values are considered significant using the FDR procedure. What would you find if you instead used a <strong>Bonferroni correction</strong>?
+In this illustrative example, we found that two p-values are considered significant using the FDR procedure. What would you find if you instead used a <strong>Bonferroni correction</strong>?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1660,12 +1669,16 @@ function checkAnswerBonferroniVsFdr() {
 </script>
 </div>
 </div>
-<p>Now, having built some intuition for computing the FDR using the Benjamini-Hochberg (BH) procedure, let’s apply it to our data of interest.</p>
-<p>It’s the same idea, but instead of considering 5 p-values, we must consider the 20,000 p-values.</p>
+</section>
+</section>
+<section id="now-back-to-the-main-story." class="level2">
+<h2 class="anchored" data-anchor-id="now-back-to-the-main-story.">Now, back to the main story.</h2>
+<p>Having built some intuition for computing the FDR using the Benjamini-Hochberg (BH) procedure, let’s apply it to our data of interest.</p>
+<p>It’s the same idea, but instead of considering 5 p-values as we did in the simple example, we must consider the 20,000 p-values.</p>
 <div id="qpyodide-insertion-location-10"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>The function <code>fdr</code> returns whether each p-value in <code>p</code> remains significant after correcting for multiplicity using FDR.</p>
-<p>Let’s display the p-values that remain significant after correcting for multiplicity using FDR:</p>
+<p>Let’s display the p-values that remain significant after correcting for multiplicity using FDR.</p>
 <div id="qpyodide-insertion-location-11"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1716,7 +1729,7 @@ function checkAnswerFdrDotsPattern() {
 <ul>
 <li><p>We originally corrected for multiplicity using the Bonferroni correction. Following this strict correction, we found no evidence of significant associations between <code>spikes</code> and <code>signals</code>.</p></li>
 <li><p>After correcting for multiplicity using FDR, we now find some neurons in the rat brain are associated with some signals.</p></li>
-<li><p>We return to our collaborators and they confirm that Signals 0-10 correspond to different measures of the rodent’s position and direction.</p></li>
+<li><p>We return to our collaborators, and they confirm that signals 0-10 correspond to different measures of the rodent’s behavior.</p></li>
 </ul>
 </div>
 <div class="alert alert-block alert-info">
@@ -1725,39 +1738,284 @@ function checkAnswerFdrDotsPattern() {
 <li><p>We’ve corrected for multiple comparisons using FDR and find a sensible result.</p></li>
 <li><p>The results are consistent with the existing theory that neurons in the brain encode rodent position.</p></li>
 <li><p>We find no evidence that neurons in the rodent brain predict stock market prices.</p></li>
-<li><p>Using a less strict correction (FDR instead of Bonferroni) we identify significant associations in the data.</p></li>
+<li><p>Using a less strict correction (FDR instead of Bonferroni), we identify significant associations in the data.</p></li>
 </ul>
 </div>
 </section>
 </section>
-<section id="split-your-data-to-test-your-conclusions." class="level1">
-<h1>7- Split your data to test your conclusions.</h1>
-<p>(Pending: describe how you can split your data in half to test your conclusions. You take the first half of your data and explore. Find the significant relationships. Then test those relationships in the second half. Called a split-sample screening/validation procedure. Let’s do it.)</p>
-<p>(Use first half of data, in time. This part is slow.)</p>
+<section id="split-the-data" class="level1">
+<h1>7. Split the Data</h1>
+<p>Splitting the data means exactly what it says: we’ll split the data into two halves. In the first half of the data, we’ll perform an exploratory analysis and identify significant relationships between <code>spikes</code> and <code>signals</code>. Then, we will test those identified relationships in the second half of the data.</p>
+<p>This process of “splitting the data” is more formally called a split-sample screening/validation procedure.</p>
+<p>Let’s do it.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We’d like to split the data, but what should we choose for the first half of the split?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-data-split">
+<input type="radio" name="answer_data_split" value="incorrect1"> Choose half of the signals and compare them with all of the neurons.<br> <input type="radio" name="answer_data_split" value="incorrect2"> Choose half of the neurons and compare them with all of the signals.<br> <input type="radio" name="answer_data_split" value="correct"> Choose half of the time points—the first 0.25 seconds—and compare all of the signals with all of the neurons.<br><br> <button type="button" onclick="checkAnswerDataSplit()">Submit</button>
+</form>
+<p id="feedback_data_split">
+</p>
+<script>
+function checkAnswerDataSplit() {
+    var selected = document.querySelector('input[name="answer_data_split"]:checked');
+    var feedback = document.getElementById("feedback_data_split");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! We split the data across time. We use the first 0.25 seconds to compare every signal with every neuron. This preserves all 20,000 possible neuron-signal relationships in the first half of the analysis.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Choosing only half of the signals would prevent us from evaluating all neuron-signal relationships in each part of the analysis. Instead, we split the observations across time.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. Choosing only half of the neurons would prevent us from evaluating all neuron-signal relationships in each part of the analysis. Instead, we split the observations across time.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>We’ll split the data in <strong>time</strong>; for the first half of the data, we’ll consider all neurons and all signals from the first 0.25 s of the recording. We do so because we want to assess the relationships between all neurons and all signals. We’ll do so using the first half of our observations.</p>
 <div id="qpyodide-insertion-location-12"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>(Find candidate significant associations.)</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How many p-values did we compute using the first half of the data?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-split-pvalues">
+<input type="radio" name="answer_split_pvalues" value="incorrect1"> 100 p-values<br> <input type="radio" name="answer_split_pvalues" value="incorrect2"> 200 p-values<br> <input type="radio" name="answer_split_pvalues" value="incorrect3"> 10,000 p-values<br> <input type="radio" name="answer_split_pvalues" value="correct"> 20,000 p-values<br><br> <button type="button" onclick="checkAnswerSplitPvalues()">Submit</button>
+</form>
+<p id="feedback_split_pvalues">
+</p>
+<script>
+function checkAnswerSplitPvalues() {
+    var selected = document.querySelector('input[name="answer_split_pvalues"]:checked');
+    var feedback = document.getElementById("feedback_split_pvalues");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! We compared each of the 200 spike trains with each of the 100 signals, so we computed 200 × 100 = 20,000 p-values—just as before.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. This counts only the number of signals. Each signal was compared with all 200 spike trains.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. This counts only the number of spike trains. Each spike train was compared with all 100 signals.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. Splitting the data across time does not reduce the number of neuron-signal pairs. We still compare all 200 spike trains with all 100 signals, giving 20,000 p-values.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We have not yet corrected for multiple comparisons. How many significant associations between spikes and signals do you expect to occur by chance for this first split of the data?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-expected-chance-associations">
+<input type="radio" name="answer_expected_chance_associations" value="incorrect1"> 50 associations<br> <input type="radio" name="answer_expected_chance_associations" value="incorrect2"> 500 associations<br> <input type="radio" name="answer_expected_chance_associations" value="correct"> 1000 associations<br> <input type="radio" name="answer_expected_chance_associations" value="incorrect3"> 20,000 associations<br><br> <button type="button" onclick="checkAnswerExpectedChanceAssociations()">Submit</button>
+</form>
+<p id="feedback_expected_chance_associations">
+</p>
+<script>
+function checkAnswerExpectedChanceAssociations() {
+    var selected = document.querySelector('input[name="answer_expected_chance_associations"]:checked');
+    var feedback = document.getElementById("feedback_expected_chance_associations");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! We expect 20,000 × 0.05 = 1000 significant associations to occur by chance.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. We must multiply the 20,000 tests by the significance level of 0.05.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. Five percent of 20,000 is 1000, not 500.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. We do not expect every test to be significant by chance. We expect approximately 5% of the 20,000 tests to be significant.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>Because we’ve computed so many p-values (200 neurons * 100 signals = 20,000 p-values), we expect to find p&lt;0.05 by chance. We must mitigate this multiplicity!</p>
+<p>Let’s determine the number of significant associations in the first half of the data, without (yet) correcting for multiplicity.</p>
 <div id="qpyodide-insertion-location-13"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>(Test these predicted associations in the second half of data.)</p>
+<p>We find 981 associations with <span class="math inline">\(p &lt; 0.05\)</span>. This is not surprising, because with 200 neurons and 100 signals, we expect about <span class="math display">\[ 200 * 100 * 0.05 = 1000 \]</span> false-positive detections to occur by chance.</p>
+<p>But, we’re not done yet.</p>
+<p>Our next step is to test these associations in the second half of the data.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How many associations do we test in the second half of the data?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-second-half-associations">
+<input type="radio" name="answer_second_half_associations" value="incorrect3"> 100 associations<br> <input type="radio" name="answer_second_half_associations" value="incorrect2"> 200 associations<br> <input type="radio" name="answer_second_half_associations" value="correct"> 981 associations<br> <input type="radio" name="answer_second_half_associations" value="incorrect1"> 20,000 associations<br><br>
+<button type="button" onclick="checkAnswerSecondHalfAssociations()">Submit</button>
+</form>
+<p id="feedback_second_half_associations">
+</p>
+<script>
+function checkAnswerSecondHalfAssociations() {
+    var selected = document.querySelector('input[name="answer_second_half_associations"]:checked');
+    var feedback = document.getElementById("feedback_second_half_associations");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! We test 981 associations in the second half of the data. This is the number of significant associations that we identified using the first half of the data.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. We computed 20,000 associations in the first half, but we test only the 981 associations selected as significant in that first half.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. There are 200 neurons, but the second-half analysis tests the neuron-signal associations selected using the first half of the data.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. There are 100 signals, but the second-half analysis tests the 981 selected neuron-signal associations.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
+<p>Note that we no longer test all possible associations between the 200 neurons and 100 signals. Instead, we restrict our analysis to the subset of associations identified as significant (<span class="math inline">\(p &lt; 0.05\)</span>) in the first half of the data.</p>
+<p>Doing so, we dramatically limit the number of tests we’ll perform in the second half of the data.</p>
+<p>Instead of the 20,000 tests we performed in the first half of the data, we’ll perform 981 statistical tests in the second half of the data.</p>
 <div id="qpyodide-insertion-location-14"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>(FDR correction on validated p-values.)</p>
+<p>Finally, to correct for multiplicity (we did still perform almost 1000 tests), let’s apply FDR correction to these p-values.</p>
 <div id="qpyodide-insertion-location-15"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>(Visualize validated associations.)</p>
+<p>We find that three significant associations remain.</p>
+<p>Let’s visualize these validated associations.</p>
 <div id="qpyodide-insertion-location-16"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>(There are three validated p-values, associated with rodent position.)</p>
+<div class="alert alert-block alert-info">
+<p><em>Interpretation</em>:</p>
+<ul>
+<li><p>We originally corrected for multiplicity using the Bonferroni correction. Following this strict correction, we found no evidence of significant associations between <code>spikes</code> and <code>signals</code>.</p></li>
+<li><p>We now split the data to correct for multiplicity. In our first split, we performed 20,000 tests and identified 981 associations with <span class="math inline">\(p&lt;0.05\)</span>. We then tested this subset of associations in the second split, and corrected for multplicity using FDR.</p></li>
+<li><p>After splitting, we find some neurons in the rat brain are associated with some signals.</p></li>
+<li><p>We return to our collaborators, and they confirm that signals 0-10 correspond to different measures of the rodent’s behavior.</p></li>
+</ul>
+</div>
+<div class="alert alert-block alert-info">
+<p><em>Relief</em></p>
+<ul>
+<li><p>We’ve corrected for multiple comparisons by splitting our data and find a sensible result.</p></li>
+<li><p>The results are consistent with the existing theory that neurons in the brain encode rodent position.</p></li>
+<li><p>We find no evidence that neurons in the rodent brain predict stock market prices.</p></li>
+<li><p>Using a less strict correction (splitting instead of Bonferroni), we identify significant associations in the data.</p></li>
+</ul>
+</div>
+<p>Q. When would you not use splitting to account for multiplicity in your data? A. When the data change in time (i.e., the second half of data is meaningfully different than the first) (correct) When the associations differ among <code>spikes</code> When the associations differ among <code>signals</code> When the associations differ among <code>spikes</code> and <code>signals</code></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+When would you not use data splitting to account for multiplicity?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<form id="quiz-form-when-not-to-split">
+<input type="radio" name="answer_when_not_to_split" value="correct"> When the data change over time—for example, when the second half of the data is meaningfully different from the first half.<br> <input type="radio" name="answer_when_not_to_split" value="incorrect1"> When the associations differ among <code>spikes</code>.<br> <input type="radio" name="answer_when_not_to_split" value="incorrect2"> When the associations differ among <code>signals</code>.<br> <input type="radio" name="answer_when_not_to_split" value="incorrect3"> When the associations differ among <code>spikes</code> and <code>signals</code>.<br><br> <button type="button" onclick="checkAnswerWhenNotToSplit()">Submit</button>
+</form>
+<p id="feedback_when_not_to_split">
+</p>
+<script>
+function checkAnswerWhenNotToSplit() {
+    var selected = document.querySelector('input[name="answer_when_not_to_split"]:checked');
+    var feedback = document.getElementById("feedback_when_not_to_split");
+
+    if (!selected) {
+        feedback.innerHTML = "Please select an answer.";
+        feedback.style.color = "blue";
+        return;
+    }
+
+    if (selected.value === "correct") {
+        feedback.innerHTML = "✅ Correct! Data splitting may not be appropriate when the data change meaningfully over time. In that case, an association identified in the first half may not be expected to appear in the second half.";
+        feedback.style.color = "green";
+    } else if (selected.value === "incorrect1") {
+        feedback.innerHTML = "❌ Incorrect. Associations may differ among spike trains without preventing us from splitting the observations across time.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect2") {
+        feedback.innerHTML = "❌ Incorrect. Associations may differ among signals without preventing us from splitting the observations across time.";
+        feedback.style.color = "red";
+    } else if (selected.value === "incorrect3") {
+        feedback.innerHTML = "❌ Incorrect. Differences among neuron-signal associations are what the analysis is intended to detect. The concern is whether the underlying relationships change between the two time periods.";
+        feedback.style.color = "red";
+    }
+}
+</script>
+</div>
+</div>
 </section>
 <section id="conclusions" class="level1">
-<h1>8- Conclusions</h1>
+<h1>8. Conclusions</h1>
+<p>Exploratory analysis allows us to discover patterns in noisy data. But, when we test many possible relationships, we create a <strong>rigor problem</strong>: some results will appear significant by chance. In our example dataset, 20,000 tests at <span class="math inline">\(\alpha = 0.05\)</span> would produce approximately 1000 false positives if all of the null hypotheses were true.</p>
+<p>We applied four approaches to address the problem of multiplicity in these data.</p>
 <ul>
-<li>Summarize rigor problem &amp; outline differences between approaches.</li>
-<li>Return to initial exploratory tongue-in-cheek study and identify rigor problem. Make clear that the authors intended to make this satire.</li>
-<li>Return to initial exploratory Nobel Prize study and consider context of rigor problem.</li>
-<li>Call out to other approaches from other units: causality (triangulation) others</li>
+<li><p><strong>Do nothing:</strong> This approach was too lenient. We found apparent relationships between rat brain activity and stock prices, but most of the 1104 results with <code>p &lt; 0.05</code> could occur by chance.</p></li>
+<li><p><strong>Apply the Bonferroni correction:</strong> This approach controlled the probability of making any false-positive claim, but it was too strict for these data. We found no significant associations, including no evidence for the well-established relationship between neural activity and rodent position.</p></li>
+<li><p><strong>Control the False Discovery Rate:</strong> The Benjamini-Hochberg procedure accepts a controlled proportion of false discoveries in exchange for greater power. It recovered associations between neural activity and rodent position and none with stock prices.</p></li>
+<li><p><strong>Split the data:</strong> The first half of the data generated candidate relationships, and the second half tested them. This separation of exploration from validation left three significant associations, all involving measures of rodent position.</p></li>
 </ul>
+<p>The rat-brain stock-market study was intentionally tongue-in-cheek satire. Its ridiculous conclusion nevertheless illustrates a real threat to rigor: if we search enough unrelated signals and report only the most interesting results, chance associations can tell a compelling story. A rigorous report should make the exploratory nature of the analysis clear, describe how many relationships were tested, report nonsignificant as well as significant results, and explain how multiplicity was addressed.</p>
+<p>The early rodent-position study sits in a different scientific context. From a modern perspective, selecting 8 neurons from 76 and reporting a handful of relationships raises reasonable questions: How were those neurons and behaviors selected? How many relationships were examined? Yet that exploratory work contributed to a finding that was supported by converging evidence and eventually recognized with a Nobel Prize. The lesson is not that exploratory analysis is unscientific. Exploratory results can generate transformative hypotheses, but confidence grows when those results are transparently reported, replicated, and supported by independent evidence.</p>
+<p>Correcting for multiplicity is therefore one part of rigorous scientific inference, not a complete solution. Other strategies developed across these units also matter: choose an adequate <a href="METER_Sample_Size-SHORT-Quarto.html">sample size</a>, interpret <a href="METER_P_Values-Quarto.html">p-values in context</a>, and repeatedly check and refine the <a href="METER_Inference-SHORT-Quarto.html">inference model</a>.</p>
 
 
 </section>
